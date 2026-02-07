@@ -1,14 +1,11 @@
-"use client";
+"use client"
 
-import { createPortal } from "react-dom";
+import { createPortal } from "react-dom"
 
 export default function Portal({ children }: { children: React.ReactNode }) {
-    const portalEl =
-        typeof document !== "undefined"
-            ? document.getElementById("portal")
-            : null;
+  const portalEl = typeof document !== "undefined" ? document.getElementById("portal") : null
 
-    if (!portalEl) return null;
+  if (!portalEl) return null
 
-    return createPortal(children, portalEl);
+  return createPortal(children, portalEl)
 }
