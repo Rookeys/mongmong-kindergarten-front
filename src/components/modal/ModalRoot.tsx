@@ -1,8 +1,8 @@
 "use client";
 
 import { useModalStore } from "@/stores/modalStore";
-import Portal from "../portal/Portal";
-import { ModalView } from "./ModalView";
+import Portal from "@/components/portal/Portal"
+import { ModalView } from "@/components/modal/ModalView";
 
 export function ModalRoot() {
     const { isOpen, content, closeModal } = useModalStore();
