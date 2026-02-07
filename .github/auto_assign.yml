@@ -1,0 +1,14 @@
+addReviewers: true
+
+addAssignees: author
+
+reviewers:
+  - KoJaem
+  - jeongYunMi
+
+numberOfReviewers: 2
+
+numberOfAssignees: 1
+
+skipKeywords:
+  - wip
