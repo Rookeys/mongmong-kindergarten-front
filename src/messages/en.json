@@ -1,5 +1,31 @@
 {
   "Home": {
     "title": "Welcome"
+  },
+  "login": {
+    "onboarding": {
+      "placeholderCharacter": "Mimi",
+      "placeholderReward": "rewards",
+      "IntroduceCharacter": ["Hello,", "I'm {character}."],
+      "IntroduceService1": ["To help you get to know yourself better,", "I'll send you a letter every day!"],
+      "IntroduceService2": ["If you're not sure what to write,", "you can read other letters for inspiration."],
+      "IntroduceService3": ["You can earn {reward} by sending letters", "and use them to decorate me!"],
+      "IntroduceService4": ["Keep sending letters,", "and you might even get a reply from me!"],
+      "login": ["If you log in,", "I can remember the replies you've sent."]
+    },
+    "oauthTitleKakao": "Continue with Kakao",
+    "oauthTitleNaver": "Continue with Naver",
+    "oauthTitleGoogle": "Continue with Google",
+    "startGuest": "Continue as Guest"
+  },
+  "sign-up": {
+    "question": ["What should I call you?"],
+    "name": "My name is",
+    "namePlaceholder": "Enter your name",
+    "nameConditions1": "You can enter between 2 and 8 characters.",
+    "nameConditions2": "Spaces, special characters, and uppercase English letters are not allowed.",
+    "nextButton": "Next",
+    "goodName": ["That's a great name!"],
+    "confirmButton": "Thanks!"
   }
 }
