@@ -1,0 +1,11 @@
+@font-face {
+  font-family: "MonaS12";
+  src: url("/assets/fonts/MonaS12.woff2") format("woff2");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "MonaS12";
+  src: url("/assets/fonts/MonaS12-Bold.woff2") format("woff2");
+  font-weight: 700;
+}
