@@ -1,16 +1,79 @@
 @import "tailwindcss";
 @import "../styles/fonts.css";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import "../styles/radius.css";
+@import "../styles/spacing.css";
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+
+  /* background — Semantic Colors Dark */
+  --color-background-upper: #f4f3f9eb;
+  --color-background-default: #f4f4f9;
+  --color-background-lower: #1e1e23;
+  --color-background-primary: #140f60;
+  --color-background-dim: #494956bd;
+
+  /* icon */
+  --color-icon-brand: #8e87f7;
+  --color-icon-warning: #ffbf4a;
+  --color-icon-danger: #ff6f7b;
+  --color-icon-success: #7edda0;
+  --color-icon-gray-primary: #f4f3f9eb;
+  --color-icon-gray-secondary: #eee9f7db;
+  --color-icon-gray-tertiary: #9e9bb5b0;
+  --color-icon-gray-quaternary: #787896a6;
+
+  /* text */
+  --color-text-strong: #f9f9fb;
+  --color-text-primary: #f4f3f9eb;
+  --color-text-secondary: #eee9f7db;
+  --color-text-tertiary: #e2dfecc4;
+  --color-text-quaternary: #d4cedbd9;
+  --color-text-warning: #ffebc7;
+  --color-text-success: #cdf1da;
+  --color-text-danger: #fdf3f1;
+  --color-text-inverse-primary: #24242bad;
+  --color-text-inverse-secondary: #494956bd;
+  --color-text-inverse-tertiary: #787896a6;
+  --color-text-brand: #6a62ea;
+  --color-text-brand-weak: #b4aeff;
+
+  /* fill */
+  --color-fill-brand: #6a62ea;
+  --color-fill-brand-weak: #2905ff1a;
+  --color-fill-success: #a7e7be;
+  --color-fill-success-weak: #27f2655e;
+  --color-fill-warning: #ffbf4a;
+  --color-fill-warning-weak: #cc5600b3;
+  --color-fill-danger: #e93726;
+  --color-fill-danger-weak: #fbe0dd;
+  --color-fill-neutral: #757387;
+  --color-fill-neutral-weak: #e2dfecc4;
+  --color-fill-glass: #e2dfecc4;
+  --color-fill-glass-weak: #eee9f7db;
+  --color-fill-floated: #3c3c46cc;
+  --color-fill-inverse: #ffffff;
+  --color-fill-inverse-weak: #9e9bb5b0;
+  --color-fill-pressed: #b4b4c9d1;
+
+  /* border */
+  --color-border-default: #575766;
+  --color-border-default-weak: #3c3c46;
+  --color-border-brand-weak: #2905ff1a;
+  --color-border-opacity-default: #b4b4c9d1;
+  --color-border-opacity-weak: #787896a6;
+
+  /* shadow */
+  --color-shadow-default: #9e9bb5b0;
+  --color-shadow-weak: #494956bd;
 }
 
 @theme {
@@ -71,13 +134,134 @@
   --text-caption-md--font-weight: 400;
   --text-caption-md--line-height: 125%;
   --text-caption-md--tracking: -0.15px;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* ==================== color ==================== */
+  /* background colors */
+  --color-background-upper: var(--color-background-upper);
+  --color-background-default: var(--color-background-default);
+  --color-background-lower: var(--color-background-lower);
+  --color-background-primary: var(--color-background-primary);
+  --color-background-dim: var(--color-background-dim);
+
+  /* icon colors */
+  --color-icon-brand: var(--color-icon-brand);
+  --color-icon-warning: var(--color-icon-warning);
+  --color-icon-danger: var(--color-icon-danger);
+  --color-icon-success: var(--color-icon-success);
+  --color-icon-gray-primary: var(--color-icon-gray-primary);
+  --color-icon-gray-secondary: var(--color-icon-gray-secondary);
+  --color-icon-gray-tertiary: var(--color-icon-gray-tertiary);
+  --color-icon-gray-quaternary: var(--color-icon-gray-quaternary);
+
+  /* text colors */
+  --color-text-strong: var(--color-text-strong);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-tertiary: var(--color-text-tertiary);
+  --color-text-quaternary: var(--color-text-quaternary);
+  --color-text-warning: var(--color-text-warning);
+  --color-text-danger: var(--color-text-danger);
+  --color-text-success: var(--color-text-success);
+  --color-text-inverse-primary: var(--color-text-inverse-primary);
+  --color-text-inverse-secondary: var(--color-text-inverse-secondary);
+  --color-text-inverse-tertiary: var(--color-text-inverse-tertiary);
+  --color-text-brand: var(--color-text-brand);
+  --color-text-brand-weak: var(--color-text-brand-weak);
+
+  /* fill colors */
+  --color-fill-floated: var(--color-fill-floated);
+  --color-fill-brand: var(--color-fill-brand);
+  --color-fill-brand-weak: var(--color-fill-brand-weak);
+  --color-fill-success: var(--color-fill-success);
+  --color-fill-success-weak: var(--color-fill-success-weak);
+  --color-fill-warning: var(--color-fill-warning);
+  --color-fill-warning-weak: var(--color-fill-warning-weak);
+  --color-fill-danger: var(--color-fill-danger);
+  --color-fill-danger-weak: var(--color-fill-danger-weak);
+  --color-fill-neutral: var(--color-fill-neutral);
+  --color-fill-neutral-weak: var(--color-fill-neutral-weak);
+  --color-fill-inverse: var(--color-fill-inverse);
+  --color-fill-inverse-weak: var(--color-fill-inverse-weak);
+  --color-fill-pressed: var(--color-fill-pressed);
+  --color-fill-glass: var(--color-fill-glass);
+  --color-fill-glass-weak: var(--color-fill-glass-weak);
+
+  /* border colors */
+  --color-border-default: var(--color-border-default);
+  --color-border-default-weak: var(--color-border-default-weak);
+  --color-border-brand-weak: var(--color-border-brand-weak);
+  --color-border-opacity-default: var(--color-border-opacity-default);
+  --color-border-opacity-weak: var(--color-border-opacity-weak);
+
+  /* shadow colors */
+  --color-shadow-weak: var(--color-shadow-weak);
+  --color-shadow-default: var(--color-shadow-default);
+
+  /* =============== Radius ==================== */
+  --radius-bottom-sheet: var(--radius-bottom-sheet);
+  --radius-modal: var(--radius-modal);
+  --radius-popover: var(--radius-popover);
+  --radius-textfield: var(--radius-textfield);
+  --radius-tab-bar: var(--radius-tab-bar);
+  --radius-badge: var(--radius-badge);
+
+  /* button radius*/
+  --radius-button-s: var(--radius-button-s);
+  --radius-button-m: var(--radius-button-m);
+  --radius-button-l: var(--radius-button-l);
+  --radius-button-xl: var(--radius-button-xl);
+  --radius-button-full: var(--radius-button-full);
+
+  /* toast radius*/
+  --radius-toast: var(--radius-toast);
+  --radius-toast-full: var(--radius-toast-full);
+
+  /* datepicker radius*/
+  --radius-wheel: var(--radius-wheel);
+  --radius-datepicker-full: var(--radius-datepicker-full);
+
+  /* card radius*/
+  --radius-card-s: var(--radius-card-s);
+  --radius-card-m: var(--radius-card-m);
+  --radius-card-l: var(--radius-card-l);
+
+  /* segmented radius*/
+  --radius-sc-s: var(--radius-sc-s);
+  --radius-sc-m: var(--radius-sc-m);
+  --radius-sc-l: var(--radius-sc-l);
+  --radius-sc-xl: var(--radius-sc-xl);
+
+  /* overlay radius*/
+  --radius-tabbar: var(--radius-tabbar);
+  --radius-bottomsheet: var(--radius-bottomsheet);
+
+  /* ==================== spacing ==================== */
+  /* padding */
+  --spacing-padding-2xs: var(--spacing-padding-2xs);
+  --spacing-padding-xs: var(--spacing-padding-xs);
+  --spacing-padding-s: var(--spacing-padding-s);
+  --spacing-padding-m: var(--spacing-padding-m);
+  --spacing-padding-l: var(--spacing-padding-l);
+  --spacing-padding-xl: var(--spacing-padding-xl);
+  --spacing-padding-2xl: var(--spacing-padding-2xl);
+  --spacing-padding-3xl: var(--spacing-padding-3xl);
+
+  /* gap */
+  --spacing-gap-2xs: var(--spacing-gap-2xs);
+  --spacing-gap-xs: var(--spacing-gap-xs);
+  --spacing-gap-s: var(--spacing-gap-s);
+  --spacing-gap-m: var(--spacing-gap-m);
+  --spacing-gap-l: var(--spacing-gap-l);
+  --spacing-gap-xl: var(--spacing-gap-xl);
+  --spacing-gap-2xl: var(--spacing-gap-2xl);
+  --spacing-gap-3xl: var(--spacing-gap-3xl);
+
+  /* layout */
+  --spacing-layout-xs: var(--spacing-layout-xs);
+  --spacing-layout-s: var(--spacing-layout-s);
+  --spacing-layout-m: var(--spacing-layout-m);
+  --spacing-layout-l: var(--spacing-layout-l);
+  --spacing-layout-xl: var(--spacing-layout-xl);
 }
 
 body {
