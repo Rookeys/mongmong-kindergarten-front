@@ -25,7 +25,7 @@
     "nameConditions1": "You can enter between 2 and 8 characters.",
     "nameConditions2": "Spaces, special characters, and uppercase English letters are not allowed.",
     "nextButton": "Next",
-    "goodName": ["That's a great name!"],
+    "goodName": ["{name}!", "That's a great name"],
     "confirmButton": "Thanks!"
   }
 }

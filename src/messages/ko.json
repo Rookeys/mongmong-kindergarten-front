@@ -24,7 +24,7 @@
     "nameConditions1": "최소 2자~최대 8자까지 입력할 수 있어요.",
     "nameConditions2": "공백, 특수 문자 및 영어 대문자는 사용할 수 없어요.",
     "nextButton": "다음",
-    "goodName": ["멋진 이름이네요."],
+    "goodName": ["{name}님!", "이름이 멋져요"],
     "confirmButton": "고마워!"
   }
 }

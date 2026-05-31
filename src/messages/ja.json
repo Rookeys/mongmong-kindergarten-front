@@ -25,7 +25,7 @@
     "nameConditions1": "2文字以上8文字以内で入力してください。",
     "nameConditions2": "スペース、特殊文字、および英大文字は使用できません。",
     "nextButton": "次へ",
-    "goodName": ["素敵な名前ですね。"],
+    "goodName": ["{name}さん！", "名前が素敵ですね"],
     "confirmButton": "ありがとう！"
   }
 }
