@@ -5,6 +5,7 @@ import { ReactNode, useEffect, useState } from "react"
 import { signIn } from "next-auth/react"
 import OnboardingSlides from "@/app/[locale]/auth/_components/OnboardingSlides"
 import { cn } from "@/utils/cn"
+import Button from "@/components/Button"
 
 
 const FIRST_SCREEN_MS = 1500
@@ -25,12 +26,16 @@ export default function OnboardingPage() {
     const slides: Props[] = [
         {
             printValues: t.raw("IntroduceCharacter"),
-            footer: (<button
+            footer: (<Button
                 onClick={() => setIsHello(true)}
-                className="w-full rounded-2xl border border-gray-300 p-3.75"
-                style={{ color: "white", backgroundColor: "#6A62EA" }}>
-                {t("helloMessage")}
-            </button>)
+                title={t("helloMessage")}
+                size="XL"
+                color="Brand"
+                variant="Fill"
+                disabled={false}
+                width="full"
+            />
+            )
         },
         {
             printValues: t.raw("IntroduceService1"),
@@ -51,7 +56,7 @@ export default function OnboardingPage() {
         {
             printValues: t.raw("login"),
             footer: (
-                <div className="flex flex-col justify-center items-center mb-8.75">
+                <div className="flex flex-col justify-center items-center text-subtitle-lg mb-8.75">
                     {/* <button
                         className="w-full mb-[10px] rounded border border-gray-300 p-[15px] text-sm"
                         onClick={() => signIn("google", { callbackUrl: `/${locale}/auth/sign-in` })}
@@ -60,7 +65,7 @@ export default function OnboardingPage() {
                     </button> */}
 
                     <button
-                        className="w-full mb-2.5 p-3.75 flex justify-center rounded-2xl text-[#262200] bg-[#FEE500]"
+                        className="w-full mb-gap-xl p-4.25 flex justify-center rounded-2xl text-[#262200] bg-[#FEE500]"
                         onClick={() => signIn("kakao", { callbackUrl: `/${locale}/auth/sign-in` })}
                     >
                         <img src={'/signIn-logo-kakao.png'}
@@ -68,7 +73,7 @@ export default function OnboardingPage() {
                         {tLogin("oauthTitleKakao")}
                     </button>
                     <button
-                        onClick={() => { alert("guest") }} className="w-full p-3.75 rounded-2xl border bg-[#757387]">
+                        onClick={() => { alert("guest") }} className="w-full p-4.25 rounded-button-l text-text-brand bg-fill-brand-weak">
                         {tLogin('startGuest')}
                     </button>
                 </div>
@@ -94,32 +99,34 @@ export default function OnboardingPage() {
 
 
     return (
-        <div className="text-title-sm text-[#575766] relative flex flex-col items-center justify-center min-h-screen overflow-hidden">
+        <div className="text-title-sm text-text-primary bg-linear-to-t from-white via-[#4B41CE] to-[#131049] relative flex flex-col items-center justify-center min-h-screen overflow-hidden">
 
-            <img
+            < img
                 src="/onboarding.gif"
                 className="w-50 h-50"
             />
 
-            {slides.map((slide, i) => (
-                <div key={`slide-${i}`}>
-                    <div key={i} className={cn(`transform transition-all duration-700 ease-out`,
-                        step === i && "translate-y-0 opacity-100", step !== i && "translate-y-3  opacity-0")}>
-                        <OnboardingSlides
-                            key={i}
-                            lines={slide.printValues}
-                            show={step === i}
-                        />
-                    </div>
-                    {step === i && !!slide.footer && (
-                        <div className="text-subtitle-lg text-white absolute bottom-0 left-0 w-full p-5">
-                            {slide.footer}
+            {
+                slides.map((slide, i) => (
+                    <div key={`slide-${i}`}>
+                        <div key={i} className={cn(`transform transition-all duration-700 ease-out`,
+                            step === i && "translate-y-0 opacity-100", step !== i && "translate-y-3 opacity-0")}>
+                            <OnboardingSlides
+                                key={i}
+                                lines={slide.printValues}
+                                show={step === i}
+                            />
                         </div>
-                    )}
-                </div>
-            ))}
+                        {step === i && !!slide.footer && (
+                            <div className="absolute bottom-0 left-0 w-full p-5">
+                                {slide.footer}
+                            </div>
+                        )}
+                    </div>
+                ))
+            }
 
 
-        </div>
+        </div >
     )
 }

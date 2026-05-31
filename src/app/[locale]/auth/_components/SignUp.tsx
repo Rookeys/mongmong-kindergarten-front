@@ -9,6 +9,7 @@ import { Session } from "next-auth"
 import { useRouter } from "next/navigation"
 import { cn } from "@/utils/cn"
 import { ONBOARDING_LAYOUT_ID } from '@/lib/providers/animationLayoutId/onboardingLayoutId';
+import Button from "@/components/Button"
 
 const FIRST_SCREEN_MS = 1500
 const SCREEN_MS = 2500
@@ -24,6 +25,7 @@ export default function SignUp({ session }: { session: Session | null }) {
     const router = useRouter();
     const [step, setStep] = useState(0)
     const [sendNext, setSendNext] = useState<boolean>(false)
+    const [nickname, setNickname] = useState("")
     const slides = [
         {
             printValues: t.raw("question"),
@@ -35,12 +37,15 @@ export default function SignUp({ session }: { session: Session | null }) {
         },
         {
             printValues: t.raw("goodName"),
-            footer: (<button
+            footer: (<Button
                 onClick={() => router.push('/auth/sign-up/bridge')}
-                className="w-full rounded-2xl p-3.75 text-[17px] mb-5 text-white bg-[#6A62EA]"
-            >
-                {t("confirmButton")}
-            </button>),
+                title={t("confirmButton")}
+                size="XL"
+                color="Brand"
+                variant="Fill"
+                disabled={false}
+                width="full"
+            />),
         },
     ]
     const lastStep = slides.length - 1
@@ -63,44 +68,47 @@ export default function SignUp({ session }: { session: Session | null }) {
 
     return (
         <LayoutGroup id="sign-up-flow">
-            <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden text-title-sm text-[#575766]">
-                {
-                    step !== 1 &&
-                    <motion.img
-                        layoutId={ONBOARDING_LAYOUT_ID}
-                        src="/onboarding.gif"
-                        alt=""
-                        className="w-50 h-50"
-                        transition={{
-                            type: "spring",
-                            stiffness: 100,
-                            damping: 34,
-                        }}
-                    />
-                }
-                {slides.map((slide, i) => (
-                    <div key={`slide-${i}`}>
-                        {
+            <div className="bg-background-default">
+                <div className="bg-linear-to-t from-white via-[#4B41CE] to-[#131049] relative flex flex-col items-center justify-center min-h-screen overflow-hidden text-title-sm text-text-primary">
+                    {
+                        step !== 1 &&
+                        <motion.img
+                            layoutId={ONBOARDING_LAYOUT_ID}
+                            src="/onboarding.gif"
+                            alt=""
+                            className="w-50 h-50"
+                            transition={{
+                                type: "spring",
+                                stiffness: 100,
+                                damping: 34,
+                            }}
+                        />
+                    }
+                    {slides.map((slide, i) => (
+                        <div key={`slide-${i}`}>
+                            {
 
-                            step !== 1 && <div key={i} className={cn(`transform transition-all duration-700 ease-out`,
-                                step === i && "translate-y-0 opacity-100", step !== i && "translate-y-10 opacity-0")}>
-                                <OnboardingSlides
-                                    key={i}
-                                    lines={slide.printValues}
-                                    show={step === i}
-                                />
-                            </div>
-                        }
-                        {step === i && !!slide.footer && (
-                            <div className="text-subtitle-lg absolute bottom-0 left-0 w-full p-5">
-                                {slide.footer}
-                            </div>
-                        )}
-                    </div>
-                ))}
-                {
-                    step === 1 && <InputNickname show={step === 1} setSendNext={setSendNext} />
-                }
+                                step !== 1 && <div key={i} className={cn(`transform transition-all duration-700 ease-out`,
+                                    step === i && "translate-y-0 opacity-100", step !== i && "translate-y-10 opacity-0")}>
+                                    <OnboardingSlides
+                                        key={i}
+                                        lines={slide.printValues}
+                                        show={step === i}
+                                        nickname={nickname}
+                                    />
+                                </div>
+                            }
+                            {step === i && !!slide.footer && (
+                                <div className="text-subtitle-lg absolute bottom-0 left-0 w-full p-5">
+                                    {slide.footer}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                    {
+                        step === 1 && <InputNickname show={step === 1} setSendNext={setSendNext} nickname={nickname} setNickname={setNickname} />
+                    }
+                </div>
             </div>
         </LayoutGroup>
     )

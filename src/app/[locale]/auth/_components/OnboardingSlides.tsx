@@ -1,28 +1,27 @@
 "use client"
 
-import { ReactNode } from "react"
-
 type Props = {
     lines?: string[]
     show?: boolean
+    nickname?: string
 }
 
 
-export default function OnboardingSlides({ lines, show }: Props) {
-
+export default function OnboardingSlides({ lines, show, nickname = "" }: Props) {
     if (show) {
-
         return (
             <>
-                <div className={`
-                    flex flex-col justify-centet items-center h-24 title-medium-weak
-                    `}>
-
+                <div className={`flex flex-col justify-centet items-center h-24 text-title-sm text-text-primary`}>
                     {!!lines && lines.map((line, i) => (
-                        <p key={i} >
-                            {line}
-                        </p>
-                    ))}
+                        nickname ? (
+                            <p key={i} >
+                                {line.replace("{name}", nickname)}
+                            </p>
+                        ) : (
+                            <p key={i}>
+                                {line}
+                            </p>
+                        )))}
                 </div>
             </>
         )

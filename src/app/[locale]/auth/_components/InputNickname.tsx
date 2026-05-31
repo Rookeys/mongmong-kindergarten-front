@@ -7,18 +7,22 @@ import { motion } from 'framer-motion';
 import { nicknameSchema } from '@/validations/nicknameSchema';
 import { cn } from '@/utils/cn';
 import { ONBOARDING_LAYOUT_ID } from '@/lib/providers/animationLayoutId/onboardingLayoutId';
+import SingleLineTextField from '@/components/SingleLineTextField';
+import Button from '@/components/Button';
 
 
 interface props {
     show: boolean
     setSendNext: Dispatch<SetStateAction<boolean>>
+    nickname: string
+    setNickname: Dispatch<SetStateAction<string>>
 }
 
 interface nicknameI {
     nickname: string
 }
 
-export default function InputNickname({ show, setSendNext }: props) {
+export default function InputNickname({ show, setSendNext, nickname, setNickname }: props) {
     const t = useTranslations("sign-up")
     const {
         setValue,
@@ -32,7 +36,6 @@ export default function InputNickname({ show, setSendNext }: props) {
             nickname: "",
         },
     });
-    const [isFocus, setIsFocus] = useState<boolean>(false)
     const errorMsg = useMemo(() => {
         return errors.nickname?.message && t(errors.nickname?.message)
     }, [errors.nickname?.message])
@@ -40,6 +43,10 @@ export default function InputNickname({ show, setSendNext }: props) {
     useEffect(() => {
         trigger("nickname")
     }, [])
+
+    useEffect(() => {
+        setValue("nickname", nickname, { shouldValidate: true })
+    }, [nickname, setValue])
 
 
     return (
@@ -57,29 +64,30 @@ export default function InputNickname({ show, setSendNext }: props) {
                     damping: 34,
                 }}
             />
-            <span className='mt-3'>{t("name")}</span>
+            <span className='mt-gap-m'>{t("name")}</span>
             <div className='w-full pr-5 pl-5 pt-6 '>
-
-                <input
-                    className="p-2 rounded-xl w-full h-12.5 mb-1 bg-[#F2F4F6]"
-                    placeholder={t('namePlaceholder')}
+                <SingleLineTextField
                     value={watch("nickname")}
-                    onChange={(e) => setValue("nickname", e.target.value, { shouldValidate: true })}
-                    onFocus={() => setIsFocus(true)}
-                    onBlur={() => setIsFocus(false)}
+                    placeholder={t('namePlaceholder')}
+                    onChange={(value) => {
+                        const nextNickname = value
+                        setValue("nickname", nextNickname, { shouldValidate: true })
+                        setNickname(nextNickname)
+                    }}
+                    clearAble={true}
+                    errorMsg={errorMsg}
                 />
-                {errorMsg && <span
-                    className={"text-caption-lg " + cn(isFocus && "text-[#F14452]", !isFocus && "text-[#8E8E93]")}
-                >{errorMsg}</span>}
             </div>
             <div className="text-subtitle-lg absolute bottom-0 left-0 w-full p-5">
-                <button
+                <Button
                     onClick={() => !errors.nickname?.message && setSendNext(true)}
-                    className={"text-subtitle-lg " + cn("w-full rounded-2xl mb-5 p-3.75 text-white", !!errors.nickname?.message && "bg-[#c0c0c0]", !!!errors.nickname?.message && "bg-[#6A62EA]")}
-                    disabled={!!errors.nickname?.message}
-                >
-                    {t("nextButton")}
-                </button>
+                    title={t("nextButton")}
+                    size="XL"
+                    color='Brand'
+                    variant='Fill'
+                    disabled={false}
+                    width='full'
+                />
             </div>
         </div >
     )
