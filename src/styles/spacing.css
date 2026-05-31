@@ -1,0 +1,58 @@
+/* Primitive Spacing */
+:root {
+  --space-0_5: 2px;
+  --space-1: 4px;
+  --space-1_5: 6px;
+  --space-2: 8px;
+  --space-2_5: 10px;
+  --space-3: 12px;
+  --space-3_5: 14px;
+  --space-4: 16px;
+  --space-4_5: 18px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 36px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-13: 52px;
+  --space-14: 56px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-30: 120px;
+}
+
+/* Semantic Padding */
+:root {
+  --spacing-padding-2xs: var(--space-1);
+  --spacing-padding-xs: var(--space-1_5);
+  --spacing-padding-s: var(--space-2);
+  --spacing-padding-m: var(--space-2_5);
+  --spacing-padding-l: var(--space-3);
+  --spacing-padding-xl: var(--space-4);
+  --spacing-padding-2xl: var(--space-5);
+  --spacing-padding-3xl: var(--space-6);
+}
+
+/* Semantic Gap */
+
+:root {
+  --spacing-gap-2xs: var(--space-0_5);
+  --spacing-gap-xs: var(--space-1);
+  --spacing-gap-s: var(--space-1_5);
+  --spacing-gap-m: var(--space-2);
+  --spacing-gap-l: var(--space-2_5);
+  --spacing-gap-xl: var(--space-3);
+  --spacing-gap-2xl: var(--space-5);
+  --spacing-gap-3xl: var(--space-6);
+}
+
+/* Semantic Layout */
+:root {
+  --spacing-layout-xs: var(--space-5);
+  --spacing-layout-s: var(--space-10);
+  --spacing-layout-m: var(--space-16);
+  --spacing-layout-l: var(--space-20);
+  --spacing-layout-xl: var(--space-30);
+}
