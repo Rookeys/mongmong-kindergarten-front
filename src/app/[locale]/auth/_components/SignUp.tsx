@@ -8,7 +8,7 @@ import InputNickname from "@/app/[locale]/auth/_components/InputNickname"
 import { Session } from "next-auth"
 import { useRouter } from "next/navigation"
 import { cn } from "@/utils/cn"
-import { ONBOARDING_LAYOUT_ID } from "@/lib/providers/animationLayoutId/onboardingLayoutId"
+import { ONBOARDING_LAYOUT_ID } from "@/constants/animationLayoutId/onboardingLayoutId"
 import Button from "@/components/Button"
 
 const FIRST_SCREEN_MS = 1500

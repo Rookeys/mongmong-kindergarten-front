@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form"
 import { motion } from "framer-motion"
 import { nicknameSchema } from "@/validations/nicknameSchema"
 import { cn } from "@/utils/cn"
-import { ONBOARDING_LAYOUT_ID } from "@/lib/providers/animationLayoutId/onboardingLayoutId"
+import { ONBOARDING_LAYOUT_ID } from "@/constants/animationLayoutId/onboardingLayoutId"
 import SingleLineTextField from "@/components/SingleLineTextField"
 import Button from "@/components/Button"
 
