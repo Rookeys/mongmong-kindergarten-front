@@ -1,13 +1,12 @@
 import type { Metadata } from "next"
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, getLocale } from 'next-intl/server';
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth";
+import { NextIntlClientProvider } from "next-intl"
+import { getMessages, getLocale } from "next-intl/server"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/auth"
 import { ModalRoot } from "@/components/modal/ModalRoot"
-import NextAuthSessionProvider from "@/lib/providers/NextAuthSessionProvider";
+import NextAuthSessionProvider from "@/lib/providers/NextAuthSessionProvider"
 import { Geist, Geist_Mono } from "next/font/google"
 import "@/app/globals.css"
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,9 +28,9 @@ export default async function LocaleLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const locale = await getLocale();
-  const messages = await getMessages();
-  const session = await getServerSession(authOptions);
+  const locale = await getLocale()
+  const messages = await getMessages()
+  const session = await getServerSession(authOptions)
 
   return (
     <html lang={locale}>

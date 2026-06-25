@@ -8,9 +8,6 @@ type NextAuthSessionProviderProps = {
   session: Session | null
 }
 
-export default function NextAuthSessionProvider({
-  children,
-  session
-}: NextAuthSessionProviderProps) {
+export default function NextAuthSessionProvider({ children, session }: NextAuthSessionProviderProps) {
   return <SessionProvider session={session}>{children}</SessionProvider>
 }
