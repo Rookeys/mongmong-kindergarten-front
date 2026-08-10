@@ -1,10 +1,10 @@
 import type { Metadata } from "next"
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, getLocale } from 'next-intl/server';
+import { NextIntlClientProvider } from "next-intl"
+import { getMessages, getLocale } from "next-intl/server"
 import { ModalRoot } from "@/components/modal/ModalRoot"
 import { Geist, Geist_Mono } from "next/font/google"
 import "@/app/globals.css"
-
+import "@kojaem/mongmong/styles.css"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,8 +26,8 @@ export default async function LocaleLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const locale = await getLocale();
-  const messages = await getMessages();
+  const locale = await getLocale()
+  const messages = await getMessages()
   return (
     <html lang={locale}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
