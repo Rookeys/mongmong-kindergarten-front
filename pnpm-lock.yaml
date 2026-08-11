@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@kojaem/mongmong':
-        specifier: 0.0.4
+        specifier: ^0.0.4
         version: 0.0.4(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(@vanilla-extract/css@1.21.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       next:
         specifier: 16.1.6
