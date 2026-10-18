@@ -7,6 +7,7 @@ import { ModalRoot } from "@/components/modal/ModalRoot"
 import NextAuthSessionProvider from "@/lib/providers/NextAuthSessionProvider"
 import { Geist, Geist_Mono } from "next/font/google"
 import "@/app/globals.css"
+import "@kojaem/mongmong/styles.css"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
