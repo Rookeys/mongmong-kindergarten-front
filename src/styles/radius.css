@@ -1,0 +1,63 @@
+/* Primitive Radius */
+:root {
+  --radius-0: 0px;
+  --radius-2: 2px;
+  --radius-4: 4px;
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --radius-10: 10px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+  --radius-24: 24px;
+  --radius-32: 32px;
+
+  --radius-full: 9999px;
+}
+
+/* Semantic Radius */
+:root {
+  --radius-bottom-sheet: var(--radius-8);
+  --radius-modal: var(--radius-8);
+  --radius-popover: var(--radius-6);
+  --radius-textfield: var(--radius-8);
+  --radius-tab-bar: var(--radius-24);
+  --radius-badge: var(--radius-full);
+
+  /* Button */
+  --radius-button-s: var(--radius-4);
+  --radius-button-m: var(--radius-6);
+  --radius-button-l: var(--radius-8);
+  --radius-button-xl: var(--radius-8);
+  --radius-button-full: var(--radius-full);
+
+  /* Toast */
+  --radius-toast: var(--radius-6);
+  --radius-toast-full: var(--radius-full);
+
+  /* DatePicker */
+  --radius-wheel: var(--radius-6);
+  --radius-datepicker-full: var(--radius-full);
+
+  /* card */
+  --radius-card-s: var(--radius-4);
+  --radius-card-m: var(--radius-6);
+  --radius-card-l: var(--radius-8);
+
+  /* segmented */
+  --radius-sc-s: var(--radius-4);
+  --radius-sc-m: var(--radius-6);
+  --radius-sc-l: var(--radius-8);
+  --radius-sc-xl: var(--radius-10);
+
+  /* TabBar */
+  --radius-tabbar: var(--radius-24);
+
+  /* Badge */
+  --radius-badge: var(--radius-full);
+
+  /* Overlay */
+  --radius-bottomsheet: var(--radius-24);
+  --radius-popover: var(--radius-12);
+  --radius-modal: var(--radius-24);
+}

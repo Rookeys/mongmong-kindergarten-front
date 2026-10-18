@@ -1,5 +1,30 @@
 {
   "Home": {
     "title": "환영합니다"
+  },
+  "login": {
+    "onboarding": {
+      "placeholderCharacter": "몽몽이",
+      "placeholderReward": "리워드",
+      "introduceCharacter": "안녕하세요.\n저는 {character}예요.",
+      "helloMessage": "안녕!",
+      "dailyLetterIntro": "자신을 알아갈 수 있도록\n매일매일 편지를 보내드릴게요!",
+      "letterExampleIntro": "뭘 써야할지 모르겠다면\n다른 편지를 보고 쓸 수 있어요.",
+      "rewardCustomizationIntro": "편지를 보내고 얻은\n{reward}로 저를 꾸밀 수 있어요.",
+      "replyChanceIntro": "열심히 편지를 보내다 보면\n제 답장을 받을 수 있을지도?",
+      "loginMemoryIntro": "로그인하면 보낸 답장을\n제가 기억할 수 있어요"
+    },
+    "oauthTitle": "{serviceName} 계정으로 시작하기",
+    "startGuest": "비회원으로 시작하기"
+  },
+  "sign-up": {
+    "question": "제가 당신을\n어떻게 불러드리면 될까요?",
+    "name": "내 이름은",
+    "namePlaceholder": "이름을 알려주세요",
+    "nameConditions1": "최소 2자~최대 8자까지 입력할 수 있어요.",
+    "nameConditions2": "공백, 특수 문자 및 영어 대문자는 사용할 수 없어요.",
+    "nextButton": "다음",
+    "goodName": "{name}님!\n이름이 멋져요",
+    "confirmButton": "고마워!"
   }
 }
