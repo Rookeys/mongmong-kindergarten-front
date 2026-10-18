@@ -1,6 +1,6 @@
 import { authOptions } from "@/auth"
 import { getServerSession } from "next-auth"
-import SignUp from "@/app/[locale]/auth/_components/SignUp"
+import SignUp from "@/app/[locale]/auth/components/SignUp"
 
 export default async function Page() {
   const session = await getServerSession(authOptions)

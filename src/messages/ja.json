@@ -6,12 +6,12 @@
     "onboarding": {
       "placeholderCharacter": "ミミ",
       "placeholderReward": "リワード",
-      "IntroduceCharacter": ["こんにちは、", "私は{character}です。"],
-      "IntroduceService1": ["自分をもっと知るために、", "毎日お手紙をお届けします！"],
-      "IntroduceService2": ["何を書けばいいか分からないときは、", "他の手紙を読んで参考にできます。"],
-      "IntroduceService3": ["手紙を送るともらえる{reward}で、", "私を飾ることができます。"],
-      "IntroduceService4": ["手紙を送り続けると、", "私から返事が届くかもしれません！"],
-      "login": ["ログインすると、", "送った返事を覚えておけます。"]
+      "introduceCharacter": "こんにちは、\n私は{character}です。",
+      "IntroduceService1": "自分をもっと知るために、\n毎日お手紙をお届けします！",
+      "IntroduceService2": "何を書けばいいか分からないときは、\n他の手紙を読んで参考にできます。",
+      "IntroduceService3": "手紙を送るともらえる{reward}で、\n私を飾ることができます。",
+      "IntroduceService4": "手紙を送り続けると、\n私から返事が届くかもしれません！",
+      "login": "ログインすると、\n送った返事を覚えておけます。"
     },
     "oauthTitleKakao": "Kakaoで続ける",
     "oauthTitleNaver": "Naverで続ける",
@@ -19,13 +19,13 @@
     "startGuest": "ゲストとして始める"
   },
   "sign-up": {
-    "question": ["あなたのことを", "どうお呼びすればいいですか？"],
+    "question": "あなたのことを\nどうお呼びすればいいですか？",
     "name": "私の名前は",
     "namePlaceholder": "名前を入力してください",
     "nameConditions1": "2文字以上8文字以内で入力してください。",
     "nameConditions2": "スペース、特殊文字、および英大文字は使用できません。",
     "nextButton": "次へ",
-    "goodName": ["{name}さん！", "名前が素敵ですね"],
+    "goodName": "{name}さん！\n名前が素敵ですね",
     "confirmButton": "ありがとう！"
   }
 }
