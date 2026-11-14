@@ -94,5 +94,20 @@
     "confirm": "확인",
     "writeToday": "오늘의 편지 답장 쓰기",
     "written": "답장 씀"
+  },
+  "lounge": {
+    "empty": "답장이 없어요",
+    "writeFirst": "먼저 답장 쓰기",
+    "writeToo": "나도 답장 쓰기",
+    "from": "From. 익명의 선생님",
+    "report": "신고",
+    "reportTitle": "이 답장을 신고할까요?",
+    "reportDescription": "관리자가 확인한 뒤 처리해요.",
+    "reportCancel": "취소",
+    "reportClose": "확인",
+    "reportDone": "신고가 접수됐어요",
+    "welcomeTitle": "휴게실에 오신 것을 환영해요",
+    "welcomeDescription": "다른 선생님들이 쓴 답장을 읽으며 영감을 얻거나 위로를 받아보세요.",
+    "welcomeConfirm": "확인했어요"
   }
 }

@@ -95,5 +95,20 @@
     "confirm": "Done",
     "writeToday": "Reply to today's letter",
     "written": "Replied"
+  },
+  "lounge": {
+    "empty": "No replies yet",
+    "writeFirst": "Be the first to reply",
+    "writeToo": "Write my reply too",
+    "from": "From. An anonymous teacher",
+    "report": "Report",
+    "reportTitle": "Report this reply?",
+    "reportDescription": "An admin will review it.",
+    "reportCancel": "Cancel",
+    "reportClose": "OK",
+    "reportDone": "Your report was submitted",
+    "welcomeTitle": "Welcome to the lounge",
+    "welcomeDescription": "Read other teachers' replies for inspiration or comfort.",
+    "welcomeConfirm": "Got it"
   }
 }

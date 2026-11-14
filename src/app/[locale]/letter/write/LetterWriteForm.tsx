@@ -91,7 +91,7 @@ export default function LetterWriteForm({
         </p>
       </div>
 
-      <Link href="/lounge" className="block">
+      <Link href={`/lounge?date=${question.date}`} className="block">
         <ListRow
           padding="l"
           className="[&_*]:text-text-primary!"

@@ -22,6 +22,12 @@
 - 답장 카드 상태(Figma 홈 `5390:22240`, "From. 익명 닉네임"): 휴게실·답장 작업 때 붙인다.
 - 캐릭터 이미지: 백엔드 `characterType.imageUrl`이 없으면 임시 알 이미지를 쓴다. 종류·레벨별 이미지는 위 표 참고.
 
+## 휴게실·일지에서 비워 둔 것
+
+- 휴게실 카드의 "From. 익명 닉네임": 백엔드 공개 일지 응답에 닉네임이 없어 "익명의 선생님"으로 고정했다.
+- 날짜 변경(Figma "날짜 변경"), 질문 리스트(일지 상단 메뉴), 편지 도착 팝업(홈)은 아직 없다.
+- 지난 날짜 답장의 "광고 보기"는 AdMob 연결 전까지 비활성.
+
 ## 디자인시스템 정합성
 
 - Figma 화면은 다크 변수 모드 값(text/primary = 밝은 글자, fill/brand·text/brand = #6A62EA, 버튼 글자 = text/strong)을 쓴다. 디자인시스템은 라이트 테마에서 Figma처럼 보이도록 토큰을 골라 두어서, 앱에 `data-theme="dark"`를 켜면 Button(fill 글자 `text.inversePrimary`, weak 글자 `text.brandWeak`)과 Popover 제목(`text.primary`)이 Figma와 달라진다.

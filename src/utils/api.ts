@@ -80,3 +80,10 @@ export interface CalendarEntry {
   letterId: string
   mood: Mood | null
 }
+
+export interface PublicLetter {
+  id: string
+  questionId: string
+  answer: string
+  createdDate: string
+}

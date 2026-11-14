@@ -95,5 +95,20 @@
     "confirm": "確認",
     "writeToday": "今日の手紙に返事を書く",
     "written": "返事済み"
+  },
+  "lounge": {
+    "empty": "返事はまだありません",
+    "writeFirst": "最初に返事を書く",
+    "writeToo": "わたしも返事を書く",
+    "from": "From. 匿名の先生",
+    "report": "通報",
+    "reportTitle": "この返事を通報しますか？",
+    "reportDescription": "管理者が確認してから対応します。",
+    "reportCancel": "キャンセル",
+    "reportClose": "確認",
+    "reportDone": "通報を受け付けました",
+    "welcomeTitle": "休憩室へようこそ",
+    "welcomeDescription": "ほかの先生たちの返事を読んで、ひらめきや癒しをもらいましょう。",
+    "welcomeConfirm": "わかりました"
   }
 }
