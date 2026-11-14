@@ -22,6 +22,14 @@
 - 답장 카드 상태(Figma 홈 `5390:22240`, "From. 익명 닉네임"): 휴게실·답장 작업 때 붙인다.
 - 캐릭터 이미지: 백엔드 `characterType.imageUrl`이 없으면 임시 알 이미지를 쓴다. 종류·레벨별 이미지는 위 표 참고.
 
+## 디자인시스템 정합성
+
+- Figma 화면은 다크 변수 모드 값(text/primary = 밝은 글자, fill/brand·text/brand = #6A62EA, 버튼 글자 = text/strong)을 쓴다. 디자인시스템은 라이트 테마에서 Figma처럼 보이도록 토큰을 골라 두어서, 앱에 `data-theme="dark"`를 켜면 Button(fill 글자 `text.inversePrimary`, weak 글자 `text.brandWeak`)과 Popover 제목(`text.primary`)이 Figma와 달라진다.
+- 그래서 앱은 라이트 테마를 유지하고, 어두운 배경 위의 TopNavigation·ListRow·Result 글자색만 화면에서 덮어썼다 (`[&_*]:text-text-...!`).
+- 해결: 디자인시스템 컴포넌트를 Figma 토큰 이름대로 맞추고(Button fill → `text.strong`, weak → `text.brand`, Popover 제목 → `text.inversePrimary`) 앱을 다크 테마로 바꾼 뒤 덮어쓴 부분을 지운다.
+- BottomSheet 배경이 반투명(`rgba(117,115,135,0.18)`)이라 Figma(불투명 밝은 배경)와 다르다. 화면에서 `bg-background-default!`로 덮어썼다.
+- `TextArea`는 디자인시스템 `feature/text-area-kojaem` 브랜치에 있다. 배포되면 답장 쓰기 화면의 임시 `<textarea>`를 교체한다.
+
 ## 정책 확인 필요
 
 - 닉네임 허용 문자: 백엔드는 `^[a-z0-9가-힣]{2,8}$`만 허용한다. 일본어·영어 로케일 사용자도 일본어 닉네임을 쓸 수 없다. 프론트 검증은 백엔드 기준에 맞춰 두었다. 일본어 닉네임이 필요하면 백엔드 패턴부터 바꿔야 한다.

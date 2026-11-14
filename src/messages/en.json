@@ -39,5 +39,48 @@
   "home": {
     "idle": "Rolling around~",
     "openLetter": "Read {name}'s letter"
+  },
+  "letter": {
+    "title": "{name}'s letter",
+    "to": "To. Teacher",
+    "body": "It's me! {name}!\nI really wanted to send {nickname} a letter,\nso I practiced hard!\nToday I rolled around, drying my face in the sun,\nand wondered:\n“{question}”\nWhat do you think, {nickname}? I'm curious",
+    "from": "From. {name},\nalways thinking of you",
+    "write": "Write a reply",
+    "alreadyWritten": "Already replied",
+    "later": "Later"
+  },
+  "letterWrite": {
+    "placeholder": "You can write up to {max} characters.",
+    "othersReplies": "See others' replies",
+    "previous": "Previous entries",
+    "noPrevious": "No previous entries",
+    "submit": "Send reply",
+    "moodTitle": "Lastly,\nhow do you feel today?",
+    "moodDescription": "It'll show on your monthly calendar.",
+    "moodConfirm": "Done"
+  },
+  "mood": {
+    "good": "Good",
+    "excited": "Excited",
+    "soso": "So-so",
+    "angry": "Angry",
+    "sad": "Sad",
+    "depressed": "Down"
+  },
+  "letterSent": {
+    "sent": "Letter sent",
+    "shareTitle": "Share your reply\nto help others?",
+    "shareDescription": "It'll be posted anonymously.",
+    "private": "Only me",
+    "public": "Share",
+    "snsTitle": "Can {name} feature\ntoday's letter?",
+    "snsDescription": "Today's letter may be featured on our Instagram feed. You can change this in Settings.",
+    "snsNo": "No",
+    "snsYes": "Yes",
+    "savedPublic": "Your reply is shared",
+    "savedPrivate": "Saved for you only",
+    "rewardEarned": "You got {count} dream pieces",
+    "rewardSpent": "You used {count} dream pieces",
+    "goHome": "Back to home"
   }
 }

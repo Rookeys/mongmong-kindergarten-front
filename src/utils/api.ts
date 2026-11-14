@@ -56,3 +56,21 @@ export interface DailyQuestion {
   content: string
   letterId: string | null
 }
+
+export const MOODS = ["good", "excited", "soso", "angry", "sad", "depressed"] as const
+export type Mood = (typeof MOODS)[number]
+
+export interface Letter {
+  id: string
+  questionId: string
+  letterDate: string
+  answer: string
+  mood: Mood | null
+  isPrivate: boolean
+  isPrivateSns: boolean
+}
+
+export interface CreateLetterResponse extends Letter {
+  // 오늘 일지는 +, 지난 날짜 일지는 - (꿈조각)
+  rewardAmount: number
+}

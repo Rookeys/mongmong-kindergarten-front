@@ -38,5 +38,48 @@
   "home": {
     "idle": "뒹굴뒹굴~",
     "openLetter": "{name}의 편지 보기"
+  },
+  "letter": {
+    "title": "{name}의 편지",
+    "to": "To. 선생님",
+    "body": "나야! 나! {name}!\n{nickname}에게 꼭 편지를 보내고 싶어서\n열심히 배웠어!\n나는 오늘 뒹굴 뒹굴, 햇빛에 얼굴을 말리며\n“{question}”\n생각이 들었어\n{nickname}는 어떻게 생각해? 궁금해",
+    "from": "From. 항상 선생님만을\n생각하는 {name}",
+    "write": "답장 쓰기",
+    "alreadyWritten": "이미 답장했어요",
+    "later": "다음에"
+  },
+  "letterWrite": {
+    "placeholder": "최대 {max}자까지 입력할 수 있어요.",
+    "othersReplies": "다른 사람이 쓴 답장 보기",
+    "previous": "이전 기록",
+    "noPrevious": "이전 기록이 없어요",
+    "submit": "답장 쓰기",
+    "moodTitle": "마지막으로\n오늘의 기분을 알려주세요",
+    "moodDescription": "월간 캘린더에 표시 돼요.",
+    "moodConfirm": "선택했어"
+  },
+  "mood": {
+    "good": "기분 좋아",
+    "excited": "신나",
+    "soso": "그냥그래",
+    "angry": "화가 나",
+    "sad": "슬퍼",
+    "depressed": "우울해"
+  },
+  "letterSent": {
+    "sent": "편지를 보냈어요",
+    "shareTitle": "다른 사람에게 도움이 되도록\n답장을 공개할까요?",
+    "shareDescription": "익명으로 등록 돼요.",
+    "private": "나만 보기",
+    "public": "공개하기",
+    "snsTitle": "{name}가 오늘의 편지를\n소개해도 될까요?",
+    "snsDescription": "오늘 보낸 편지가 인스타그램 피드에 소개될 수 있어요. 공유 조건은 설정에서 바꿀 수 있어요.",
+    "snsNo": "아니요",
+    "snsYes": "네",
+    "savedPublic": "답장을 공개했어요",
+    "savedPrivate": "나만 볼 수 있게 저장했어요",
+    "rewardEarned": "꿈 조각 {count}개 받았어요",
+    "rewardSpent": "꿈 조각 {count}개를 사용했어요",
+    "goHome": "홈으로 돌아가기"
   }
 }

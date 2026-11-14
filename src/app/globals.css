@@ -419,3 +419,18 @@ body {
   color: var(--foreground);
   font-family: MonaS12, Helvetica, sans-serif;
 }
+
+/* Figma Semantic/Background/Gradient_bg2 (편지·답장 화면 배경) */
+@utility bg-gradient-letter {
+  background: radial-gradient(
+    564% 148% at 54.4% 132.4%,
+    rgb(249 248 255) 10.25%,
+    rgb(196 192 251) 25.69%,
+    rgb(142 135 247) 41.12%,
+    rgb(112 105 209) 48.77%,
+    rgb(81 75 172) 56.43%,
+    rgb(51 45 134) 64.08%,
+    rgb(35 30 115) 67.9%,
+    rgb(20 15 96) 71.73%
+  );
+}

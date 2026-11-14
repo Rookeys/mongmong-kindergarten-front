@@ -39,5 +39,48 @@
   "home": {
     "idle": "ごろごろ~",
     "openLetter": "{name}の手紙を見る"
+  },
+  "letter": {
+    "title": "{name}の手紙",
+    "to": "To. 先生",
+    "body": "ぼくだよ！{name}だよ！\n{nickname}にどうしても手紙を送りたくて\nいっぱい練習したよ！\n今日はごろごろ、ひなたぼっこしながら\n「{question}」\nって考えたんだ\n{nickname}はどう思う？気になるな",
+    "from": "From. いつも先生のことを\n想っている{name}",
+    "write": "返事を書く",
+    "alreadyWritten": "返事済みです",
+    "later": "あとで"
+  },
+  "letterWrite": {
+    "placeholder": "最大{max}文字まで入力できます。",
+    "othersReplies": "ほかの人の返事を見る",
+    "previous": "これまでの記録",
+    "noPrevious": "これまでの記録はありません",
+    "submit": "返事を送る",
+    "moodTitle": "最後に\n今日の気分を教えてください",
+    "moodDescription": "月間カレンダーに表示されます。",
+    "moodConfirm": "選んだよ"
+  },
+  "mood": {
+    "good": "いい気分",
+    "excited": "ワクワク",
+    "soso": "まあまあ",
+    "angry": "怒ってる",
+    "sad": "悲しい",
+    "depressed": "落ち込み"
+  },
+  "letterSent": {
+    "sent": "手紙を送りました",
+    "shareTitle": "ほかの人の役に立つように\n返事を公開しますか？",
+    "shareDescription": "匿名で登録されます。",
+    "private": "自分だけ",
+    "public": "公開する",
+    "snsTitle": "{name}が今日の手紙を\n紹介してもいいですか？",
+    "snsDescription": "今日の手紙がInstagramのフィードで紹介されることがあります。共有設定は設定画面で変更できます。",
+    "snsNo": "いいえ",
+    "snsYes": "はい",
+    "savedPublic": "返事を公開しました",
+    "savedPrivate": "自分だけ見られるように保存しました",
+    "rewardEarned": "夢のかけらを{count}個もらいました",
+    "rewardSpent": "夢のかけらを{count}個使いました",
+    "goHome": "ホームに戻る"
   }
 }

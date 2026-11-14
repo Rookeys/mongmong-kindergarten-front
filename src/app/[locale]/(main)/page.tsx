@@ -1,5 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server"
 import { Button, Popover } from "@kojaem/mongmong"
+import CharacterImage from "@/components/CharacterImage"
 import { Link } from "@/i18n/navigation"
 import { api, type Character, type DailyQuestion, type User } from "@/utils/api"
 import { requireSession } from "@/utils/session"
@@ -37,14 +38,7 @@ export default async function HomePage() {
         />
         {/* Figma "Primitive / Popover": 내용 폭에 맞춤. DS popover는 260px 고정이라 덮어씀 */}
         <Popover kind="popover" title={t("idle")} tail="bottom" className="w-auto!" />
-        {/* 원본 이미지 여백이 커서 Figma와 같은 비율로 잘라 보여준다 */}
-        <div className="relative size-[100px] overflow-hidden">
-          <img
-            src={character.characterType.imageUrl ?? "/assets/images/character-egg.png"}
-            alt={character.characterType.name}
-            className="absolute top-[-52.98%] left-[-55.44%] size-[212.9%] max-w-none [image-rendering:pixelated]"
-          />
-        </div>
+        <CharacterImage src={character.characterType.imageUrl} alt={character.characterType.name} size={100} />
       </section>
 
       <section className="px-5 pb-3">
