@@ -14,6 +14,7 @@ export interface User {
   nickname: string | null
   rewardCount: number
   myInviteCode: string
+  createdDate: string
 }
 
 export interface AuthTokenResponse {
@@ -106,4 +107,21 @@ export interface CharacterItem {
   itemType: ItemType
   imageUrl: string
   isEquipped: boolean
+}
+
+export interface GraduationCard {
+  id: string
+  graduatedAt: string
+  levelSnapshot: number
+  characterName: string
+  letterCount: number
+  topMood: Mood | null
+  cardImageUrl: string | null
+}
+
+export interface Notice {
+  id: string
+  title: string
+  content: string
+  createdDate: string
 }

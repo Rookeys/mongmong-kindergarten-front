@@ -154,5 +154,28 @@
       "title": "夢のかけらを{count}個もらえます",
       "description": "友だちが最初の手紙を書くと2人とももらえます。"
     }
+  },
+  "office": {
+    "together": "{nickname}さんと一緒に{days}日目",
+    "inviteCode": "わたしの招待コード：{code}",
+    "rewardCount": "夢のかけら{count}個",
+    "moreRewards": "もっともらう",
+    "album": "卒業アルバム",
+    "notices": "お知らせ"
+  },
+  "album": {
+    "title": "卒業アルバム",
+    "empty": "まだ卒業した子はいません",
+    "name": "名前",
+    "letterCount": "送った手紙",
+    "letterCountValue": "{count}通",
+    "topMood": "いちばん多かった気分",
+    "save": "保存する",
+    "share": "シェアする",
+    "shareText": "{name}と手紙を{count}通やりとりして卒業しました！#モンモン幼稚園"
+  },
+  "notices": {
+    "title": "お知らせ",
+    "empty": "お知らせはありません"
   }
 }

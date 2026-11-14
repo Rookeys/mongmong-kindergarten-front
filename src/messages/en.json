@@ -154,5 +154,28 @@
       "title": "Get {count} dream pieces",
       "description": "You both get them after their first letter."
     }
+  },
+  "office": {
+    "together": "Day {days} with {nickname}",
+    "inviteCode": "My invite code: {code}",
+    "rewardCount": "{count} dream pieces",
+    "moreRewards": "Get more",
+    "album": "Graduation album",
+    "notices": "Notices"
+  },
+  "album": {
+    "title": "Graduation album",
+    "empty": "No graduates yet",
+    "name": "Name",
+    "letterCount": "Letters sent",
+    "letterCountValue": "{count}",
+    "topMood": "Most common mood",
+    "save": "Save",
+    "share": "Share",
+    "shareText": "{name} graduated after {count} letters together! #MongmongKindergarten"
+  },
+  "notices": {
+    "title": "Notices",
+    "empty": "No notices"
   }
 }

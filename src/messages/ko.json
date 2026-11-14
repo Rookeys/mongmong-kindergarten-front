@@ -153,5 +153,28 @@
       "title": "꿈 조각 {count}개를 받아요",
       "description": "친구가 첫 편지를 쓰면 둘 다 받아요."
     }
+  },
+  "office": {
+    "together": "{nickname}님과 함께한 지 {days}일 째",
+    "inviteCode": "내 초대 코드 : {code}",
+    "rewardCount": "꿈 조각 {count}개",
+    "moreRewards": "더 받기",
+    "album": "졸업 앨범",
+    "notices": "공지사항"
+  },
+  "album": {
+    "title": "졸업 앨범",
+    "empty": "아직 졸업한 친구가 없어요",
+    "name": "이름",
+    "letterCount": "보낸 편지",
+    "letterCountValue": "{count}개",
+    "topMood": "가장 많이 보낸 기분",
+    "save": "저장하기",
+    "share": "공유하기",
+    "shareText": "{name}와 함께 편지 {count}통을 주고받고 졸업했어요! #몽몽유치원"
+  },
+  "notices": {
+    "title": "공지사항",
+    "empty": "공지사항이 없어요"
   }
 }
