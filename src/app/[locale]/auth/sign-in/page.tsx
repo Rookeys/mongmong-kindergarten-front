@@ -12,9 +12,8 @@ export default function Page() {
   const { data: session } = useSession()
 
   useEffect(() => {
-    if (session?.signup_required) {
-      router.push(`/${locale}/auth/sign-up`)
-    }
+    if (!session?.access_token) return
+    router.replace(session.signup_required ? `/${locale}/auth/sign-up` : `/${locale}`)
   }, [session, locale, router])
 
   return <Onboarding />
