@@ -1,35 +1,40 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
 import { useSession } from "next-auth/react"
-import { Button, Modal } from "@kojaem/mongmong"
+import { BottomSheet, Button, Chip, Toast } from "@kojaem/mongmong"
 import { DIALOG_CLASS } from "@/constants/dialog"
 import { api, ApiError } from "@/utils/api"
+import { sleep } from "@/utils/sleep"
 
-// TODO: 신고 사유 선택 UI (Figma 없음, TODO.md). 지금은 사유 없이 신고한다.
+const REASONS = ["spam", "abuse", "inappropriate", "other"] as const
+
+// TODO: Figma에 신고 사유 선택 화면이 없어 임시 구현 (TODO.md). 사유는 선택 사항이다.
 export default function ReportButton({ letterId }: { letterId: string }) {
   const t = useTranslations("lounge")
   const { data: session } = useSession()
   const [open, setOpen] = useState(false)
-  const [result, setResult] = useState<string>()
+  const [reason, setReason] = useState<(typeof REASONS)[number]>()
+  const [toast, setToast] = useState<string>()
   const [sending, setSending] = useState(false)
+
+  useEffect(() => {
+    if (toast) sleep(2500).then(() => setToast(undefined))
+  }, [toast])
 
   const report = async () => {
     setSending(true)
     try {
-      await api(`/letters/${letterId}/reports`, { method: "POST", token: session?.access_token, body: {} })
-      setResult(t("reportDone"))
+      await api(`/letters/${letterId}/reports`, { method: "POST", token: session?.access_token, body: { reasonType: reason } })
+      setToast(t("reportDone"))
     } catch (e) {
-      setResult(e instanceof ApiError ? e.message : String(e))
+      setToast(e instanceof ApiError ? e.message : String(e))
     } finally {
       setSending(false)
+      setOpen(false)
+      setReason(undefined)
     }
-  }
-
-  const close = () => {
-    setOpen(false)
-    setResult(undefined)
   }
 
   return (
@@ -37,29 +42,38 @@ export default function ReportButton({ letterId }: { letterId: string }) {
       <button type="button" className="text-subtitle-sm text-text-brand" onClick={() => setOpen(true)}>
         {t("report")}
       </button>
-      <Modal
+      {toast && <Toast className="fixed bottom-28 left-1/2 z-10 -translate-x-1/2">{toast}</Toast>}
+      <BottomSheet
         className={DIALOG_CLASS}
         open={open}
-        onOpenChange={(next) => !next && close()}
-        title={result ?? t("reportTitle")}
-        description={result ? undefined : t("reportDescription")}
+        onOpenChange={setOpen}
+        title={t("reportTitle")}
+        description={t("reportDescription")}
         buttons={
-          result ? (
-            <Button size="l" color="brand" variant="fill" isFullWidth onClick={close}>
-              {t("reportClose")}
+          <>
+            <Button size="xl" color="brand" variant="weak" isFullWidth onClick={() => setOpen(false)}>
+              {t("reportCancel")}
             </Button>
-          ) : (
-            <>
-              <Button size="l" className="whitespace-nowrap" color="brand" variant="weak" isFullWidth onClick={close}>
-                {t("reportCancel")}
-              </Button>
-              <Button size="l" className="whitespace-nowrap" color="brand" variant="fill" isFullWidth disabled={sending} onClick={report}>
-                {t("report")}
-              </Button>
-            </>
-          )
+            <Button size="xl" color="brand" variant="fill" isFullWidth disabled={sending} onClick={report}>
+              {t("report")}
+            </Button>
+          </>
         }
-      />
+      >
+        <div className="flex flex-wrap gap-2">
+          {REASONS.map((value) => (
+            <Chip
+              key={value}
+              kind="select"
+              size="m"
+              selected={reason === value}
+              onClick={() => setReason(reason === value ? undefined : value)}
+            >
+              {t(`reason.${value}`)}
+            </Chip>
+          ))}
+        </div>
+      </BottomSheet>
     </>
   )
 }

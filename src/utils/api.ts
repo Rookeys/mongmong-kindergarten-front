@@ -125,3 +125,10 @@ export interface Notice {
   content: string
   createdDate: string
 }
+
+export interface UserSetting {
+  localeType: "ko" | "en" | "ja"
+  setLetterIsPrivate: boolean
+  setLetterIsPrivateSns: boolean
+  pushEnabled: boolean
+}

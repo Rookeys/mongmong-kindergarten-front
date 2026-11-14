@@ -22,6 +22,9 @@ export default function InputNickname({ setSendNext, onNext }: props) {
   const t = useTranslations("sign-up")
   const { data: session, update } = useSession()
   const [submitting, setSubmitting] = useState(false)
+  // TODO: Figma에 없는 임시 입력칸 (TODO.md). 첫 일지를 쓰면 초대한 사람과 나 모두 꿈조각을 받는다.
+  const [inviteCode, setInviteCode] = useState("")
+  const [inviteError, setInviteError] = useState<string>()
   const {
     setValue,
     setError,
@@ -60,6 +63,16 @@ export default function InputNickname({ setSendNext, onNext }: props) {
           error={Boolean(errors.nickname?.message)}
           helperText={errors.nickname?.message}
         />
+        <div className="pt-4">
+          <TextField
+            label={t("inviteCodeLabel")}
+            value={inviteCode}
+            placeholder={t("inviteCodePlaceholder")}
+            onChange={(event) => setInviteCode(event.target.value)}
+            error={Boolean(inviteError)}
+            helperText={inviteError}
+          />
+        </div>
       </div>
       <div className="text-subtitle-lg absolute bottom-0 left-0 w-full py-5">
         <Button
@@ -69,12 +82,16 @@ export default function InputNickname({ setSendNext, onNext }: props) {
             const nickname = watch("nickname")
             setSubmitting(true)
             try {
-              await api("/auth/me", { method: "PATCH", token: session?.access_token, body: { nickname } })
+              setInviteError(undefined)
+              const friendInviteCode = inviteCode.trim() || undefined
+              await api("/auth/me", { method: "PATCH", token: session?.access_token, body: { nickname, friendInviteCode } })
               await update({ nickname })
               onNext(nickname)
               setSendNext("goodName")
             } catch (error) {
-              setError("nickname", { message: error instanceof ApiError ? error.message : String(error) })
+              const message = error instanceof ApiError ? error.message : String(error)
+              if (error instanceof ApiError && error.code.startsWith("INVITE")) setInviteError(message)
+              else setError("nickname", { message })
             } finally {
               setSubmitting(false)
             }

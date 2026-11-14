@@ -27,7 +27,9 @@
     "nextButton": "Next",
     "goodName": "{name}!\nThat's a great name",
     "confirmButton": "Thanks!",
-    "bridge": "Writing a letter\njust for {name}.."
+    "bridge": "Writing a letter\njust for {name}..",
+    "inviteCodeLabel": "Friend invite code (optional)",
+    "inviteCodePlaceholder": "Enter an invite code if you have one"
   },
   "tab": {
     "home": "Home",
@@ -103,13 +105,19 @@
     "from": "From. An anonymous teacher",
     "report": "Report",
     "reportTitle": "Report this reply?",
-    "reportDescription": "An admin will review it.",
+    "reportDescription": "Choosing a reason helps us review faster. An admin will review it.",
     "reportCancel": "Cancel",
     "reportClose": "OK",
     "reportDone": "Your report was submitted",
     "welcomeTitle": "Welcome to the lounge",
     "welcomeDescription": "Read other teachers' replies for inspiration or comfort.",
-    "welcomeConfirm": "Got it"
+    "welcomeConfirm": "Got it",
+    "reason": {
+      "spam": "Spam or ads",
+      "abuse": "Abuse or harassment",
+      "inappropriate": "Inappropriate",
+      "other": "Other"
+    }
   },
   "decorate": {
     "tab": {
@@ -161,7 +169,8 @@
     "rewardCount": "{count} dream pieces",
     "moreRewards": "Get more",
     "album": "Graduation album",
-    "notices": "Notices"
+    "notices": "Notices",
+    "settings": "Settings"
   },
   "album": {
     "title": "Graduation album",
@@ -177,5 +186,26 @@
   "notices": {
     "title": "Notices",
     "empty": "No notices"
+  },
+  "settings": {
+    "title": "Settings",
+    "setLetterIsPrivate": "Share replies",
+    "setLetterIsPrivateDescription": "New replies are shared anonymously in the lounge.",
+    "setLetterIsPrivateSns": "Allow SNS feature",
+    "setLetterIsPrivateSnsDescription": "Your letters may be featured on our Instagram feed.",
+    "pushEnabled": "Push notifications",
+    "pushEnabledDescription": "We'll let you know when a letter arrives.",
+    "language": "Language",
+    "locale": {
+      "ko": "한국어",
+      "en": "English",
+      "ja": "日本語"
+    },
+    "logout": "Log out",
+    "withdraw": "Delete account",
+    "withdrawTitle": "Delete your account?",
+    "withdrawDescription": "Your letters and character history will be removed. Signing up again with the same account starts fresh.",
+    "withdrawConfirm": "Delete",
+    "cancel": "Cancel"
   }
 }

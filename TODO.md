@@ -4,7 +4,8 @@
 
 - [ ] **카카오 실제 로그인 1회**: 로그인 → 이름 작성 → 브릿지 → 홈까지. 코드 쪽은 이메일 계정으로만 검증했다.
 - [ ] **프론트 PR 순서대로 머지**: 브랜치가 앞 브랜치 위에 쌓여 있다.
-  `feat/auth-api` → `feat/home` → `feat/letter` → `feat/diary` → `feat/lounge` → `feat/decorate` → `feat/rewards` → `feat/office`
+  `feat/auth-api` → `feat/home` → `feat/letter` → `feat/diary` → `feat/lounge` → `feat/decorate` → `feat/rewards` → `feat/office` → `feat/temp-screens`
+- [ ] **백엔드 `feat/nickname-japanese` 머지**: `feat/temp-screens`와 함께.
 - [ ] **디자인시스템 `main` → `dev` 머지**: `dev`에 0.0.6 릴리스가 안 들어가 있고, 이미 반영된 `.changeset/button-full-width.md`, `.changeset/text-field-background.md`가 남아 있다. 이대로 다음 릴리스를 하면 버전이 한 번 더 오른다.
 - [ ] **디자인시스템 브랜치 2개 머지 후 릴리스**: `feature/text-area-kojaem`, `feature/dark-mode-parity-kojaem`. 배포되면 알려주기 → 프론트를 다크 테마로 바꾸고 덮어쓴 색·임시 textarea를 정리한다 (아래 "디자인시스템 정합성").
 - [ ] **디자이너에게 전달**: 아래 "Figma에 디자인이 없는 화면·요소" 표, 홈 오른쪽 위 아이콘 3개 용도, 꾸미기 옷·얼굴 아이템을 캐릭터 위 어디에 그릴지, 꾸미기 탭 장식·기타 여부.
@@ -14,14 +15,15 @@
 ## Figma에 디자인이 없는 화면·요소
 
 백엔드 API는 준비되어 있고 디자인만 없는 항목이다. 근거: 백엔드 `docs/decisions-2026-10-18.md` 2·3장.
+**(임시 구현)** 표시는 디자인시스템 컴포넌트로 먼저 만들어 둔 것이다. 디자인이 나오면 교체한다.
 
 | 화면·요소 | 들어갈 위치 | API |
 |---|---|---|
-| 친구 초대 코드 입력칸 (선택 입력) | 온보딩 이름 작성 | `PATCH /auth/me` `{ nickname, friendInviteCode }` |
-| 신고 사유 선택 (선택 입력) | 휴게실 다른 사람 일지 | `POST /letters/:id/reports` (`reasonType` 생략 가능) |
-| 설정 메뉴와 설정 화면 (일지 공개, SNS 소개, 푸시, 언어) | 원장실 | `GET/PATCH /auth/me/settings` |
-| 로그아웃 | 원장실 | `POST /auth/logout` |
-| 탈퇴 (재가입 시 새 계정이 된다는 안내 포함) | 원장실 | `DELETE /auth/me` |
+| 친구 초대 코드 입력칸 (선택 입력) **(임시 구현)** | 온보딩 이름 작성 | `PATCH /auth/me` `{ nickname, friendInviteCode }` |
+| 신고 사유 선택 (선택 입력) **(임시 구현)** | 휴게실 다른 사람 일지 | `POST /letters/:id/reports` (`reasonType` 생략 가능) |
+| 설정 메뉴와 설정 화면 (일지 공개, SNS 소개, 푸시, 언어) **(임시 구현, /office/settings)** | 원장실 | `GET/PATCH /auth/me/settings` |
+| 로그아웃 **(임시 구현)** | 원장실 | `POST /auth/logout` |
+| 탈퇴 (재가입 시 새 계정이 된다는 안내 포함) **(임시 구현)** | 원장실 | `DELETE /auth/me` |
 | 캐릭터 종류별(몽몽이·햄몽이·빼몽이) × 레벨별(Lv1~4) 이미지 | 캐릭터 홈, 졸업 앨범 | `GET /characters/me` (`characterType`, `level`) |
 | 졸업 연출과 새 캐릭터 소개 | 캐릭터 홈 (`canGraduate`가 true일 때) | `POST /characters/graduate` |
 | 에러 안내 문구: 이미 신고한 글, 판매 중지된 아이템, 졸업일 전 등 | 각 화면 | 에러 코드는 백엔드 `docs/error-codes.md` |
@@ -54,7 +56,7 @@
 
 ## 정책 확인 필요
 
-- 닉네임 허용 문자: 백엔드는 `^[a-z0-9가-힣]{2,8}$`만 허용한다. 일본어·영어 로케일 사용자도 일본어 닉네임을 쓸 수 없다. 프론트 검증은 백엔드 기준에 맞춰 두었다. 일본어 닉네임이 필요하면 백엔드 패턴부터 바꿔야 한다.
+- 닉네임에 일본어(히라가나·가타카나·한자)를 허용하기로 했다. 백엔드 `feat/nickname-japanese`와 프론트 `feat/temp-screens`를 같이 머지해야 한다 (프론트만 먼저 나가면 일본어 닉네임이 서버에서 거절된다).
 
 ## 로그인
 

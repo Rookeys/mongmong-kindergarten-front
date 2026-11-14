@@ -27,7 +27,9 @@
     "nextButton": "次へ",
     "goodName": "{name}さん！\n名前が素敵ですね",
     "confirmButton": "ありがとう！",
-    "bridge": "{name}さんのために\n一生懸命お手紙を書いています.."
+    "bridge": "{name}さんのために\n一生懸命お手紙を書いています..",
+    "inviteCodeLabel": "友だち招待コード（任意）",
+    "inviteCodePlaceholder": "招待コードがあれば入力してください"
   },
   "tab": {
     "home": "ホーム",
@@ -103,13 +105,19 @@
     "from": "From. 匿名の先生",
     "report": "通報",
     "reportTitle": "この返事を通報しますか？",
-    "reportDescription": "管理者が確認してから対応します。",
+    "reportDescription": "理由を選ぶと早く確認できます。管理者が確認してから対応します。",
     "reportCancel": "キャンセル",
     "reportClose": "確認",
     "reportDone": "通報を受け付けました",
     "welcomeTitle": "休憩室へようこそ",
     "welcomeDescription": "ほかの先生たちの返事を読んで、ひらめきや癒しをもらいましょう。",
-    "welcomeConfirm": "わかりました"
+    "welcomeConfirm": "わかりました",
+    "reason": {
+      "spam": "スパム・広告",
+      "abuse": "暴言・嫌がらせ",
+      "inappropriate": "不適切な内容",
+      "other": "その他"
+    }
   },
   "decorate": {
     "tab": {
@@ -161,7 +169,8 @@
     "rewardCount": "夢のかけら{count}個",
     "moreRewards": "もっともらう",
     "album": "卒業アルバム",
-    "notices": "お知らせ"
+    "notices": "お知らせ",
+    "settings": "設定"
   },
   "album": {
     "title": "卒業アルバム",
@@ -177,5 +186,26 @@
   "notices": {
     "title": "お知らせ",
     "empty": "お知らせはありません"
+  },
+  "settings": {
+    "title": "設定",
+    "setLetterIsPrivate": "返事を公開",
+    "setLetterIsPrivateDescription": "新しい返事を休憩室に匿名で公開します。",
+    "setLetterIsPrivateSns": "SNS紹介に同意",
+    "setLetterIsPrivateSnsDescription": "送った手紙がInstagramのフィードで紹介されることがあります。",
+    "pushEnabled": "プッシュ通知",
+    "pushEnabledDescription": "手紙が届いたらお知らせします。",
+    "language": "言語",
+    "locale": {
+      "ko": "한국어",
+      "en": "English",
+      "ja": "日本語"
+    },
+    "logout": "ログアウト",
+    "withdraw": "退会する",
+    "withdrawTitle": "本当に退会しますか？",
+    "withdrawDescription": "退会すると手紙とキャラクターの記録が消えます。同じアカウントで再登録すると新しいアカウントとして始まります。",
+    "withdrawConfirm": "退会する",
+    "cancel": "キャンセル"
   }
 }

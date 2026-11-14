@@ -8,7 +8,7 @@ import { requireSession } from "@/utils/session"
 const DAY_MS = 24 * 60 * 60 * 1000
 const ROW_CLASS = "[&_*]:text-text-primary!"
 
-// TODO: 자주 묻는 질문·의견 보내기·스토어 리뷰·서비스 팀원 링크, 설정·로그아웃·탈퇴 (TODO.md)
+// TODO: 자주 묻는 질문·의견 보내기·스토어 리뷰·서비스 팀원 링크 (TODO.md)
 export default async function OfficePage() {
   const { access_token: token } = await requireSession()
   const t = await getTranslations("office")
@@ -37,7 +37,8 @@ export default async function OfficePage() {
       {(
         [
           ["album", "/office/album"],
-          ["notices", "/office/notices"]
+          ["notices", "/office/notices"],
+          ["settings", "/office/settings"]
         ] as const
       ).map(([key, href]) => (
         <Link key={key} href={href} className="block">
