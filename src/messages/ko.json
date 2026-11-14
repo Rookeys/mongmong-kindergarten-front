@@ -124,5 +124,34 @@
     "later": "다음에",
     "watchAd": "광고 보기",
     "close": "확인"
+  },
+  "rewards": {
+    "title": "꿈 조각 공장",
+    "count": "꿈 조각 {count}개",
+    "attendance": "출석체크하고",
+    "ad": "광고 보고",
+    "invite": "친구 초대하고",
+    "receive": "{count}개 받기",
+    "received": "받았어요",
+    "receiveShort": "받기",
+    "attendanceTitle": "오늘도 와주셨군요!\n꿈 조각을 {count}개 드릴게요",
+    "attendanceDescription": "편지에 대한 답장을 쓰면 하나 더 드려요.",
+    "attendanceDone": "꿈 조각 {count}개를 받았어요",
+    "writeReply": "답장 쓰기",
+    "inviteSend": "초대 보내기",
+    "close": "닫기",
+    "codeCopied": "초대 코드를 복사했어요",
+    "inviteMessage": "몽몽유치원에서 같이 편지 써요! 가입할 때 초대 코드 {code}를 입력해 주세요.",
+    "inviteStep1": {
+      "title": "친구에게 초대 코드를 보내고"
+    },
+    "inviteStep2": {
+      "title": "친구가 가입하면",
+      "description": "친구가 초대 코드를 입력해야 해요."
+    },
+    "inviteStep3": {
+      "title": "꿈 조각 {count}개를 받아요",
+      "description": "친구가 첫 편지를 쓰면 둘 다 받아요."
+    }
   }
 }

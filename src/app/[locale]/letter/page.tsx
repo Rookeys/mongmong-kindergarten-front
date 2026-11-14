@@ -3,7 +3,7 @@ import { Button } from "@kojaem/mongmong"
 import { Link } from "@/i18n/navigation"
 import { api, type Character, type DailyQuestion, type User } from "@/utils/api"
 import { requireSession } from "@/utils/session"
-import LetterTopNavigation from "./LetterTopNavigation"
+import BackTopNavigation from "@/components/BackTopNavigation"
 
 export default async function LetterPage() {
   const { access_token: token } = await requireSession()
@@ -19,7 +19,7 @@ export default async function LetterPage() {
 
   return (
     <main className="bg-gradient-letter flex min-h-dvh flex-col">
-      <LetterTopNavigation title={t("title", { name })} />
+      <BackTopNavigation title={t("title", { name })} />
 
       <section className="px-5 py-5">
         <article className="border-border-brand-weak rounded-bottom-sheet flex flex-col border bg-[radial-gradient(120%_120%_at_0%_0%,rgb(255_255_255/0.9),rgb(249_248_255/0.9)_54%,rgb(229_226_255/0.9))] py-6 backdrop-blur-[15px]">

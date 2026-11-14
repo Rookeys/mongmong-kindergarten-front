@@ -125,5 +125,34 @@
     "later": "Later",
     "watchAd": "Watch ad",
     "close": "OK"
+  },
+  "rewards": {
+    "title": "Dream piece factory",
+    "count": "{count} dream pieces",
+    "attendance": "Check in",
+    "ad": "Watch an ad",
+    "invite": "Invite a friend",
+    "receive": "Get {count}",
+    "received": "Received",
+    "receiveShort": "Get",
+    "attendanceTitle": "Welcome back!\nHere are {count} dream pieces",
+    "attendanceDescription": "Reply to a letter to get one more.",
+    "attendanceDone": "You got {count} dream pieces",
+    "writeReply": "Write a reply",
+    "inviteSend": "Send invite",
+    "close": "Close",
+    "codeCopied": "Invite code copied",
+    "inviteMessage": "Let's write letters together at Mongmong Kindergarten! Enter invite code {code} when you sign up.",
+    "inviteStep1": {
+      "title": "Send your invite code"
+    },
+    "inviteStep2": {
+      "title": "When your friend signs up",
+      "description": "They need to enter your invite code."
+    },
+    "inviteStep3": {
+      "title": "Get {count} dream pieces",
+      "description": "You both get them after their first letter."
+    }
   }
 }

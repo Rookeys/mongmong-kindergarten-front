@@ -125,5 +125,34 @@
     "later": "あとで",
     "watchAd": "広告を見る",
     "close": "確認"
+  },
+  "rewards": {
+    "title": "夢のかけら工場",
+    "count": "夢のかけら{count}個",
+    "attendance": "出席チェックで",
+    "ad": "広告を見て",
+    "invite": "友だち招待で",
+    "receive": "{count}個もらう",
+    "received": "受け取り済み",
+    "receiveShort": "もらう",
+    "attendanceTitle": "今日も来てくれたんですね！\n夢のかけらを{count}個あげます",
+    "attendanceDescription": "手紙に返事を書くともう1個もらえます。",
+    "attendanceDone": "夢のかけらを{count}個もらいました",
+    "writeReply": "返事を書く",
+    "inviteSend": "招待を送る",
+    "close": "閉じる",
+    "codeCopied": "招待コードをコピーしました",
+    "inviteMessage": "モンモン幼稚園で一緒に手紙を書こう！登録時に招待コード{code}を入力してね。",
+    "inviteStep1": {
+      "title": "友だちに招待コードを送って"
+    },
+    "inviteStep2": {
+      "title": "友だちが登録したら",
+      "description": "友だちが招待コードを入力する必要があります。"
+    },
+    "inviteStep3": {
+      "title": "夢のかけらを{count}個もらえます",
+      "description": "友だちが最初の手紙を書くと2人とももらえます。"
+    }
   }
 }

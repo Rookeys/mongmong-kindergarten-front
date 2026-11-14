@@ -20,7 +20,9 @@ export default async function HomePage() {
       <header className="flex h-[54px] items-center justify-between bg-[#140f60] px-5 py-3">
         <div className="flex items-center gap-5">
           <HeaderStat value={`LV.${character.level}`} />
-          <HeaderStat value={me.rewardCount} />
+          <Link href="/rewards">
+            <HeaderStat value={me.rewardCount} />
+          </Link>
         </div>
         {/* TODO: 오른쪽 아이콘 3개는 Figma에서 용도 미정 (임시 하트 아이콘) */}
         <div className="flex items-center gap-5" aria-hidden>

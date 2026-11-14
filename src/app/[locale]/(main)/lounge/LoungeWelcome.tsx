@@ -38,7 +38,7 @@ export default function LoungeWelcome() {
         </Button>
       }
     >
-      <img src="/assets/images/character-face.png" alt="" width={100} height={100} className="mx-auto" />
+      <img src="/assets/images/character-face.png" alt="" width={100} height={100} className="mx-auto block" />
     </BottomSheet>
   )
 }

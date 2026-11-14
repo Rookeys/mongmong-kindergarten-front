@@ -7,7 +7,7 @@ import { BottomSheet, Button, GridList, GridListItem, ListRow, Modal, Result } f
 import { DIALOG_CLASS } from "@/constants/dialog"
 import { Link } from "@/i18n/navigation"
 import { api, ApiError, MOODS, type CreateLetterResponse, type DailyQuestion, type Letter, type Mood } from "@/utils/api"
-import LetterTopNavigation from "../LetterTopNavigation"
+import BackTopNavigation from "@/components/BackTopNavigation"
 import LetterSentFlow from "./LetterSentFlow"
 
 const MAX_LENGTH = 1000
@@ -72,7 +72,7 @@ export default function LetterWriteForm({
   return (
     <>
       {/* TODO: 제목 옆 화살표로 날짜 변경 (Figma "날짜 변경") */}
-      <LetterTopNavigation title={title} />
+      <BackTopNavigation title={title} />
       <h1 className="text-title-md text-text-primary px-5 py-6">{question.content}</h1>
 
       <div className="flex flex-col gap-1.5 py-4">
