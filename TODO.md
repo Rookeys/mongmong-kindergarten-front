@@ -3,11 +3,10 @@
 ## 직접 확인할 것 (체크리스트)
 
 - [ ] **카카오 실제 로그인 1회**: 로그인 → 이름 작성 → 브릿지 → 홈까지. 코드 쪽은 이메일 계정으로만 검증했다.
-- [ ] **프론트 PR 순서대로 머지**: 브랜치가 앞 브랜치 위에 쌓여 있다.
-  `feat/auth-api` → `feat/home` → `feat/letter` → `feat/diary` → `feat/lounge` → `feat/decorate` → `feat/rewards` → `feat/office` → `feat/temp-screens`
-- [ ] **백엔드 `feat/nickname-japanese` 머지**: `feat/temp-screens`와 함께.
+- [ ] **프론트 PR 머지**: `dev` ← `feat/temp-screens` 하나에 MVP 작업이 모두 들어 있다. 기능별로 커밋을 나눠 두었다.
+- [ ] **백엔드 `feat/nickname-japanese` 머지**: 프론트 PR과 같이 (일본어 닉네임).
 - [ ] **디자인시스템 `main` → `dev` 머지**: `dev`에 0.0.6 릴리스가 안 들어가 있고, 이미 반영된 `.changeset/button-full-width.md`, `.changeset/text-field-background.md`가 남아 있다. 이대로 다음 릴리스를 하면 버전이 한 번 더 오른다.
-- [ ] **디자인시스템 브랜치 2개 머지 후 릴리스**: `feature/text-area-kojaem`, `feature/dark-mode-parity-kojaem`. 배포되면 알려주기 → 프론트를 다크 테마로 바꾸고 덮어쓴 색·임시 textarea를 정리한다 (아래 "디자인시스템 정합성").
+- [ ] **디자인시스템 `feature/figma-parity-kojaem` 머지 후 릴리스** (TextArea + Figma 색 맞춤). 배포되면 알려주기 → 프론트를 다크 테마로 바꾸고 덮어쓴 색·임시 textarea를 정리한다 (아래 "디자인시스템 정합성").
 - [ ] **디자이너에게 전달**: 아래 "Figma에 디자인이 없는 화면·요소" 표, 홈 오른쪽 위 아이콘 3개 용도, 꾸미기 옷·얼굴 아이템을 캐릭터 위 어디에 그릴지, 꾸미기 탭 장식·기타 여부.
 - [ ] **(선택) 로컬 개발 DB 테스트 데이터 정리**: 검증하며 넣은 테스트 계정(`*@test.dev`), 공개 답장, 졸업 카드 1개, 공지 1개, 테스트 계정 꿈조각 20개.
 - [ ] **`pnpm lint` 고장**: `eslint-plugin-tailwindcss`가 Tailwind v4를 지원하지 않아 실행 자체가 안 된다 (이번 작업 전부터).
@@ -50,13 +49,13 @@
 - 그래서 앱은 라이트 테마를 유지하고, 어두운 배경 위의 TopNavigation·ListRow·Result 글자색만 화면에서 덮어썼다 (`[&_*]:text-text-...!`).
 - 해결: 디자인시스템 컴포넌트를 Figma 토큰 이름대로 맞추고(Button fill → `text.strong`, weak → `text.brand`, Popover 제목 → `text.inversePrimary`) 앱을 다크 테마로 바꾼 뒤 덮어쓴 부분을 지운다.
 - BottomSheet·Modal 배경(`background.upper`)이 라이트 테마에서 반투명이라 화면에서 `bg-background-default!`로 덮어썼다 (`src/constants/dialog.ts`).
-- 디자인시스템 수정은 `feature/dark-mode-parity-kojaem` 브랜치에 있다. 배포되면 `<html data-theme="dark">`로 바꾸고 덮어쓴 부분을 지운다.
+- 디자인시스템 수정은 `feature/figma-parity-kojaem` 브랜치에 있다. 배포되면 `<html data-theme="dark">`로 바꾸고 덮어쓴 부분을 지운다.
 - DatePicker wheel에 연·월만 고르는 옵션이 없어 일지 달 선택에서 일(day) 열도 보인다.
-- `TextArea`는 디자인시스템 `feature/text-area-kojaem` 브랜치에 있다. 배포되면 답장 쓰기 화면의 임시 `<textarea>`를 교체한다.
+- `TextArea`는 디자인시스템 `feature/figma-parity-kojaem` 브랜치에 있다. 배포되면 답장 쓰기 화면의 임시 `<textarea>`를 교체한다.
 
 ## 정책 확인 필요
 
-- 닉네임에 일본어(히라가나·가타카나·한자)를 허용하기로 했다. 백엔드 `feat/nickname-japanese`와 프론트 `feat/temp-screens`를 같이 머지해야 한다 (프론트만 먼저 나가면 일본어 닉네임이 서버에서 거절된다).
+- 닉네임에 일본어(히라가나·가타카나·한자)를 허용하기로 했다. 백엔드 `feat/nickname-japanese`와 프론트 PR을 같이 머지해야 한다 (프론트만 먼저 나가면 일본어 닉네임이 서버에서 거절된다).
 
 ## 로그인
 
