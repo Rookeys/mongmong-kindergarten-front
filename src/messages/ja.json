@@ -110,5 +110,20 @@
     "welcomeTitle": "休憩室へようこそ",
     "welcomeDescription": "ほかの先生たちの返事を読んで、ひらめきや癒しをもらいましょう。",
     "welcomeConfirm": "わかりました"
+  },
+  "decorate": {
+    "tab": {
+      "clothes": "服",
+      "face": "顔",
+      "background": "背景"
+    },
+    "back": "一覧へ",
+    "buy": "夢のかけら{cost}個で購入",
+    "bought": "購入しました",
+    "insufficientTitle": "広告を見て夢のかけらを集めますか？",
+    "insufficientDescription": "夢のかけらが{count}個足りません。",
+    "later": "あとで",
+    "watchAd": "広告を見る",
+    "close": "確認"
   }
 }

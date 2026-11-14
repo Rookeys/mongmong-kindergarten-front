@@ -87,3 +87,23 @@ export interface PublicLetter {
   answer: string
   createdDate: string
 }
+
+export const ITEM_TYPES = ["clothes", "face", "background"] as const
+export type ItemType = (typeof ITEM_TYPES)[number]
+
+export interface Item {
+  id: string
+  name: string
+  itemType: ItemType
+  imageUrl: string
+  cost: number
+}
+
+export interface CharacterItem {
+  id: string
+  itemId: string
+  itemName: string
+  itemType: ItemType
+  imageUrl: string
+  isEquipped: boolean
+}

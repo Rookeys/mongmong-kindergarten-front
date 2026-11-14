@@ -110,5 +110,20 @@
     "welcomeTitle": "Welcome to the lounge",
     "welcomeDescription": "Read other teachers' replies for inspiration or comfort.",
     "welcomeConfirm": "Got it"
+  },
+  "decorate": {
+    "tab": {
+      "clothes": "Clothes",
+      "face": "Face",
+      "background": "Background"
+    },
+    "back": "Back to list",
+    "buy": "Buy for {cost} dream pieces",
+    "bought": "Purchased",
+    "insufficientTitle": "Watch an ad for dream pieces?",
+    "insufficientDescription": "You need {count} more dream pieces.",
+    "later": "Later",
+    "watchAd": "Watch ad",
+    "close": "OK"
   }
 }

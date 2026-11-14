@@ -109,5 +109,20 @@
     "welcomeTitle": "휴게실에 오신 것을 환영해요",
     "welcomeDescription": "다른 선생님들이 쓴 답장을 읽으며 영감을 얻거나 위로를 받아보세요.",
     "welcomeConfirm": "확인했어요"
+  },
+  "decorate": {
+    "tab": {
+      "clothes": "옷",
+      "face": "얼굴",
+      "background": "배경"
+    },
+    "back": "목록으로",
+    "buy": "꿈 조각 {cost}개로 구매하기",
+    "bought": "구매했어요",
+    "insufficientTitle": "광고 보고 꿈 조각을 모을까요?",
+    "insufficientDescription": "꿈 조각 {count}개가 부족해요.",
+    "later": "다음에",
+    "watchAd": "광고 보기",
+    "close": "확인"
   }
 }
