@@ -39,3 +39,20 @@ export async function api<T>(path: string, { token, body, headers, ...init }: Ap
   if (!res.ok) throw new ApiError(res.status, data?.code ?? "UNKNOWN", data?.message ?? res.statusText)
   return data as T
 }
+
+export interface Character {
+  id: string
+  characterType: { id: string; name: string; imageUrl: string | null }
+  level: number
+  maxLevel: number
+  letterCount: number
+  nextLevelLetterCount: number | null
+  canGraduate: boolean
+}
+
+export interface DailyQuestion {
+  id: string
+  date: string
+  content: string
+  letterId: string | null
+}

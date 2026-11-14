@@ -28,5 +28,16 @@
     "goodName": "{name}!\nThat's a great name",
     "confirmButton": "Thanks!",
     "bridge": "Writing a letter\njust for {name}.."
+  },
+  "tab": {
+    "home": "Home",
+    "diary": "Diary",
+    "decorate": "Decorate",
+    "lounge": "Lounge",
+    "office": "Office"
+  },
+  "home": {
+    "idle": "Rolling around~",
+    "openLetter": "Read {name}'s letter"
   }
 }

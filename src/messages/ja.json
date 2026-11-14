@@ -28,5 +28,16 @@
     "goodName": "{name}さん！\n名前が素敵ですね",
     "confirmButton": "ありがとう！",
     "bridge": "{name}さんのために\n一生懸命お手紙を書いています.."
+  },
+  "tab": {
+    "home": "ホーム",
+    "diary": "日誌",
+    "decorate": "着せ替え",
+    "lounge": "休憩室",
+    "office": "園長室"
+  },
+  "home": {
+    "idle": "ごろごろ~",
+    "openLetter": "{name}の手紙を見る"
   }
 }

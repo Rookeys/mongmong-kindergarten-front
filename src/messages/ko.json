@@ -27,5 +27,16 @@
     "goodName": "{name}님!\n이름이 멋져요",
     "confirmButton": "고마워!",
     "bridge": "{name}님을 위해\n열심히 편지 쓰는 중.."
+  },
+  "tab": {
+    "home": "홈",
+    "diary": "일지",
+    "decorate": "꾸미기",
+    "lounge": "휴게실",
+    "office": "원장실"
+  },
+  "home": {
+    "idle": "뒹굴뒹굴~",
+    "openLetter": "{name}의 편지 보기"
   }
 }
