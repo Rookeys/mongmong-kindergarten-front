@@ -1,5 +1,6 @@
 import { getFormatter, getLocale } from "next-intl/server"
-import { api, type Character, type DailyQuestion, type Letter } from "@/utils/api"
+import { api, type Character, type DailyQuestion, type Letter, type User } from "@/utils/api"
+import { todayKst } from "@/utils/date"
 import { requireSession } from "@/utils/session"
 import LetterWriteForm from "./LetterWriteForm"
 
@@ -10,8 +11,9 @@ export default async function LetterWritePage({ searchParams }: { searchParams: 
   const format = await getFormatter()
 
   const query = new URLSearchParams({ locale, ...(date && { date }) })
-  const [character, question] = await Promise.all([
+  const [character, me, question] = await Promise.all([
     api<Character>("/characters/me", { token }),
+    api<User>("/auth/me", { token }),
     api<DailyQuestion>(`/questions/daily?${query}`, { token })
   ])
   const letters = await api<Letter[]>(`/letters?questionId=${question.id}`, { token })
@@ -27,6 +29,8 @@ export default async function LetterWritePage({ searchParams }: { searchParams: 
         previous={previous}
         characterName={character.characterType.name}
         characterImage={character.characterType.imageUrl}
+        isPastDate={question.date < todayKst()}
+        rewardCount={me.rewardCount}
       />
     </main>
   )

@@ -56,7 +56,14 @@
     "submit": "답장 쓰기",
     "moodTitle": "마지막으로\n오늘의 기분을 알려주세요",
     "moodDescription": "월간 캘린더에 표시 돼요.",
-    "moodConfirm": "선택했어"
+    "moodConfirm": "선택했어",
+    "costTitle": "꿈 조각 {count}개를 사용할까요?",
+    "costDescription": "답장을 쓰려면 꿈 조각 {count}개가 필요해요.",
+    "costInsufficientTitle": "꿈 조각 {count}개가 부족해요",
+    "costInsufficientDescription": "광고보고 꿈 조각을 모을까요?",
+    "costLater": "다음에",
+    "costUse": "사용하기",
+    "costWatchAd": "광고 보기"
   },
   "mood": {
     "good": "기분 좋아",
@@ -81,5 +88,11 @@
     "rewardEarned": "꿈 조각 {count}개 받았어요",
     "rewardSpent": "꿈 조각 {count}개를 사용했어요",
     "goHome": "홈으로 돌아가기"
+  },
+  "diary": {
+    "pickMonth": "달을 선택해주세요",
+    "confirm": "확인",
+    "writeToday": "오늘의 편지 답장 쓰기",
+    "written": "답장 씀"
   }
 }

@@ -3,14 +3,16 @@
 import { useState } from "react"
 import { useLocale, useTranslations } from "next-intl"
 import { useSession } from "next-auth/react"
-import { BottomSheet, Button, GridList, GridListItem, ListRow, Result } from "@kojaem/mongmong"
-import { BOTTOM_SHEET_CLASS } from "@/constants/bottomSheet"
+import { BottomSheet, Button, GridList, GridListItem, ListRow, Modal, Result } from "@kojaem/mongmong"
+import { DIALOG_CLASS } from "@/constants/dialog"
 import { Link } from "@/i18n/navigation"
 import { api, ApiError, MOODS, type CreateLetterResponse, type DailyQuestion, type Letter, type Mood } from "@/utils/api"
 import LetterTopNavigation from "../LetterTopNavigation"
 import LetterSentFlow from "./LetterSentFlow"
 
 const MAX_LENGTH = 1000
+// 지난 날짜 일지는 꿈조각 3개 차감 (백엔드 POST /letters)
+const PAST_LETTER_COST = 3
 
 interface Props {
   title: string
@@ -19,15 +21,27 @@ interface Props {
   previous: Letter[]
   characterName: string
   characterImage: string | null
+  isPastDate: boolean
+  rewardCount: number
 }
 
-export default function LetterWriteForm({ title, question, written, previous, characterName, characterImage }: Props) {
+export default function LetterWriteForm({
+  title,
+  question,
+  written,
+  previous,
+  characterName,
+  characterImage,
+  isPastDate,
+  rewardCount
+}: Props) {
   const t = useTranslations("letterWrite")
   const tMood = useTranslations("mood")
   const locale = useLocale()
   const { data: session } = useSession()
   const [answer, setAnswer] = useState(written?.answer ?? "")
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [costModal, setCostModal] = useState<"confirm" | "insufficient">()
   const [mood, setMood] = useState<Mood>()
   const [sending, setSending] = useState(false)
   const [error, setError] = useState<string>()
@@ -109,14 +123,54 @@ export default function LetterWriteForm({ title, question, written, previous, ch
 
       {!written && answer.trim() && (
         <div className="sticky bottom-0 mt-auto px-5 pb-5">
-          <Button size="xl" color="brand" variant="fill" isFullWidth onClick={() => setSheetOpen(true)}>
+          <Button size="xl" color="brand" variant="fill" isFullWidth onClick={() => {
+              if (!isPastDate) return setSheetOpen(true)
+              setCostModal(rewardCount < PAST_LETTER_COST ? "insufficient" : "confirm")
+            }}
+          >
             {t("submit")}
           </Button>
         </div>
       )}
 
+      <Modal
+        className={DIALOG_CLASS}
+        open={Boolean(costModal)}
+        onOpenChange={(open) => !open && setCostModal(undefined)}
+        title={t(costModal === "insufficient" ? "costInsufficientTitle" : "costTitle", { count: PAST_LETTER_COST })}
+        description={t(costModal === "insufficient" ? "costInsufficientDescription" : "costDescription", {
+          count: PAST_LETTER_COST
+        })}
+        buttons={
+          <>
+            <Button size="l" className="whitespace-nowrap" color="brand" variant="weak" isFullWidth onClick={() => setCostModal(undefined)}>
+              {t("costLater")}
+            </Button>
+            {costModal === "insufficient" ? (
+              // TODO: AdMob 보상형 광고 연결 (백엔드 TODO: SSV 콜백으로 지급)
+              <Button size="l" className="whitespace-nowrap" color="brand" variant="fill" isFullWidth disabled>
+                {t("costWatchAd")}
+              </Button>
+            ) : (
+              <Button
+                size="l"
+                color="brand"
+                variant="fill"
+                isFullWidth
+                onClick={() => {
+                  setCostModal(undefined)
+                  setSheetOpen(true)
+                }}
+              >
+                {t("costUse")}
+              </Button>
+            )}
+          </>
+        }
+      />
+
       <BottomSheet
-        className={BOTTOM_SHEET_CLASS}
+        className={DIALOG_CLASS}
         open={sheetOpen}
         onOpenChange={setSheetOpen}
         title={t("moodTitle")}

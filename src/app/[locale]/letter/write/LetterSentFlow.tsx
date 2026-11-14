@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react"
 import { AnimatePresence } from "motion/react"
 import { BottomSheet, Button, Toast } from "@kojaem/mongmong"
 import CharacterImage from "@/components/CharacterImage"
-import { BOTTOM_SHEET_CLASS } from "@/constants/bottomSheet"
+import { DIALOG_CLASS } from "@/constants/dialog"
 import { Link } from "@/i18n/navigation"
 import { api, ApiError, type CreateLetterResponse } from "@/utils/api"
 import { sleep } from "@/utils/sleep"
@@ -112,7 +112,7 @@ export default function LetterSentFlow({ letter, characterName, characterImage }
       )}
 
       <BottomSheet
-        className={BOTTOM_SHEET_CLASS}
+        className={DIALOG_CLASS}
         open={snsSheetOpen}
         onOpenChange={setSnsSheetOpen}
         title={t("snsTitle", { name: characterName })}

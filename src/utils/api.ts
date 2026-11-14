@@ -74,3 +74,9 @@ export interface CreateLetterResponse extends Letter {
   // 오늘 일지는 +, 지난 날짜 일지는 - (꿈조각)
   rewardAmount: number
 }
+
+export interface CalendarEntry {
+  date: string
+  letterId: string
+  mood: Mood | null
+}

@@ -57,7 +57,14 @@
     "submit": "Send reply",
     "moodTitle": "Lastly,\nhow do you feel today?",
     "moodDescription": "It'll show on your monthly calendar.",
-    "moodConfirm": "Done"
+    "moodConfirm": "Done",
+    "costTitle": "Use {count} dream pieces?",
+    "costDescription": "Replying to a past letter costs {count} dream pieces.",
+    "costInsufficientTitle": "You need {count} dream pieces",
+    "costInsufficientDescription": "Watch an ad to collect dream pieces?",
+    "costLater": "Later",
+    "costUse": "Use",
+    "costWatchAd": "Watch ad"
   },
   "mood": {
     "good": "Good",
@@ -82,5 +89,11 @@
     "rewardEarned": "You got {count} dream pieces",
     "rewardSpent": "You used {count} dream pieces",
     "goHome": "Back to home"
+  },
+  "diary": {
+    "pickMonth": "Choose a month",
+    "confirm": "Done",
+    "writeToday": "Reply to today's letter",
+    "written": "Replied"
   }
 }

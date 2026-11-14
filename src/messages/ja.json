@@ -57,7 +57,14 @@
     "submit": "返事を送る",
     "moodTitle": "最後に\n今日の気分を教えてください",
     "moodDescription": "月間カレンダーに表示されます。",
-    "moodConfirm": "選んだよ"
+    "moodConfirm": "選んだよ",
+    "costTitle": "夢のかけらを{count}個使いますか？",
+    "costDescription": "返事を書くには夢のかけらが{count}個必要です。",
+    "costInsufficientTitle": "夢のかけらが{count}個足りません",
+    "costInsufficientDescription": "広告を見て夢のかけらを集めますか？",
+    "costLater": "あとで",
+    "costUse": "使う",
+    "costWatchAd": "広告を見る"
   },
   "mood": {
     "good": "いい気分",
@@ -82,5 +89,11 @@
     "rewardEarned": "夢のかけらを{count}個もらいました",
     "rewardSpent": "夢のかけらを{count}個使いました",
     "goHome": "ホームに戻る"
+  },
+  "diary": {
+    "pickMonth": "月を選んでください",
+    "confirm": "確認",
+    "writeToday": "今日の手紙に返事を書く",
+    "written": "返事済み"
   }
 }

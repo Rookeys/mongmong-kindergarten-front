@@ -27,7 +27,9 @@
 - Figma 화면은 다크 변수 모드 값(text/primary = 밝은 글자, fill/brand·text/brand = #6A62EA, 버튼 글자 = text/strong)을 쓴다. 디자인시스템은 라이트 테마에서 Figma처럼 보이도록 토큰을 골라 두어서, 앱에 `data-theme="dark"`를 켜면 Button(fill 글자 `text.inversePrimary`, weak 글자 `text.brandWeak`)과 Popover 제목(`text.primary`)이 Figma와 달라진다.
 - 그래서 앱은 라이트 테마를 유지하고, 어두운 배경 위의 TopNavigation·ListRow·Result 글자색만 화면에서 덮어썼다 (`[&_*]:text-text-...!`).
 - 해결: 디자인시스템 컴포넌트를 Figma 토큰 이름대로 맞추고(Button fill → `text.strong`, weak → `text.brand`, Popover 제목 → `text.inversePrimary`) 앱을 다크 테마로 바꾼 뒤 덮어쓴 부분을 지운다.
-- BottomSheet 배경이 반투명(`rgba(117,115,135,0.18)`)이라 Figma(불투명 밝은 배경)와 다르다. 화면에서 `bg-background-default!`로 덮어썼다.
+- BottomSheet·Modal 배경(`background.upper`)이 라이트 테마에서 반투명이라 화면에서 `bg-background-default!`로 덮어썼다 (`src/constants/dialog.ts`).
+- 디자인시스템 수정은 `feature/dark-mode-parity-kojaem` 브랜치에 있다. 배포되면 `<html data-theme="dark">`로 바꾸고 덮어쓴 부분을 지운다.
+- DatePicker wheel에 연·월만 고르는 옵션이 없어 일지 달 선택에서 일(day) 열도 보인다.
 - `TextArea`는 디자인시스템 `feature/text-area-kojaem` 브랜치에 있다. 배포되면 답장 쓰기 화면의 임시 `<textarea>`를 교체한다.
 
 ## 정책 확인 필요
