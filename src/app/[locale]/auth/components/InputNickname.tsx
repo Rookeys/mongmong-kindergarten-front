@@ -10,7 +10,7 @@ import { Button, TextField } from "@kojaem/mongmong"
 import { api, ApiError } from "@/utils/api"
 
 interface props {
-  setSendNext: Dispatch<SetStateAction<"question" | "inputNicknmae" | "goodName">>
+  setSendNext: Dispatch<SetStateAction<"question" | "inputNicknmae" | "goodName" | "bridge">>
   onNext: (nickname: string) => void
 }
 

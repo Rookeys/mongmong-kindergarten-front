@@ -26,6 +26,7 @@
     "nameConditions2": "スペース、特殊文字、および英大文字は使用できません。",
     "nextButton": "次へ",
     "goodName": "{name}さん！\n名前が素敵ですね",
-    "confirmButton": "ありがとう！"
+    "confirmButton": "ありがとう！",
+    "bridge": "{name}さんのために\n一生懸命お手紙を書いています.."
   }
 }

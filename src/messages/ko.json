@@ -25,6 +25,7 @@
     "nameConditions2": "공백, 특수 문자 및 영어 대문자는 사용할 수 없어요.",
     "nextButton": "다음",
     "goodName": "{name}님!\n이름이 멋져요",
-    "confirmButton": "고마워!"
+    "confirmButton": "고마워!",
+    "bridge": "{name}님을 위해\n열심히 편지 쓰는 중.."
   }
 }

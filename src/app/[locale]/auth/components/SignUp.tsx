@@ -1,6 +1,6 @@
 "use client"
 
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useState } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import InputNickname from "@/app/[locale]/auth/components/InputNickname"
@@ -21,8 +21,9 @@ const imageTransition = {
 
 export default function SignUp({ session }: { session: Session | null }) {
   const t = useTranslations("sign-up")
+  const locale = useLocale()
   const router = useRouter()
-  const [step, setStep] = useState<"question" | "inputNicknmae" | "goodName">("question")
+  const [step, setStep] = useState<"question" | "inputNicknmae" | "goodName" | "bridge">("question")
   const [nickname, setNickname] = useState("")
 
   return (
@@ -64,7 +65,7 @@ export default function SignUp({ session }: { session: Session | null }) {
               buttonEl={
                 <Button
                   type="button"
-                  onClick={() => router.push("/auth/sign-up/bridge")}
+                  onClick={() => setStep("bridge")}
                   size="xl"
                   color="brand"
                   variant="fill"
@@ -74,6 +75,16 @@ export default function SignUp({ session }: { session: Session | null }) {
                   {t("confirmButton")}
                 </Button>
               }
+            />
+          )}
+          {step === "bridge" && (
+            <Slide
+              key="bridge"
+              step="bridge"
+              currentStep={step}
+              stringValue={t("bridge", { name: nickname })}
+              delay={SCREEN_MS}
+              onNext={() => router.replace(`/${locale}`)}
             />
           )}
         </AnimatePresence>

@@ -26,6 +26,7 @@
     "nameConditions2": "Spaces, special characters, and uppercase English letters are not allowed.",
     "nextButton": "Next",
     "goodName": "{name}!\nThat's a great name",
-    "confirmButton": "Thanks!"
+    "confirmButton": "Thanks!",
+    "bridge": "Writing a letter\njust for {name}.."
   }
 }

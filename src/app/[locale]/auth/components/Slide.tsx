@@ -6,26 +6,8 @@ import { motion } from "motion/react"
 import { useEffect } from "react"
 
 type Props = {
-  step:
-    | "introduceCharacter"
-    | "dailyLetterIntro"
-    | "letterExampleIntro"
-    | "rewardCustomizationIntro"
-    | "replyChanceIntro"
-    | "loginMemoryIntro"
-    | "question"
-    | "inputNicknmae"
-    | "goodName"
-  currentStep:
-    | "introduceCharacter"
-    | "dailyLetterIntro"
-    | "letterExampleIntro"
-    | "rewardCustomizationIntro"
-    | "replyChanceIntro"
-    | "loginMemoryIntro"
-    | "question"
-    | "inputNicknmae"
-    | "goodName"
+  step: string
+  currentStep: string
   stringValue: string
   delay: number
   onNext: () => void
