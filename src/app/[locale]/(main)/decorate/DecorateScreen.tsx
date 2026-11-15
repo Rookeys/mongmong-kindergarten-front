@@ -37,7 +37,6 @@ export default function DecorateScreen() {
   /** 구매 화면을 보고 있는 아이템 */
   const [itemToBuy, setItemToBuy] = useState<GetItemResponseDto>()
   const [isInsufficientModalOpen, setIsInsufficientModalOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string>()
   const { toastMessage, showToast } = useToast()
 
   if (!character || !me || !items || !ownedItems) return <LoadingScreen />
@@ -47,6 +46,7 @@ export default function DecorateScreen() {
   const equippedWearables = equippedItems.filter((ownedItem) => ownedItem.itemType !== ItemType.background)
   const itemsOfSelectedType = items.filter((item) => item.itemType === selectedType)
   const isSaving = purchaseItem.isPending || updateEquip.isPending
+  const saveError = purchaseItem.error ?? updateEquip.error
 
   const handleItemClick = (item: GetItemResponseDto) => {
     const ownedItem = ownedItems.find((owned) => owned.itemId === item.id)
@@ -57,8 +57,7 @@ export default function DecorateScreen() {
     updateEquip.mutate(
       { id: ownedItem.id, data: { isEquipped: !ownedItem.isEquipped } },
       {
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: getCharacterItemFindMineQueryKey() }),
-        onError: (error) => setErrorMessage(getErrorMessage(error))
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: getCharacterItemFindMineQueryKey() })
       }
     )
   }
@@ -76,8 +75,7 @@ export default function DecorateScreen() {
           setItemToBuy(undefined)
           queryClient.invalidateQueries({ queryKey: getCharacterItemFindMineQueryKey() })
           queryClient.invalidateQueries({ queryKey: getAuthGetMeQueryKey() })
-        },
-        onError: (error) => setErrorMessage(getErrorMessage(error))
+        }
       }
     )
   }
@@ -147,7 +145,13 @@ export default function DecorateScreen() {
         missingCount={itemToBuy ? itemToBuy.cost - me.rewardCount : 0}
         onClose={() => setIsInsufficientModalOpen(false)}
       />
-      <ErrorModal message={errorMessage} onClose={() => setErrorMessage(undefined)} />
+      <ErrorModal
+        message={saveError ? getErrorMessage(saveError) : undefined}
+        onClose={() => {
+          purchaseItem.reset()
+          updateEquip.reset()
+        }}
+      />
     </main>
   )
 }

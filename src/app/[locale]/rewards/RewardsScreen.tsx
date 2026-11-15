@@ -26,8 +26,7 @@ export default function RewardsScreen() {
   const { data: me } = useAuthGetMe()
   const { data: attendance } = useRewardFindTodayAttendance()
   const checkAttendance = useRewardCheckAttendance()
-  const [isAttendanceSheetOpen, setIsAttendanceSheetOpen] = useState(false)
-  const [isInviteSheetOpen, setIsInviteSheetOpen] = useState(false)
+  const [openSheet, setOpenSheet] = useState<"attendance" | "invite">()
   const { toastMessage, showToast } = useToast()
 
   if (!me || !attendance) return <LoadingScreen />
@@ -35,7 +34,7 @@ export default function RewardsScreen() {
   const handleAttendance = () => {
     checkAttendance.mutate(undefined, {
       onSuccess: () => {
-        setIsAttendanceSheetOpen(false)
+        setOpenSheet(undefined)
         showToast(t("attendanceDone", { count: ATTENDANCE_REWARD }))
         queryClient.invalidateQueries({ queryKey: getRewardFindTodayAttendanceQueryKey() })
         queryClient.invalidateQueries({ queryKey: getAuthGetMeQueryKey() })
@@ -54,21 +53,21 @@ export default function RewardsScreen() {
         title={t("attendance")}
         buttonLabel={attendance.isChecked ? t("received") : t("receive", { count: ATTENDANCE_REWARD })}
         disabled={attendance.isChecked}
-        onClick={() => setIsAttendanceSheetOpen(true)}
+        onClick={() => setOpenSheet("attendance")}
       />
       {/* TODO: AdMob 보상형 광고 연결 전까지 비활성 */}
       <RewardRow title={t("ad")} buttonLabel={t("receive", { count: AD_REWARD })} disabled />
       <RewardRow
         title={t("invite")}
         buttonLabel={t("receive", { count: INVITE_REWARD })}
-        onClick={() => setIsInviteSheetOpen(true)}
+        onClick={() => setOpenSheet("invite")}
       />
 
       {toastMessage && <Toast className="fixed bottom-6 left-1/2 -translate-x-1/2">{toastMessage}</Toast>}
 
       <BottomSheet
-        open={isAttendanceSheetOpen}
-        onOpenChange={setIsAttendanceSheetOpen}
+        open={openSheet === "attendance"}
+        onOpenChange={(open) => setOpenSheet(open ? "attendance" : undefined)}
         title={t("attendanceTitle", { count: ATTENDANCE_REWARD })}
         description={t("attendanceDescription")}
         buttonLayout="vertical"
@@ -96,8 +95,8 @@ export default function RewardsScreen() {
       </BottomSheet>
 
       <InviteSheet
-        open={isInviteSheetOpen}
-        onOpenChange={setIsInviteSheetOpen}
+        open={openSheet === "invite"}
+        onOpenChange={(open) => setOpenSheet(open ? "invite" : undefined)}
         inviteCode={me.myInviteCode}
         onCopied={() => showToast(t("codeCopied"))}
       />

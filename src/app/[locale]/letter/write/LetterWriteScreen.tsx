@@ -2,12 +2,14 @@
 
 import { useState } from "react"
 import { useFormatter, useLocale, useTranslations } from "next-intl"
+import { Controller, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { Button, ListRow, TextArea } from "@kojaem/mongmong"
 import { getAuthGetMeQueryKey, useAuthGetMe } from "@/apis/generated/auth/auth"
 import { getCharacterFindMineQueryKey, useCharacterFindMine } from "@/apis/generated/characters/characters"
 import { getLetterFindCalendarQueryKey, useLetterCreate, useLetterFindAll } from "@/apis/generated/letters/letters"
-import type { CreateLetterResponseDto, LocaleType, MoodType } from "@/apis/generated/model"
+import type { CreateLetterResponseDto, LocaleType } from "@/apis/generated/model"
 import { getQuestionFindDailyQueryKey, useQuestionFindDaily } from "@/apis/generated/questions/questions"
 import { getErrorMessage } from "@/apis/instance"
 import BackTopNavigation from "@/components/BackTopNavigation"
@@ -15,12 +17,14 @@ import CharacterFace from "@/components/CharacterFace"
 import LoadingScreen from "@/components/LoadingScreen"
 import { Link } from "@/i18n/navigation"
 import { toKstDate } from "@/utils/date"
+import { letterSchema, MAX_ANSWER_LENGTH, type LetterFormValues } from "@/validations/letterSchema"
 import LetterSentFlow from "./LetterSentFlow"
 import MoodSheet from "./MoodSheet"
 import PastLetterCostModal, { PAST_LETTER_COST } from "./PastLetterCostModal"
 import PreviousLetters from "./PreviousLetters"
 
-const MAX_ANSWER_LENGTH = 1000
+/** 답장을 보내기 전 차례로 여는 창: 지난 날짜면 꿈조각 확인 → 기분 선택 */
+type Dialog = "cost" | "mood"
 
 export default function LetterWriteScreen({ date }: { date?: string }) {
   const t = useTranslations("letterWrite")
@@ -34,9 +38,11 @@ export default function LetterWriteScreen({ date }: { date?: string }) {
   const { data: myLetters } = useLetterFindAll({ questionId: question?.id }, { query: { enabled: Boolean(question) } })
   const createLetter = useLetterCreate()
 
-  const [answer, setAnswer] = useState<string>()
-  const [isCostModalOpen, setIsCostModalOpen] = useState(false)
-  const [isMoodSheetOpen, setIsMoodSheetOpen] = useState(false)
+  const { register, control, watch, handleSubmit } = useForm<LetterFormValues>({
+    resolver: zodResolver(letterSchema),
+    defaultValues: { answer: "" }
+  })
+  const [openDialog, setOpenDialog] = useState<Dialog>()
   const [sentLetter, setSentLetter] = useState<CreateLetterResponseDto>()
 
   if (!character || !me || !question || !myLetters) return <LoadingScreen />
@@ -44,25 +50,15 @@ export default function LetterWriteScreen({ date }: { date?: string }) {
 
   const writtenLetter = myLetters.find((letter) => letter.id === question.letterId)
   const previousLetters = myLetters.filter((letter) => letter.id !== question.letterId)
-  const answerText = answer ?? writtenLetter?.answer ?? ""
+  const answer = watch("answer")
   const isPastDate = question.date < toKstDate()
-  const canSubmit = !writtenLetter && answerText.trim().length > 0
 
-  // 지난 날짜 답장은 꿈조각을 쓰므로 먼저 확인받는다
-  const handleSubmitClick = () => {
-    if (isPastDate) {
-      setIsCostModalOpen(true)
-    } else {
-      setIsMoodSheetOpen(true)
-    }
-  }
-
-  const handleSend = (mood: MoodType) => {
+  const onSubmit = ({ answer, mood }: LetterFormValues) => {
     createLetter.mutate(
-      { data: { answer: answerText, mood, letterDate: question.date, localeType: locale } },
+      { data: { answer, mood, letterDate: question.date, localeType: locale } },
       {
         onSuccess: (letter) => {
-          setIsMoodSheetOpen(false)
+          setOpenDialog(undefined)
           setSentLetter(letter)
           // 답장 여부·꿈조각·레벨·캘린더가 바뀐다
           queryClient.invalidateQueries({ queryKey: getQuestionFindDailyQueryKey() })
@@ -81,15 +77,19 @@ export default function LetterWriteScreen({ date }: { date?: string }) {
       <h1 className="text-title-md text-text-primary px-5 py-6">{question.content}</h1>
 
       <div className="px-5 py-4">
-        <TextArea
-          value={answerText}
-          onChange={(event) => setAnswer(event.target.value)}
-          maxLength={MAX_ANSWER_LENGTH}
-          disabled={Boolean(writtenLetter)}
-          placeholder={t("placeholder", { max: MAX_ANSWER_LENGTH })}
-          helperText={`${answerText.length}/${MAX_ANSWER_LENGTH}`}
-          className="field-sizing-content"
-        />
+        {writtenLetter ? (
+          <p className="bg-card border-border-brand-weak rounded-textfield text-body-md text-text-inverse-primary border p-4 whitespace-pre-line">
+            {writtenLetter.answer}
+          </p>
+        ) : (
+          <TextArea
+            {...register("answer")}
+            maxLength={MAX_ANSWER_LENGTH}
+            placeholder={t("placeholder", { max: MAX_ANSWER_LENGTH })}
+            helperText={`${answer.length}/${MAX_ANSWER_LENGTH}`}
+            className="field-sizing-content"
+          />
+        )}
       </div>
 
       <Link href={`/lounge?date=${question.date}`} className="block">
@@ -103,30 +103,42 @@ export default function LetterWriteScreen({ date }: { date?: string }) {
 
       <PreviousLetters letters={previousLetters} />
 
-      {canSubmit && (
+      {!writtenLetter && answer.trim() && (
         <div className="sticky bottom-0 mt-auto px-5 pb-5">
-          <Button size="xl" color="brand" variant="fill" isFullWidth onClick={handleSubmitClick}>
+          {/* 지난 날짜 답장은 꿈조각을 쓰므로 먼저 확인받는다 */}
+          <Button
+            size="xl"
+            color="brand"
+            variant="fill"
+            isFullWidth
+            onClick={() => setOpenDialog(isPastDate ? "cost" : "mood")}
+          >
             {t("submit")}
           </Button>
         </div>
       )}
 
       <PastLetterCostModal
-        open={isCostModalOpen}
+        open={openDialog === "cost"}
         hasEnoughReward={me.rewardCount >= PAST_LETTER_COST}
-        onClose={() => setIsCostModalOpen(false)}
-        onConfirm={() => {
-          setIsCostModalOpen(false)
-          setIsMoodSheetOpen(true)
-        }}
+        onClose={() => setOpenDialog(undefined)}
+        onConfirm={() => setOpenDialog("mood")}
       />
 
-      <MoodSheet
-        open={isMoodSheetOpen}
-        onOpenChange={setIsMoodSheetOpen}
-        isSending={createLetter.isPending}
-        errorMessage={createLetter.error ? getErrorMessage(createLetter.error) : undefined}
-        onConfirm={handleSend}
+      <Controller
+        name="mood"
+        control={control}
+        render={({ field }) => (
+          <MoodSheet
+            open={openDialog === "mood"}
+            onOpenChange={(open) => setOpenDialog(open ? "mood" : undefined)}
+            selectedMood={field.value}
+            onSelectMood={field.onChange}
+            isSending={createLetter.isPending}
+            errorMessage={createLetter.error ? getErrorMessage(createLetter.error) : undefined}
+            onConfirm={handleSubmit(onSubmit)}
+          />
+        )}
       />
     </main>
   )
