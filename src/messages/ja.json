@@ -239,5 +239,14 @@
       "past_letter": "過去の日付の返事",
       "item_purchase": "アイテム購入"
     }
+  },
+  "guest": {
+    "title": "今日の質問",
+    "description": "返事を書くとキャラクターが育ちます。",
+    "write": "返事を書く",
+    "loginTitle": "返事を書くにはログインが必要です",
+    "loginDescription": "カカオで始めると今日の返事から記録できます。",
+    "later": "あとで",
+    "login": "ログイン"
   }
 }

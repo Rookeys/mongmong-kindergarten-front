@@ -239,5 +239,14 @@
       "past_letter": "Past-date reply",
       "item_purchase": "Item purchase"
     }
+  },
+  "guest": {
+    "title": "Today's question",
+    "description": "Your character grows as you reply.",
+    "write": "Write a reply",
+    "loginTitle": "Log in to write a reply",
+    "loginDescription": "Start with Kakao to save your reply from today.",
+    "later": "Later",
+    "login": "Log in"
   }
 }

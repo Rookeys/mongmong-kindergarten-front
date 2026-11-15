@@ -5,6 +5,7 @@ import { useState } from "react"
 import { AnimatePresence } from "motion/react"
 import { signIn } from "next-auth/react"
 import { Button } from "@kojaem/mongmong"
+import { Link } from "@/i18n/navigation"
 import Slide from "@/app/[locale]/auth/components/Slide"
 import SlideWithButton from "@/app/[locale]/auth/components/SlideWithButton"
 
@@ -107,14 +108,13 @@ export default function OnboardingPage() {
                   <img src={"/signIn-logo-kakao.png"} className="mr-[8px] w-[20px]" />
                   {tLogin("oauthTitle", { serviceName: "Kakao" })}
                 </button>
-                <button
-                  onClick={() => {
-                    alert("guest")
-                  }}
-                  className="rounded-button-l text-text-brand bg-fill-brand-weak w-full p-[17px]"
+                {/* 비회원은 오늘 질문만 볼 수 있다 (답장은 로그인 필요) */}
+                <Link
+                  href="/guest"
+                  className="rounded-button-l text-text-brand bg-fill-brand-weak w-full p-[17px] text-center"
                 >
                   {tLogin("startGuest")}
-                </button>
+                </Link>
               </div>
             }
           />
