@@ -219,7 +219,8 @@
     "pickDate": "Choose a date",
     "adNotReady": "Ads aren't ready yet. (AdMob integration needed)",
     "confirm": "Done",
-    "comingSoon": "This feature is still being built."
+    "comingSoon": "This feature is still being built.",
+    "restDay": "February 29 is a day off."
   },
   "questions": {
     "title": "Question list",

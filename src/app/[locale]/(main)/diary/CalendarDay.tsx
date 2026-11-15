@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl"
 import { Link } from "@/i18n/navigation"
 import { cn } from "@/utils/cn"
-import type { CalendarCell } from "@/utils/date"
+import { isRestDay, type CalendarCell } from "@/utils/date"
 
 interface Props {
   cell: CalendarCell
@@ -14,6 +14,8 @@ export default function CalendarDay({ cell, today, isWritten }: Props) {
   const t = useTranslations("diary")
   const isToday = cell.date === today
   const isFuture = cell.date > today
+  // 2월 29일은 질문이 없는 쉬는 날
+  const isDisabled = isFuture || isRestDay(cell.date)
 
   const content = (
     <span
@@ -31,7 +33,7 @@ export default function CalendarDay({ cell, today, isWritten }: Props) {
     </span>
   )
 
-  if (isFuture) return content
+  if (isDisabled) return content
   return (
     <Link href={`/letter/write?date=${cell.date}`} aria-label={cell.date}>
       {content}

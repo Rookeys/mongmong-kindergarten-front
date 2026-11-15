@@ -219,7 +219,8 @@
     "pickDate": "日付を選んでください",
     "adNotReady": "広告はまだ準備中です。(AdMob連携が必要)",
     "confirm": "確認",
-    "comingSoon": "この機能はまだ準備中です。"
+    "comingSoon": "この機能はまだ準備中です。",
+    "restDay": "2月29日はお休みの日です。"
   },
   "questions": {
     "title": "質問リスト",

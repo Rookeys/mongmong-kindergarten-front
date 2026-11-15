@@ -16,7 +16,7 @@ Figma에 화면이나 동작 기준이 없어 프론트에서 먼저 만들어 �
 | 무엇 | 지금 동작 | 파일 |
 |---|---|---|
 | 날짜 변경 | 답장 쓰기·휴게실 상단 "2026년 5월 5일 ˅"을 누르면 바텀시트 휠(연·월·일)에서 날짜 선택, 미래 날짜는 오늘로 맞춤. 디자인시스템 달력은 어두운 화면용(Figma 기준)이라 밝은 시트에는 휠을 씀 | `src/components/DateChangeTitle.tsx` |
-| 질문 리스트 | 일지 탭 오른쪽 위 메뉴 → `/questions`. 질문 순번을 올해 날짜로 바꿔(1번 = 1월 1일) 그 날짜 답장 쓰기로 이동, 미래 날짜는 비활성. 윤년 2월 29일 처리는 백엔드 규칙 확인 필요 | `src/app/[locale]/questions/` |
+| 질문 리스트 | 일지 탭 오른쪽 위 메뉴 → `/questions`. 질문 순번을 올해 날짜로 바꿔(1번 = 1월 1일, 평년 기준) 그 날짜 답장 쓰기로 이동, 미래 날짜는 비활성 | `src/app/[locale]/questions/` |
 | 편지 도착 팝업 | 오늘 편지에 아직 답장하지 않았으면 홈에 들어올 때 하루 한 번 (기기별, localStorage) | `src/app/[locale]/(main)/LetterArrivalSheet.tsx` |
 | 홈 답장 카드 | 오늘 답장한 뒤에는 질문 카드 대신 같은 질문의 다른 사람 공개 답장 1개 (Figma 홈 `5390:22240`). 공개 답장이 없으면 질문 카드 그대로 | `src/app/[locale]/(main)/HomeScreen.tsx` |
 | 휴게실 작성자 | 공개 답장은 익명이라 "From. 익명"으로 고정 | `src/components/PublicLetterCard.tsx` |
@@ -36,6 +36,10 @@ Figma에 화면이나 동작 기준이 없어 프론트에서 먼저 만들어 �
 | 캐릭터 종류별(몽몽이·햄몽이·빼몽이) × 레벨별(Lv1~4) 이미지 | 캐릭터 홈, 졸업 앨범 | `GET /characters/me` (`characterType`, `level`) |
 | 졸업 연출과 새 캐릭터 소개 | 캐릭터 홈 (`canGraduate`가 true일 때) | `POST /characters/graduate` |
 | 에러 안내 문구: 이미 신고한 글, 판매 중지된 아이템, 졸업일 전 등 | 각 화면 | 에러 코드는 백엔드 `docs/error-codes.md` |
+
+## 정해진 규칙
+
+- 2월 29일은 질문이 없는 쉬는 날이다. 백엔드는 이날 질문을 주지 않고(`QUESTION_NOT_FOUND`), 프론트는 API를 부르지 않고 "2월 29일은 하루 쉬는 날이에요."를 보여준다 (홈·편지·답장 쓰기·휴게실, 일지 캘린더에서는 누를 수 없음). 백엔드 `feat/leap-day-no-question`과 같이 나가야 한다.
 
 ## 아직 비워 둔 것
 

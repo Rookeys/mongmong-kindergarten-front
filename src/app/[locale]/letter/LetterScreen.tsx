@@ -8,15 +8,27 @@ import type { LocaleType } from "@/apis/generated/model"
 import { useQuestionFindDaily } from "@/apis/generated/questions/questions"
 import BackTopNavigation from "@/components/BackTopNavigation"
 import LoadingScreen from "@/components/LoadingScreen"
+import RestDayScreen from "@/components/RestDayScreen"
 import { Link } from "@/i18n/navigation"
+import { isRestDay, toKstDate } from "@/utils/date"
 
 export default function LetterScreen() {
   const t = useTranslations("letter")
   const locale = useLocale() as LocaleType
   const { data: character } = useCharacterFindMine()
   const { data: me } = useAuthGetMe()
-  const { data: question } = useQuestionFindDaily({ locale })
+  // 2월 29일은 질문이 없는 날이라 조회하지 않는다
+  const isTodayRestDay = isRestDay(toKstDate())
+  const { data: question } = useQuestionFindDaily({ locale }, { query: { enabled: !isTodayRestDay } })
 
+  if (isTodayRestDay) {
+    return (
+      <main className="bg-gradient-letter flex min-h-dvh flex-col">
+        <BackTopNavigation />
+        <RestDayScreen />
+      </main>
+    )
+  }
   if (!character || !me || !question) return <LoadingScreen />
 
   const name = character.characterType.name

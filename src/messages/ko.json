@@ -218,7 +218,8 @@
     "pickDate": "날짜를 선택해주세요",
     "adNotReady": "광고는 아직 준비 중이에요. (AdMob 연동 필요)",
     "confirm": "확인",
-    "comingSoon": "아직 만들고 있는 기능이에요."
+    "comingSoon": "아직 만들고 있는 기능이에요.",
+    "restDay": "2월 29일은 하루 쉬는 날이에요."
   },
   "questions": {
     "title": "질문 리스트",

@@ -11,14 +11,18 @@ import CharacterImage from "@/components/CharacterImage"
 import LoadingScreen from "@/components/LoadingScreen"
 import PublicLetterCard from "@/components/PublicLetterCard"
 import { Link } from "@/i18n/navigation"
+import { isRestDay, toKstDate } from "@/utils/date"
 import LetterArrivalSheet from "./LetterArrivalSheet"
 
 export default function HomeScreen() {
   const t = useTranslations("home")
+  const tCommon = useTranslations("common")
   const locale = useLocale() as LocaleType
   const { data: character } = useCharacterFindMine()
   const { data: me } = useAuthGetMe()
-  const { data: question } = useQuestionFindDaily({ locale })
+  // 2월 29일은 질문이 없는 날이라 조회하지 않는다
+  const isTodayRestDay = isRestDay(toKstDate())
+  const { data: question } = useQuestionFindDaily({ locale }, { query: { enabled: !isTodayRestDay } })
   const hasReplied = Boolean(question?.letterId)
   // 오늘 답장한 뒤에는 질문 카드 대신 같은 질문에 다른 사람이 쓴 공개 답장 하나를 보여준다 (Figma 홈 5390:22240)
   const { data: publicLetters } = useLetterFindPublic(
@@ -26,11 +30,11 @@ export default function HomeScreen() {
     { query: { enabled: hasReplied } }
   )
 
-  if (!character || !me || !question) return <LoadingScreen />
+  if (!character || !me || (!question && !isTodayRestDay)) return <LoadingScreen />
 
   const characterName = character.characterType.name
   // 공개 목록에는 내 답장도 들어 있어서 빼고 고른다
-  const otherReply = publicLetters?.find((letter) => letter.id !== question.letterId)
+  const otherReply = publicLetters?.find((letter) => letter.id !== question?.letterId)
 
   return (
     <main className="bg-home-floor flex flex-1 flex-col">
@@ -60,7 +64,11 @@ export default function HomeScreen() {
       </section>
 
       <section className="px-[20px] pb-[12px]">
-        {otherReply ? (
+        {!question ? (
+          <div className="bg-fill-glass-weak border-border-brand-weak rounded-card-l border px-[20px] py-[16px] backdrop-blur-[15px]">
+            <p className="text-body-md text-text-inverse-primary">{tCommon("restDay")}</p>
+          </div>
+        ) : otherReply ? (
           <PublicLetterCard letter={otherReply} />
         ) : (
           <div className="bg-fill-glass-weak border-border-brand-weak rounded-card-l flex flex-col items-end gap-[12px] border px-[20px] py-[16px] backdrop-blur-[15px]">
@@ -71,7 +79,7 @@ export default function HomeScreen() {
           </div>
         )}
       </section>
-      {!hasReplied && <LetterArrivalSheet />}
+      {question && !hasReplied && <LetterArrivalSheet />}
     </main>
   )
 }

@@ -44,10 +44,15 @@ export function toDateString(date: Date) {
   return `${date.getFullYear()}-${month}-${day}`
 }
 
-/**
- * 질문 순번(1~365)이 올해 며칠인지. 백엔드는 같은 월/일에 같은 질문을 주므로 1월 1일을 1번으로 센다.
- * TODO: 윤년 2월 29일 처리는 백엔드 규칙 확인 필요 (임시)
- */
+/** 2월 29일은 질문이 없는 쉬는 날이다 (백엔드도 질문을 주지 않는다) */
+export function isRestDay(date: string) {
+  return date.slice(5) === "02-29"
+}
+
+/** 질문 순번(1~365)이 올해 며칠인지. 평년 기준으로 1번 = 1월 1일, 365번 = 12월 31일 (2월 29일은 질문 없음) */
 export function getDateOfQuestionOrder(year: number, orderNum: number) {
-  return toDateString(new Date(year, 0, orderNum))
+  const nonLeapDate = new Date(2001, 0, orderNum)
+  const month = String(nonLeapDate.getMonth() + 1).padStart(2, "0")
+  const day = String(nonLeapDate.getDate()).padStart(2, "0")
+  return `${year}-${month}-${day}`
 }

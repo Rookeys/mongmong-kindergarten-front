@@ -12,7 +12,7 @@ import { getDateOfQuestionOrder, toKstDate } from "@/utils/date"
 
 /**
  * 1년치 질문 목록. 누르면 올해 그 질문 날짜의 답장 쓰기로 간다 (미래 날짜는 비활성).
- * TODO: 질문 순번 → 날짜 계산과 "광고 보고 답장 쓰기" 동작은 임시 구현 (TODO.md)
+ * 2월 29일은 질문이 없어 목록에도 없다. TODO: "광고 보고 답장 쓰기"는 임시 알림 (TODO.md)
  */
 export default function QuestionListScreen() {
   const t = useTranslations("questions")

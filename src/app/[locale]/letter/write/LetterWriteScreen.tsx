@@ -16,8 +16,9 @@ import BackTopNavigation from "@/components/BackTopNavigation"
 import CharacterFace from "@/components/CharacterFace"
 import DateChangeTitle from "@/components/DateChangeTitle"
 import LoadingScreen from "@/components/LoadingScreen"
+import RestDayScreen from "@/components/RestDayScreen"
 import { Link } from "@/i18n/navigation"
-import { toKstDate } from "@/utils/date"
+import { isRestDay, toKstDate } from "@/utils/date"
 import { letterSchema, MAX_ANSWER_LENGTH, type LetterFormValues } from "@/validations/letterSchema"
 import LetterSentFlow from "./LetterSentFlow"
 import MoodSheet from "./MoodSheet"
@@ -34,7 +35,9 @@ export default function LetterWriteScreen({ date }: { date?: string }) {
 
   const { data: character } = useCharacterFindMine()
   const { data: me } = useAuthGetMe()
-  const { data: question } = useQuestionFindDaily({ date, locale })
+  // 2월 29일은 질문이 없는 날이라 조회하지 않는다
+  const restDay = isRestDay(date ?? toKstDate())
+  const { data: question } = useQuestionFindDaily({ date, locale }, { query: { enabled: !restDay } })
   const { data: myLetters } = useLetterFindAll({ questionId: question?.id }, { query: { enabled: Boolean(question) } })
   const createLetter = useLetterCreate()
 
@@ -45,6 +48,14 @@ export default function LetterWriteScreen({ date }: { date?: string }) {
   const [openDialog, setOpenDialog] = useState<Dialog>()
   const [sentLetter, setSentLetter] = useState<CreateLetterResponseDto>()
 
+  if (restDay) {
+    return (
+      <main className="bg-gradient-letter flex min-h-dvh flex-col">
+        <BackTopNavigation title={<DateChangeTitle date={date ?? toKstDate()} path="/letter/write" />} />
+        <RestDayScreen />
+      </main>
+    )
+  }
   if (!character || !me || !question || !myLetters) return <LoadingScreen />
   if (sentLetter) return <LetterSentFlow letter={sentLetter} character={character} />
 

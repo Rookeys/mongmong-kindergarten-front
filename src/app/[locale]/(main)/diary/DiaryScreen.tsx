@@ -6,7 +6,7 @@ import { useLetterFindCalendar } from "@/apis/generated/letters/letters"
 import { useQuestionFindDaily } from "@/apis/generated/questions/questions"
 import LoadingScreen from "@/components/LoadingScreen"
 import { Link } from "@/i18n/navigation"
-import { getMonthCells, toKstDate } from "@/utils/date"
+import { getMonthCells, isRestDay, toKstDate } from "@/utils/date"
 import CalendarDay from "./CalendarDay"
 import MonthPicker from "./MonthPicker"
 
@@ -24,9 +24,11 @@ export default function DiaryScreen({ month: monthParam }: { month?: string }) {
   const { year, month } = parseMonth(monthParam, today)
 
   const { data: calendar } = useLetterFindCalendar({ year, month })
-  const { data: todayQuestion } = useQuestionFindDaily()
+  // 2월 29일은 질문이 없는 날이라 조회하지 않는다
+  const isTodayRestDay = isRestDay(today)
+  const { data: todayQuestion } = useQuestionFindDaily(undefined, { query: { enabled: !isTodayRestDay } })
 
-  if (!calendar || !todayQuestion) return <LoadingScreen />
+  if (!calendar || (!todayQuestion && !isTodayRestDay)) return <LoadingScreen />
 
   const writtenDates = calendar.map((entry) => entry.date)
   // 2026-02-01이 일요일이라 그 주로 요일 이름을 만든다
@@ -71,7 +73,7 @@ export default function DiaryScreen({ month: monthParam }: { month?: string }) {
         </ol>
       </section>
 
-      {!todayQuestion.letterId && (
+      {todayQuestion && !todayQuestion.letterId && (
         <div className="mt-auto px-[20px] pb-[20px]">
           <Button asChild size="xl" color="brand" variant="fill" isFullWidth>
             <Link href="/letter/write">{t("writeToday")}</Link>

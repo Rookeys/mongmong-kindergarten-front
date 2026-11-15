@@ -8,19 +8,33 @@ import { useQuestionFindDaily } from "@/apis/generated/questions/questions"
 import CharacterFace from "@/components/CharacterFace"
 import DateChangeTitle from "@/components/DateChangeTitle"
 import LoadingScreen from "@/components/LoadingScreen"
+import RestDayScreen from "@/components/RestDayScreen"
 import { Link } from "@/i18n/navigation"
+import { isRestDay, toKstDate } from "@/utils/date"
 import LoungeWelcomeSheet from "./LoungeWelcomeSheet"
 import PublicLetterCard from "@/components/PublicLetterCard"
 
 export default function LoungeScreen({ date }: { date?: string }) {
   const t = useTranslations("lounge")
   const locale = useLocale() as LocaleType
-  const { data: question } = useQuestionFindDaily({ date, locale })
+  // 2월 29일은 질문이 없는 날이라 조회하지 않는다
+  const restDay = isRestDay(date ?? toKstDate())
+  const { data: question } = useQuestionFindDaily({ date, locale }, { query: { enabled: !restDay } })
   const { data: letters } = useLetterFindPublic(
     { questionId: question?.id ?? "" },
     { query: { enabled: Boolean(question) } }
   )
 
+  if (restDay) {
+    return (
+      <main className="bg-gradient-letter flex flex-1 flex-col">
+        <header className="text-subtitle-lg text-text-primary flex h-[54px] items-center justify-center">
+          <DateChangeTitle date={date ?? toKstDate()} path="/lounge" />
+        </header>
+        <RestDayScreen />
+      </main>
+    )
+  }
   if (!question || !letters) return <LoadingScreen />
 
   const writeHref = `/letter/write?date=${question.date}`
