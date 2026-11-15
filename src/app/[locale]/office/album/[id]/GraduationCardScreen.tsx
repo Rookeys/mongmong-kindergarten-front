@@ -44,8 +44,7 @@ export default function GraduationCardScreen({ cardId }: { cardId: string }) {
             alt=""
             className="pixelated absolute top-0 left-1/2 h-[180px] w-[305px] max-w-none -translate-x-1/2"
           />
-          {/* TODO: 디자인시스템 popover 자동 폭 옵션이 생기면 w-auto! 제거 */}
-          <Popover kind="popover" title={tHome("idle")} tail="bottom" className="w-auto!" />
+          <Popover kind="popover" fixedWidth={false} title={tHome("idle")} tail="bottom" />
           <CharacterImage src={null} alt={card.characterName} size={80} />
         </div>
         <dl className="flex flex-col gap-[8px]">

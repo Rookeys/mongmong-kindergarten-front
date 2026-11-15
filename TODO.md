@@ -47,15 +47,11 @@ Figma에 화면이나 동작 기준이 없어 프론트에서 먼저 만들어 �
 
 ## 디자인시스템
 
-앱은 `<html data-theme="dark">`(Figma Dark 색 모드)로 디자인시스템 컴포넌트를 그대로 쓴다. 아래 부족한 점은 디자인시스템 `feature/design-gaps-kojaem` 브랜치에서 고치는 중이고, 배포되기 전까지 프론트는 지금처럼 둔다.
+앱은 `<html data-theme="dark">`(Figma Dark 색 모드)로 `@kojaem/mongmong`(0.0.8) 컴포넌트를 그대로 쓴다. 화면에서 덮어쓰는 색·크기는 없다.
+부족한 점이 생기면 프론트에서 덮어쓰지 말고 여기에 적은 뒤 디자인시스템에서 고친다.
 
-- Popover `kind="popover"`가 폭 260px 고정 → 홈·졸업 카드 말풍선은 `className="w-auto!"`로 덮어씀 (배포 후 새 옵션으로 교체)
-- BottomSheet·Modal 제목 줄바꿈(`\n`) 미지원 → 지금은 한 줄로 이어서 보임
-- DatePicker wheel에 연·월만 고르는 옵션 없음 → 일지 달 선택에 일(day) 열도 보임
-- Dark 테마 Chip 선택 색 Figma 대조
-- DatePicker 휠 글자색: 지금 배포본(0.0.7)은 Dark에서 선택된 줄이 흐리다 → 같은 브랜치에서 Figma 기준으로 고침 (날짜 변경·달 선택 시트에 영향)
-
-배포되면 프론트에서 할 일: `@kojaem/mongmong` 올리기, Popover `w-auto!` → `fixedWidth={false}`, 일지 달 선택을 `DatePicker type="wheel" unit="month"`로, 화면 확인
+- Figma Dark `Text/Brand`는 #8e87f7인데 디자인시스템 `tokens.json`은 #6a62ea → 토큰 동기화 확인 필요
+- Figma 기준으로 DatePicker 달력은 어두운 화면 위에, 밝은 바텀시트 안에는 휠을 쓴다
 
 ## 로그인
 

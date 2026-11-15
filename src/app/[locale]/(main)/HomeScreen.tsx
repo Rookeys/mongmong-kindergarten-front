@@ -55,8 +55,7 @@ export default function HomeScreen() {
           alt=""
           className="pixelated absolute top-0 left-1/2 h-[304px] w-[515px] max-w-none -translate-x-1/2"
         />
-        {/* TODO: 디자인시스템 popover가 폭 260px 고정이라 Figma처럼 내용 폭에 맞추려고 덮어씀 (자동 폭 옵션 필요) */}
-        <Popover kind="popover" title={t("idle")} tail="bottom" className="w-auto!" />
+        <Popover kind="popover" fixedWidth={false} title={t("idle")} tail="bottom" />
         <CharacterImage src={character.characterType.imageUrl} alt={characterName} size={100} />
       </section>
 

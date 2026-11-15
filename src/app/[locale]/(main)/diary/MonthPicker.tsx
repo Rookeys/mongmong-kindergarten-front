@@ -46,9 +46,9 @@ export default function MonthPicker({ title, year, month }: Props) {
           </Button>
         }
       >
-        {/* TODO: 디자인시스템 DatePicker wheel에 연·월만 고르는 옵션이 없어 일(day) 열도 보인다 */}
         <DatePicker
           type="wheel"
+          unit="month"
           value={selectedDate}
           onChange={setSelectedDate}
           minYear={FIRST_YEAR}
