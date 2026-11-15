@@ -3,6 +3,7 @@
 ## 직접 확인할 것 (체크리스트)
 
 - [ ] **카카오 실제 로그인 1회**: 로그인 → 이름 작성 → 브릿지 → 홈까지. 코드 쪽은 이메일 계정으로만 검증했다.
+- [ ] **GitHub 시크릿 `GH_PACKAGES_TOKEN` 등록** (프론트 레포 Settings → Secrets and variables → Actions): `read:packages` 권한 PAT. CI가 `@kojaem/mongmong`을 받을 때 쓴다.
 - [ ] **프론트 PR 머지**: `dev` ← `feat/temp-screens` 하나에 MVP 작업이 모두 들어 있다. 기능별로 커밋을 나눠 두었다.
 - [ ] **백엔드 `feat/nickname-japanese` 머지**: 프론트 PR과 같이 (일본어 닉네임).
 - [ ] **디자인시스템 `feature/figma-parity-kojaem` 머지 후 릴리스** (TextArea + Figma 색 맞춤). 배포되면 알려주기 → 프론트를 다크 테마로 바꾸고 덮어쓴 색·임시 textarea를 정리한다 (아래 "디자인시스템 정합성").
