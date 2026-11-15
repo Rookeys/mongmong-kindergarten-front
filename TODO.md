@@ -3,8 +3,8 @@
 ## 직접 확인할 것 (체크리스트)
 
 - [ ] **카카오 실제 로그인 1회**: 로그인 → 이름 작성 → 브릿지 → 홈까지. 코드 쪽은 이메일 계정으로만 검증했다.
-- [ ] **GitHub 시크릿 `GH_PACKAGES_TOKEN` 등록** (프론트 레포 Settings → Secrets and variables → Actions): `read:packages` 권한 PAT. CI가 `@kojaem/mongmong`을 받을 때 쓴다.
-- [ ] **프론트 PR 머지**: `dev` ← `feat/temp-screens` 하나에 MVP 작업이 모두 들어 있다. 기능별로 커밋을 나눠 두었다.
+- [ ] **프론트 PR 머지**: `dev` ← `feat/temp-screens` 하나에 MVP 작업이 모두 들어 있다. 기능별로 커밋을 나눠 두었다. (CI용 `GH_PACKAGES_TOKEN` 시크릿은 등록됨)
+- [ ] **`.env`의 `NEXT_PUBLIC_API_ROOT`**: 로컬은 `http://localhost:4000` (`/api/v1` 없이). 예전 `NEXT_PUBLIC_API_URL`은 쓰지 않는다.
 - [ ] **디자이너에게 전달**: 아래 "Figma에 디자인이 없는 화면·요소" 표와 "임시 구현" 목록, 홈 오른쪽 위 아이콘 3개 용도, 꾸미기 옷·얼굴 아이템을 캐릭터 위 어디에 그릴지, 꾸미기 탭 장식·기타 여부.
 - [ ] **(선택) 로컬 개발 DB 테스트 데이터 정리**: 검증·스크린샷용 테스트 계정(`*@test.dev`), 공개 답장, 졸업 카드 1개, 공지 1개.
 - [ ] **`pnpm lint` 고장**: `eslint-plugin-tailwindcss`가 Tailwind v4를 지원하지 않아 실행 자체가 안 된다 (이번 작업 전부터).
@@ -39,6 +39,8 @@ Figma에 화면이나 동작 기준이 없어 프론트에서 먼저 만들어 �
 
 ## 아직 비워 둔 것
 
+- 토큰 갱신 공유: 같은 Refresh Token으로 동시에 갱신하지 않도록 진행 중인 갱신을 서버 메모리에서 공유한다(`src/app/api/auth/refreshAccessToken.ts`). 프론트 서버를 여러 대 띄우면 Redis 같은 공유 저장소로 옮겨야 한다.
+
 - 홈 상단 오른쪽 아이콘 3개: Figma에 용도가 없고 임시 하트 아이콘이다.
 - 홈·화면 하단 광고 배너: Figma는 임시 이미지다. AdMob 붙일 때 넣는다.
 - 캐릭터 이미지: 백엔드 `characterType.imageUrl`이 없으면 임시 알 이미지를 쓴다.
@@ -46,6 +48,8 @@ Figma에 화면이나 동작 기준이 없어 프론트에서 먼저 만들어 �
 - 졸업 카드 저장·공유: html-to-image로 카드를 PNG로 만든다. 움직이는 캐릭터는 찍는 순간 한 프레임만 들어가고, 다른 도메인 이미지(`cardImageUrl` 등)는 그 서버가 CORS를 허용해야 찍힌다.
 
 ## 디자인시스템
+
+백엔드 할 일은 백엔드 레포 `TODO.md`에 있다. 프론트 할 일은 이 파일 하나로 본다.
 
 앱은 `<html data-theme="dark">`(Figma Dark 색 모드)로 `@kojaem/mongmong`(0.0.8) 컴포넌트를 그대로 쓴다. 화면에서 덮어쓰는 색·크기는 없다.
 부족한 점이 생기면 프론트에서 덮어쓰지 말고 여기에 적은 뒤 디자인시스템에서 고친다.
