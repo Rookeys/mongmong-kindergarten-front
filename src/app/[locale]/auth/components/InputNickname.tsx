@@ -52,9 +52,9 @@ export default function InputNickname({ onComplete }: { onComplete: () => void }
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="mt-14 h-25 w-25 shrink-0" aria-hidden />
+      <div className="mt-[56px] h-[100px] w-[100px] shrink-0" aria-hidden />
       <span className="mt-gap-m">{t("name")}</span>
-      <div className="flex w-full flex-col gap-4 px-5 pt-6">
+      <div className="flex w-full flex-col gap-[16px] px-[20px] pt-[24px]">
         <TextField
           {...register("nickname")}
           placeholder={t("namePlaceholder")}
@@ -70,7 +70,7 @@ export default function InputNickname({ onComplete }: { onComplete: () => void }
           helperText={errors.friendInviteCode?.message}
         />
       </div>
-      <div className="text-subtitle-lg absolute bottom-0 left-0 w-full py-5">
+      <div className="text-subtitle-lg absolute bottom-0 left-0 w-full py-[20px]">
         <Button
           type="submit"
           size="xl"

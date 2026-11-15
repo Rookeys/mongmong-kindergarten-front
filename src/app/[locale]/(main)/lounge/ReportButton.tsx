@@ -41,7 +41,7 @@ export default function ReportButton({ letterId }: { letterId: string }) {
       <button type="button" className="text-subtitle-sm text-text-brand" onClick={() => setIsOpen(true)}>
         {t("report")}
       </button>
-      {toastMessage && <Toast className="fixed bottom-28 left-1/2 z-10 -translate-x-1/2">{toastMessage}</Toast>}
+      {toastMessage && <Toast className="fixed bottom-[112px] left-1/2 z-10 -translate-x-1/2">{toastMessage}</Toast>}
       <BottomSheet
         open={isOpen}
         onOpenChange={(open) => (open ? setIsOpen(true) : closeSheet())}
@@ -69,7 +69,7 @@ export default function ReportButton({ letterId }: { letterId: string }) {
           name="reasonType"
           control={control}
           render={({ field }) => (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-[8px]">
               {Object.values(LetterReportReasonType).map((reason) => (
                 <Chip
                   key={reason}

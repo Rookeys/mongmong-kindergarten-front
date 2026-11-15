@@ -31,7 +31,7 @@ export default function MonthPicker({ title, year, month }: Props) {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="text-subtitle-lg text-text-primary flex items-center gap-1.5"
+        className="text-subtitle-lg text-text-primary flex items-center gap-[6px]"
       >
         {title}
         <img src="/assets/icons/arrow-down.png" alt="" width={16} height={16} className="rotate-90" />

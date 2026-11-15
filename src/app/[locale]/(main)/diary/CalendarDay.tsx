@@ -18,7 +18,7 @@ export default function CalendarDay({ cell, today, isWritten }: Props) {
   const content = (
     <span
       className={cn(
-        "text-title-sm mx-auto flex h-[42px] w-9 items-center justify-center rounded-full",
+        "text-title-sm mx-auto flex h-[42px] w-[36px] items-center justify-center rounded-full",
         isToday && !isWritten ? "bg-fill-brand text-text-strong" : "text-text-tertiary",
         !cell.isCurrentMonth && "text-text-quaternary opacity-50"
       )}

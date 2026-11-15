@@ -12,7 +12,7 @@ export default function NoticeScreen({ noticeId }: { noticeId: string }) {
   return (
     <main className="bg-night-sky flex min-h-dvh flex-col">
       <BackTopNavigation title={notice.title} />
-      <p className="text-body-md text-text-primary px-5 py-4 whitespace-pre-line">{notice.content}</p>
+      <p className="text-body-md text-text-primary px-[20px] py-[16px] whitespace-pre-line">{notice.content}</p>
     </main>
   )
 }

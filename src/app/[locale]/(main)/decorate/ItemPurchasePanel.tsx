@@ -14,7 +14,7 @@ interface Props {
 export default function ItemPurchasePanel({ item, isPurchasing, onBack, onBuy }: Props) {
   const t = useTranslations("decorate")
   return (
-    <div className="flex flex-col items-center gap-3 px-2.5">
+    <div className="flex flex-col items-center gap-[12px] px-[10px]">
       <button
         type="button"
         className="text-text-inverse-secondary self-start text-xl"

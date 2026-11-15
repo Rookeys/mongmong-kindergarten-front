@@ -10,15 +10,15 @@ export default function PreviousLetters({ letters }: { letters: GetLetterRespons
 
   return (
     <section>
-      <h2 className="text-subtitle-lg text-text-primary px-5 pt-6 pb-3">{t("previous")}</h2>
+      <h2 className="text-subtitle-lg text-text-primary px-[20px] pt-[24px] pb-[12px]">{t("previous")}</h2>
       {letters.length === 0 ? (
         <Result image={<CharacterFace size={40} />} title={t("noPrevious")} />
       ) : (
-        <ul className="flex flex-col gap-4 px-5 pb-28">
+        <ul className="flex flex-col gap-[16px] px-[20px] pb-[112px]">
           {letters.map((letter) => (
-            <li key={letter.id} className="flex flex-col gap-2">
+            <li key={letter.id} className="flex flex-col gap-[8px]">
               <p className="text-subtitle-md text-text-primary">{formatDotDate(letter.letterDate)}</p>
-              <p className="bg-card border-border-brand-weak rounded-textfield text-body-md text-text-inverse-primary border p-4 whitespace-pre-line">
+              <p className="bg-card border-border-brand-weak rounded-textfield text-body-md text-text-inverse-primary border p-[16px] whitespace-pre-line">
                 {letter.answer}
               </p>
             </li>

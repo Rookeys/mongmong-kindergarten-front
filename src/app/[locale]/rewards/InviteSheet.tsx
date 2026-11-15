@@ -49,11 +49,11 @@ export default function InviteSheet({ open, onOpenChange, inviteCode, onCopied }
         </>
       }
     >
-      <ul className="flex flex-col gap-4">
+      <ul className="flex flex-col gap-[16px]">
         {INVITE_STEPS.map((step) => (
-          <li key={step} className="flex items-start gap-3">
+          <li key={step} className="flex items-start gap-[12px]">
             <CharacterFace />
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-[4px]">
               <p className="text-subtitle-lg text-text-inverse-primary">
                 {t(`${step}.title`, { count: INVITE_REWARD })}
               </p>

@@ -30,7 +30,7 @@ export default function OfficeScreen() {
 
   return (
     <main className="bg-night-sky flex flex-1 flex-col">
-      <section className="flex flex-col gap-1 px-5 pt-14 pb-6">
+      <section className="flex flex-col gap-[4px] px-[20px] pt-[56px] pb-[24px]">
         <h1 className="text-title-md text-text-primary">
           {t("together", { nickname: me.nickname ?? "", days: getDaysTogether(me.createdDate) })}
         </h1>

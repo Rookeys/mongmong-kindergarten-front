@@ -28,7 +28,7 @@ export function ModalView({ children, onClose }: { children: React.ReactNode; on
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       {/* content */}
-      <div className="relative rounded bg-white p-6">{children}</div>
+      <div className="relative rounded-[4px] bg-white p-[24px]">{children}</div>
     </div>
   )
 }

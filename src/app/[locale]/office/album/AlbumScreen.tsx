@@ -19,14 +19,14 @@ export default function AlbumScreen() {
     <main className="bg-gradient-letter flex min-h-dvh flex-col">
       <BackTopNavigation title={t("title")} />
       {cards.length === 0 ? (
-        <Result className="mt-20" image={<CharacterFace size={40} />} title={t("empty")} />
+        <Result className="mt-[80px]" image={<CharacterFace size={40} />} title={t("empty")} />
       ) : (
-        <ul className="grid grid-cols-2 gap-3 p-5">
+        <ul className="grid grid-cols-2 gap-[12px] p-[20px]">
           {cards.map((card) => (
             <li key={card.id}>
               <Link
                 href={`/office/album/${card.id}`}
-                className="bg-card border-border-brand-weak flex flex-col items-center gap-2 rounded-lg border p-3"
+                className="bg-card border-border-brand-weak flex flex-col items-center gap-[8px] rounded-[8px] border p-[12px]"
               >
                 <GraduationCardHeader card={card} />
                 <img

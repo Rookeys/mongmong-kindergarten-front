@@ -23,22 +23,22 @@ export default function HomeScreen() {
 
   return (
     <main className="bg-home-floor flex flex-1 flex-col">
-      <header className="bg-home-header flex h-[54px] items-center justify-between px-5 py-3">
-        <div className="flex items-center gap-5">
+      <header className="bg-home-header flex h-[54px] items-center justify-between px-[20px] py-[12px]">
+        <div className="flex items-center gap-[20px]">
           <HeaderStat value={`LV.${character.level}`} />
           <Link href="/rewards">
             <HeaderStat value={me.rewardCount} />
           </Link>
         </div>
         {/* TODO: 오른쪽 아이콘 3개는 Figma에서 용도 미정 (임시 하트 아이콘) */}
-        <div className="flex items-center gap-5" aria-hidden>
+        <div className="flex items-center gap-[20px]" aria-hidden>
           <HeaderIcon />
           <HeaderIcon />
           <HeaderIcon />
         </div>
       </header>
 
-      <section className="relative flex h-[398px] flex-col items-center justify-end gap-1 overflow-hidden">
+      <section className="relative flex h-[398px] flex-col items-center justify-end gap-[4px] overflow-hidden">
         <img
           src="/assets/images/home-room.gif"
           alt=""
@@ -49,8 +49,8 @@ export default function HomeScreen() {
         <CharacterImage src={character.characterType.imageUrl} alt={characterName} size={100} />
       </section>
 
-      <section className="px-5 pb-3">
-        <div className="bg-fill-glass-weak border-border-brand-weak rounded-card-l flex flex-col items-end gap-3 border px-5 py-4 backdrop-blur-[15px]">
+      <section className="px-[20px] pb-[12px]">
+        <div className="bg-fill-glass-weak border-border-brand-weak rounded-card-l flex flex-col items-end gap-[12px] border px-[20px] py-[16px] backdrop-blur-[15px]">
           <p className="text-body-md text-text-inverse-primary w-full">{question.content}</p>
           <Button asChild size="s" color="brand" variant="fill">
             <Link href="/letter">{t("openLetter", { name: characterName })}</Link>
@@ -63,7 +63,7 @@ export default function HomeScreen() {
 
 function HeaderStat({ value }: { value: string | number }) {
   return (
-    <div className="flex items-center gap-0.5">
+    <div className="flex items-center gap-[2px]">
       <HeaderIcon />
       <span className="text-subtitle-sm text-text-primary">{value}</span>
     </div>

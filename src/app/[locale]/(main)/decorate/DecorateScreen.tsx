@@ -82,7 +82,7 @@ export default function DecorateScreen() {
 
   return (
     <main className="bg-night-sky flex flex-1 flex-col">
-      <section className="relative flex flex-1 items-center justify-center py-10">
+      <section className="relative flex flex-1 items-center justify-center py-[40px]">
         {equippedBackground && (
           <ItemImage src={equippedBackground.imageUrl} size={360} className="absolute inset-0 size-full object-cover" />
         )}
@@ -93,10 +93,10 @@ export default function DecorateScreen() {
             <ItemImage key={ownedItem.id} src={ownedItem.imageUrl} size={120} className="absolute inset-0" />
           ))}
         </div>
-        {toastMessage && <Toast className="absolute bottom-4">{toastMessage}</Toast>}
+        {toastMessage && <Toast className="absolute bottom-[16px]">{toastMessage}</Toast>}
       </section>
 
-      <section className="bg-background-upper rounded-t-[28px] px-2.5 pt-5 pb-4">
+      <section className="bg-background-upper rounded-t-[28px] px-[10px] pt-[20px] pb-[16px]">
         {itemToBuy ? (
           <ItemPurchasePanel
             item={itemToBuy}
@@ -106,7 +106,7 @@ export default function DecorateScreen() {
           />
         ) : (
           <>
-            <div className="flex gap-2 px-3.5 pb-3">
+            <div className="flex gap-[8px] px-[14px] pb-[12px]">
               {Object.values(ItemType).map((type) => (
                 <Chip
                   key={type}

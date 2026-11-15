@@ -31,9 +31,9 @@ export default function GraduationCardScreen({ cardId }: { cardId: string }) {
   return (
     <main className="bg-gradient-letter flex min-h-dvh flex-col">
       <BackTopNavigation />
-      <article className="bg-card border-border-brand-weak mx-5 flex flex-col gap-4 rounded-lg border p-4">
+      <article className="bg-card border-border-brand-weak mx-[20px] flex flex-col gap-[16px] rounded-[8px] border p-[16px]">
         <GraduationCardHeader card={card} />
-        <div className="bg-home-floor relative flex h-[230px] flex-col items-center justify-end gap-1 overflow-hidden rounded pb-4">
+        <div className="bg-home-floor relative flex h-[230px] flex-col items-center justify-end gap-[4px] overflow-hidden rounded-[4px] pb-[16px]">
           <img
             src="/assets/images/home-room.gif"
             alt=""
@@ -43,7 +43,7 @@ export default function GraduationCardScreen({ cardId }: { cardId: string }) {
           <Popover kind="popover" title={tHome("idle")} tail="bottom" className="w-auto!" />
           <CharacterImage src={null} alt={card.characterName} size={80} />
         </div>
-        <dl className="flex flex-col gap-2">
+        <dl className="flex flex-col gap-[8px]">
           {details.map((detail) => (
             <div key={detail.label} className="flex justify-between">
               <dt className="text-body-md text-text-inverse-secondary">{detail.label}</dt>

@@ -18,14 +18,14 @@ export default function NoticesScreen() {
     <main className="bg-night-sky flex min-h-dvh flex-col">
       <BackTopNavigation title={t("title")} />
       {notices.length === 0 ? (
-        <Result className="mt-20" title={t("empty")} />
+        <Result className="mt-[80px]" title={t("empty")} />
       ) : (
         <ol className="flex flex-col">
           {notices.map((notice, index) => (
             <li key={notice.id}>
               <Link
                 href={`/office/notices/${notice.id}`}
-                className="text-subtitle-md text-text-primary flex gap-6 px-5 py-4"
+                className="text-subtitle-md text-text-primary flex gap-[24px] px-[20px] py-[16px]"
               >
                 <span className="text-text-secondary">{String(notices.length - index).padStart(3, "0")}</span>
                 {notice.title}

@@ -36,7 +36,7 @@ export default function DiaryScreen({ month: monthParam }: { month?: string }) {
 
   return (
     <main className="bg-night-sky flex flex-1 flex-col">
-      <header className="flex h-[54px] items-center px-2.5">
+      <header className="flex h-[54px] items-center px-[10px]">
         <div className="flex-1" />
         <MonthPicker
           title={format.dateTime(new Date(Date.UTC(year, month - 1, 1)), {
@@ -53,15 +53,15 @@ export default function DiaryScreen({ month: monthParam }: { month?: string }) {
         </div>
       </header>
 
-      <section className="flex flex-col gap-2 py-5">
-        <div className="grid grid-cols-7 px-6 py-2">
+      <section className="flex flex-col gap-[8px] py-[20px]">
+        <div className="grid grid-cols-7 px-[24px] py-[8px]">
           {weekdays.map((weekday) => (
             <span key={weekday} className="text-caption-lg text-text-tertiary text-center">
               {weekday}
             </span>
           ))}
         </div>
-        <ol className="grid grid-cols-7 gap-y-4 px-6 py-2">
+        <ol className="grid grid-cols-7 gap-y-[16px] px-[24px] py-[8px]">
           {getMonthCells(year, month).map((cell) => (
             <li key={cell.date}>
               <CalendarDay cell={cell} today={today} isWritten={writtenDates.includes(cell.date)} />
@@ -71,7 +71,7 @@ export default function DiaryScreen({ month: monthParam }: { month?: string }) {
       </section>
 
       {!todayQuestion.letterId && (
-        <div className="mt-auto px-5 pb-5">
+        <div className="mt-auto px-[20px] pb-[20px]">
           <Button asChild size="xl" color="brand" variant="fill" isFullWidth>
             <Link href="/letter/write">{t("writeToday")}</Link>
           </Button>

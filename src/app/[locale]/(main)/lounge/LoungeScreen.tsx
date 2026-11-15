@@ -31,7 +31,7 @@ export default function LoungeScreen({ date }: { date?: string }) {
       <header className="text-subtitle-lg text-text-primary flex h-[54px] items-center justify-center">
         {format.dateTime(new Date(`${question.date}T00:00:00`), { dateStyle: "long" })}
       </header>
-      <h1 className="text-title-md text-text-primary px-5 py-6">{question.content}</h1>
+      <h1 className="text-title-md text-text-primary px-[20px] py-[24px]">{question.content}</h1>
 
       {letters.length === 0 ? (
         <Result
@@ -53,7 +53,7 @@ export default function LoungeScreen({ date }: { date?: string }) {
               trailingAccessory={<span aria-hidden>›</span>}
             />
           </Link>
-          <ul className="flex flex-col gap-6 px-5 pt-3 pb-6">
+          <ul className="flex flex-col gap-[24px] px-[20px] pt-[12px] pb-[24px]">
             {letters.map((letter) => (
               <li key={letter.id}>
                 <PublicLetterCard letter={letter} />

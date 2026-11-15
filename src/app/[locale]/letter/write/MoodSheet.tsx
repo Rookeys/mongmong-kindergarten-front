@@ -34,7 +34,7 @@ export default function MoodSheet({
       title={t("moodTitle")}
       description={t("moodDescription")}
       buttons={
-        <div className="flex w-full flex-col gap-2">
+        <div className="flex w-full flex-col gap-[8px]">
           {errorMessage && <p className="text-caption-lg text-text-danger">{errorMessage}</p>}
           <Button
             size="xl"

@@ -26,20 +26,20 @@ export default function LetterScreen() {
     <main className="bg-gradient-letter flex min-h-dvh flex-col">
       <BackTopNavigation title={t("title", { name })} />
 
-      <section className="p-5">
-        <article className="bg-letter-paper border-border-brand-weak rounded-bottom-sheet flex flex-col border py-6 backdrop-blur-[15px]">
-          <p className="text-subtitle-lg text-text-inverse-primary px-6 py-3">{t("to")}</p>
-          <p className="text-body-md text-text-inverse-secondary px-6 py-2 whitespace-pre-line">
+      <section className="p-[20px]">
+        <article className="bg-letter-paper border-border-brand-weak rounded-bottom-sheet flex flex-col border py-[24px] backdrop-blur-[15px]">
+          <p className="text-subtitle-lg text-text-inverse-primary px-[24px] py-[12px]">{t("to")}</p>
+          <p className="text-body-md text-text-inverse-secondary px-[24px] py-[8px] whitespace-pre-line">
             {t("body", { name, nickname: me.nickname ?? "", question: question.content })}
           </p>
-          <div className="flex h-[58px] items-center justify-between px-6 pt-5">
+          <div className="flex h-[58px] items-center justify-between px-[24px] pt-[20px]">
             <p className="text-subtitle-lg text-text-inverse-primary whitespace-pre-line">{t("from", { name })}</p>
             <img src="/assets/images/letter-sign.png" alt="" width={60} height={60} className="pixelated" />
           </div>
         </article>
       </section>
 
-      <div className="mt-auto flex flex-col gap-2 px-5 pb-5">
+      <div className="mt-auto flex flex-col gap-[8px] px-[20px] pb-[20px]">
         {hasReplied ? (
           <Button size="xl" color="brand" variant="fill" isFullWidth disabled>
             {t("alreadyWritten")}

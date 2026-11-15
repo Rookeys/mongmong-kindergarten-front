@@ -63,7 +63,7 @@ export default function RewardsScreen() {
         onClick={() => setOpenSheet("invite")}
       />
 
-      {toastMessage && <Toast className="fixed bottom-6 left-1/2 -translate-x-1/2">{toastMessage}</Toast>}
+      {toastMessage && <Toast className="fixed bottom-[24px] left-1/2 -translate-x-1/2">{toastMessage}</Toast>}
 
       <BottomSheet
         open={openSheet === "attendance"}

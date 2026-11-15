@@ -20,7 +20,7 @@ export default function ShareCardButtons({ shareText }: { shareText: string }) {
   }
 
   return (
-    <div className="mt-auto flex gap-2 px-5 pb-5">
+    <div className="mt-auto flex gap-[8px] px-[20px] pb-[20px]">
       <Button size="xl" color="brand" variant="weak" isFullWidth disabled>
         {t("save")}
       </Button>

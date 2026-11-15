@@ -33,7 +33,7 @@ export default function Slide({ step, currentStep, stringValue, delay, onNext }:
     >
       <div className="absolute top-[421px] left-1/2 w-full -translate-x-1/2">
         <motion.p
-          className="text-title-sm text-text-primary flex h-24 items-center justify-center text-center whitespace-pre-line"
+          className="text-title-sm text-text-primary flex h-[96px] items-center justify-center text-center whitespace-pre-line"
           initial={slide.initial}
           animate={slide.animate}
           exit={slide.exit}

@@ -30,14 +30,14 @@ export default function AccountActions() {
   }
 
   return (
-    <div className="mt-auto flex flex-col gap-2 px-5 pb-5">
+    <div className="mt-auto flex flex-col gap-[8px] px-[20px] pb-[20px]">
       {withdraw.error && <p className="text-caption-lg text-text-danger">{getErrorMessage(withdraw.error)}</p>}
       <Button size="xl" color="brand" variant="fill" isFullWidth disabled={isLoggingOut} onClick={handleLogout}>
         {t("logout")}
       </Button>
       <button
         type="button"
-        className="text-caption-lg text-text-tertiary py-2 underline"
+        className="text-caption-lg text-text-tertiary py-[8px] underline"
         onClick={() => setIsWithdrawModalOpen(true)}
       >
         {t("withdraw")}

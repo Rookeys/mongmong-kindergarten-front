@@ -30,7 +30,7 @@ export default function OnboardingPage() {
         backgroundImage: "url('/assets/images/background.png')"
       }}
     >
-      <img src="/onboarding.gif" className="mx-auto mt-[197px] h-50 w-50" />
+      <img src="/onboarding.gif" className="mx-auto mt-[197px] h-[200px] w-[200px]" />
       <AnimatePresence mode="wait">
         {step === "introduceCharacter" && (
           <SlideWithButton
@@ -99,19 +99,19 @@ export default function OnboardingPage() {
             currentStep={step}
             stringValue={t("loginMemoryIntro")}
             buttonEl={
-              <div className="text-subtitle-lg mb-8.75 flex flex-col items-center justify-center">
+              <div className="text-subtitle-lg mb-[35px] flex flex-col items-center justify-center">
                 <button
-                  className="mb-gap-xl flex w-full justify-center rounded-2xl bg-[#FEE500] p-4.25 text-[#262200]"
+                  className="mb-gap-xl flex w-full justify-center rounded-[16px] bg-[#FEE500] p-[17px] text-[#262200]"
                   onClick={() => signIn("kakao", { callbackUrl: `/${locale}/auth/sign-in` })}
                 >
-                  <img src={"/signIn-logo-kakao.png"} className="mr-2 w-5" />
+                  <img src={"/signIn-logo-kakao.png"} className="mr-[8px] w-[20px]" />
                   {tLogin("oauthTitle", { serviceName: "Kakao" })}
                 </button>
                 <button
                   onClick={() => {
                     alert("guest")
                   }}
-                  className="rounded-button-l text-text-brand bg-fill-brand-weak w-full p-4.25"
+                  className="rounded-button-l text-text-brand bg-fill-brand-weak w-full p-[17px]"
                 >
                   {tLogin("startGuest")}
                 </button>

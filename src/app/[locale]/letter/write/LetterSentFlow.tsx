@@ -48,8 +48,8 @@ export default function LetterSentFlow({ letter, character }: Props) {
   }
 
   return (
-    <main className="bg-gradient-letter flex min-h-dvh flex-col items-center px-5 pb-5">
-      <div className="flex flex-col items-center gap-2 pt-16 text-center">
+    <main className="bg-gradient-letter flex min-h-dvh flex-col items-center px-[20px] pb-[20px]">
+      <div className="flex flex-col items-center gap-[8px] pt-[64px] text-center">
         <p className="text-title-sm text-text-primary whitespace-pre-line">{getTitle(step, letter.rewardAmount, t)}</p>
         {step === "share" && <p className="text-body-md text-text-secondary">{t("shareDescription")}</p>}
       </div>
@@ -59,16 +59,16 @@ export default function LetterSentFlow({ letter, character }: Props) {
       </div>
 
       {toastMessage && (
-        <Toast className="mb-3" icon={<span aria-hidden>✓</span>}>
+        <Toast className="mb-[12px]" icon={<span aria-hidden>✓</span>}>
           {toastMessage}
         </Toast>
       )}
       {updateLetter.error && (
-        <p className="text-caption-lg text-text-danger mb-2">{getErrorMessage(updateLetter.error)}</p>
+        <p className="text-caption-lg text-text-danger mb-[8px]">{getErrorMessage(updateLetter.error)}</p>
       )}
 
       {step === "share" && (
-        <div className="flex w-full gap-2">
+        <div className="flex w-full gap-[8px]">
           <Button
             size="xl"
             color="brand"

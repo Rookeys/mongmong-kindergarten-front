@@ -68,7 +68,7 @@ export default function SettingsScreen() {
         padding="l"
         title={t("language")}
         trailingAccessory={
-          <div className="flex gap-1.5">
+          <div className="flex gap-[6px]">
             {Object.values(LocaleType).map((locale) => (
               <Chip
                 key={locale}
@@ -84,7 +84,7 @@ export default function SettingsScreen() {
         }
       />
       {updateSetting.error && (
-        <p className="text-caption-lg text-text-danger px-5">{getErrorMessage(updateSetting.error)}</p>
+        <p className="text-caption-lg text-text-danger px-[20px]">{getErrorMessage(updateSetting.error)}</p>
       )}
 
       <AccountActions />

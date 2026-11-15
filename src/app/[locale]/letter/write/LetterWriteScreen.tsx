@@ -74,11 +74,11 @@ export default function LetterWriteScreen({ date }: { date?: string }) {
     <main className="bg-gradient-letter flex min-h-dvh flex-col">
       {/* TODO: 제목 옆 화살표로 날짜 변경 (Figma "날짜 변경") */}
       <BackTopNavigation title={format.dateTime(new Date(`${question.date}T00:00:00`), { dateStyle: "long" })} />
-      <h1 className="text-title-md text-text-primary px-5 py-6">{question.content}</h1>
+      <h1 className="text-title-md text-text-primary px-[20px] py-[24px]">{question.content}</h1>
 
-      <div className="px-5 py-4">
+      <div className="px-[20px] py-[16px]">
         {writtenLetter ? (
-          <p className="bg-card border-border-brand-weak rounded-textfield text-body-md text-text-inverse-primary border p-4 whitespace-pre-line">
+          <p className="bg-card border-border-brand-weak rounded-textfield text-body-md text-text-inverse-primary border p-[16px] whitespace-pre-line">
             {writtenLetter.answer}
           </p>
         ) : (
@@ -104,7 +104,7 @@ export default function LetterWriteScreen({ date }: { date?: string }) {
       <PreviousLetters letters={previousLetters} />
 
       {!writtenLetter && answer.trim() && (
-        <div className="sticky bottom-0 mt-auto px-5 pb-5">
+        <div className="sticky bottom-0 mt-auto px-[20px] pb-[20px]">
           {/* 지난 날짜 답장은 꿈조각을 쓰므로 먼저 확인받는다 */}
           <Button
             size="xl"
