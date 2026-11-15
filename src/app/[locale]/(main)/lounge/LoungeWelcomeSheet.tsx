@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
 import { BottomSheet, Button } from "@kojaem/mongmong"
 import CharacterFace from "@/components/CharacterFace"
-import { DIALOG_SURFACE } from "@/constants/designSystemOverrides"
 
 const SEEN_STORAGE_KEY = "lounge-welcome-seen"
 
@@ -28,7 +27,6 @@ export default function LoungeWelcomeSheet() {
 
   return (
     <BottomSheet
-      className={DIALOG_SURFACE}
       open={isOpen}
       onOpenChange={(open) => !open && handleClose()}
       title={t("welcomeTitle")}

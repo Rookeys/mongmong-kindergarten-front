@@ -3,26 +3,24 @@
 import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { BottomSheet, Button, GridList, GridListItem } from "@kojaem/mongmong"
-import { MOODS, type Mood } from "@/apis/letter"
-import { DIALOG_SURFACE } from "@/constants/designSystemOverrides"
+import { MoodType } from "@/apis/generated/model"
 
 interface Props {
   open: boolean
   onOpenChange: (open: boolean) => void
   isSending: boolean
   errorMessage?: string
-  onConfirm: (mood: Mood) => void
+  onConfirm: (mood: MoodType) => void
 }
 
 /** 답장을 보내기 전 오늘의 기분 선택 (월간 캘린더에 표시됨) */
 export default function MoodSheet({ open, onOpenChange, isSending, errorMessage, onConfirm }: Props) {
   const t = useTranslations("letterWrite")
   const tMood = useTranslations("mood")
-  const [selectedMood, setSelectedMood] = useState<Mood>()
+  const [selectedMood, setSelectedMood] = useState<MoodType>()
 
   return (
     <BottomSheet
-      className={DIALOG_SURFACE}
       open={open}
       onOpenChange={onOpenChange}
       title={t("moodTitle")}
@@ -44,7 +42,7 @@ export default function MoodSheet({ open, onOpenChange, isSending, errorMessage,
       }
     >
       <GridList columns="3">
-        {MOODS.map((mood) => (
+        {Object.values(MoodType).map((mood) => (
           <GridListItem
             key={mood}
             image={<img src="/assets/images/mood-placeholder.png" alt="" width={40} height={40} />}

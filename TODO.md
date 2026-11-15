@@ -6,7 +6,6 @@
 - [ ] **GitHub 시크릿 `GH_PACKAGES_TOKEN` 등록** (프론트 레포 Settings → Secrets and variables → Actions): `read:packages` 권한 PAT. CI가 `@kojaem/mongmong`을 받을 때 쓴다.
 - [ ] **프론트 PR 머지**: `dev` ← `feat/temp-screens` 하나에 MVP 작업이 모두 들어 있다. 기능별로 커밋을 나눠 두었다.
 - [ ] **백엔드 `feat/nickname-japanese` 머지**: 프론트 PR과 같이 (일본어 닉네임).
-- [ ] **디자인시스템 `feature/figma-parity-kojaem` 머지 후 릴리스** (TextArea + Figma 색 맞춤). 배포되면 알려주기 → 프론트를 다크 테마로 바꾸고 덮어쓴 색·임시 textarea를 정리한다 (아래 "디자인시스템 정합성").
 - [ ] **디자이너에게 전달**: 아래 "Figma에 디자인이 없는 화면·요소" 표, 홈 오른쪽 위 아이콘 3개 용도, 꾸미기 옷·얼굴 아이템을 캐릭터 위 어디에 그릴지, 꾸미기 탭 장식·기타 여부.
 - [ ] **(선택) 로컬 개발 DB 테스트 데이터 정리**: 검증하며 넣은 테스트 계정(`*@test.dev`), 공개 답장, 졸업 카드 1개, 공지 1개, 테스트 계정 꿈조각 20개.
 - [ ] **`pnpm lint` 고장**: `eslint-plugin-tailwindcss`가 Tailwind v4를 지원하지 않아 실행 자체가 안 된다 (이번 작업 전부터).
@@ -43,15 +42,14 @@
 - 꾸미기: 옷·얼굴 아이템을 캐릭터 위 어디에 그릴지 기준이 없어 캐릭터 크기에 맞춰 겹쳤다. 아이템 탭은 백엔드 기준 옷/얼굴/배경 3개 (Figma 일부 화면은 장식·기타 포함).
 - 지난 날짜 답장·아이템 구매의 "광고 보기"는 AdMob 연결 전까지 비활성.
 
-## 디자인시스템 정합성
+## 디자인시스템에 요청할 것
 
-- Figma 화면은 다크 변수 모드 값(text/primary = 밝은 글자, fill/brand·text/brand = #6A62EA, 버튼 글자 = text/strong)을 쓴다. 디자인시스템은 라이트 테마에서 Figma처럼 보이도록 토큰을 골라 두어서, 앱에 `data-theme="dark"`를 켜면 Button(fill 글자 `text.inversePrimary`, weak 글자 `text.brandWeak`)과 Popover 제목(`text.primary`)이 Figma와 달라진다.
-- 그래서 앱은 라이트 테마를 유지하고, 어두운 배경 위의 TopNavigation·ListRow·Result 글자색만 화면에서 덮어썼다 (`[&_*]:text-text-...!`).
-- 해결: 디자인시스템 컴포넌트를 Figma 토큰 이름대로 맞추고(Button fill → `text.strong`, weak → `text.brand`, Popover 제목 → `text.inversePrimary`) 앱을 다크 테마로 바꾼 뒤 덮어쓴 부분을 지운다.
-- BottomSheet·Modal 배경(`background.upper`)이 라이트 테마에서 반투명이라 화면에서 `bg-background-default!`로 덮어썼다 (`src/constants/dialog.ts`).
-- 디자인시스템 수정은 `feature/figma-parity-kojaem` 브랜치에 있다. 배포되면 `<html data-theme="dark">`로 바꾸고 덮어쓴 부분을 지운다.
-- DatePicker wheel에 연·월만 고르는 옵션이 없어 일지 달 선택에서 일(day) 열도 보인다.
-- `TextArea`는 디자인시스템 `feature/figma-parity-kojaem` 브랜치에 있다. 배포되면 답장 쓰기 화면의 임시 `<textarea>`를 교체한다.
+앱은 `<html data-theme="dark">`(Figma Dark 색 모드)로 디자인시스템 컴포넌트를 그대로 쓴다. 아래만 화면에서 보완했다.
+
+- Popover `kind="popover"`가 폭 260px 고정이라, 홈·졸업 카드의 짧은 말풍선은 `className="w-auto!"`로 덮어썼다 → 자동 폭 옵션 필요
+- BottomSheet·Modal 제목이 줄바꿈(`\n`)을 그대로 보여주지 않는다 (Figma는 두 줄) → 제목에 `white-space: pre-line` 필요
+- DatePicker wheel에 연·월만 고르는 옵션이 없어 일지 달 선택에서 일(day) 열도 보인다
+- Dark 테마에서 Chip 선택 색이 Figma와 같은지 확인 필요 (꾸미기 탭, 설정 언어)
 
 ## 정책 확인 필요
 

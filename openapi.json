@@ -1,0 +1,3485 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "description": "DB에 SELECT 1을 보내 응답하면 ok. DB가 죽어 있으면 500.",
+        "operationId": "healthCheck",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "정상",
+            "content": { "application/json": { "schema": { "example": { "status": "ok" } } } }
+          }
+        },
+        "summary": "헬스체크",
+        "tags": ["health"]
+      }
+    },
+    "/api/v1/questions/series": {
+      "post": {
+        "description": "가장 먼저 만든 시리즈가 기본 시리즈다(시리즈를 고르지 않은 회원·비회원이 쓴다).",
+        "operationId": "questionCreateSeries",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateQuestionSeriesRequestDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "생성 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetQuestionSeriesResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "질문 시리즈 생성 (관리자)",
+        "tags": ["questions"]
+      },
+      "get": {
+        "operationId": "questionFindAllSeries",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetQuestionSeriesResponseDto" } }
+              }
+            }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "질문 시리즈 목록 조회",
+        "tags": ["questions"]
+      }
+    },
+    "/api/v1/questions/series/{id}/questions": {
+      "put": {
+        "description": "날짜 순번(1~365)별 질문 문구를 한 번에 넣는다. 이미 있는 순번·언어는 덮어쓰고 보내지 않은 순번은 그대로 둔다. 응답의 missingOrderNums로 빈 날짜를 확인한다. CSV 파일은 pnpm import:questions 스크립트로 넣을 수 있다.",
+        "operationId": "questionUpsertQuestions",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "질문 시리즈 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpsertQuestionsRequestDto" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "등록 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/UpsertQuestionsResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `QUESTION_SERIES_NOT_FOUND`: 존재하지 않는 질문 시리즈입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "질문 일괄 등록·수정 (관리자)",
+        "tags": ["questions"]
+      }
+    },
+    "/api/v1/questions/guest/today": {
+      "get": {
+        "description": "로그인 없이 오늘(KST) 질문 하나만 내려준다. 답변 저장은 클라이언트가 처리한다.",
+        "operationId": "questionFindGuestToday",
+        "parameters": [
+          {
+            "name": "locale",
+            "required": false,
+            "in": "query",
+            "description": "콘텐츠 로케일 (미지정 시 한국어)",
+            "schema": { "$ref": "#/components/schemas/LocaleType" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetDailyQuestionResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `QUESTION_SERIES_NOT_FOUND`: 존재하지 않는 질문 시리즈입니다.\n- `QUESTION_NOT_FOUND`: 해당 날짜의 질문을 찾을 수 없습니다.\n- `QUESTION_CONTENT_NOT_FOUND`: 질문 콘텐츠를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "summary": "비회원용 오늘의 질문 조회",
+        "tags": ["questions"]
+      }
+    },
+    "/api/v1/questions/daily": {
+      "get": {
+        "description": "날짜를 생략하면 오늘(KST) 질문이다. 같은 월/일은 매년 같은 질문이며, 그 날짜에 쓴 일지가 있으면 letterId가 채워진다.",
+        "operationId": "questionFindDaily",
+        "parameters": [
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "description": "조회할 날짜 (KST, 미지정 시 오늘. 미래 날짜 불가)",
+            "schema": { "example": "2026-05-05", "type": "string" }
+          },
+          {
+            "name": "locale",
+            "required": false,
+            "in": "query",
+            "description": "콘텐츠 로케일 (미지정 시 한국어)",
+            "schema": { "$ref": "#/components/schemas/LocaleType" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetDailyQuestionResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.\n- `DATE_IN_FUTURE`: 미래 날짜는 사용할 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.\n- `QUESTION_SERIES_NOT_FOUND`: 존재하지 않는 질문 시리즈입니다.\n- `QUESTION_NOT_FOUND`: 해당 날짜의 질문을 찾을 수 없습니다.\n- `QUESTION_CONTENT_NOT_FOUND`: 질문 콘텐츠를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "날짜별 질문 조회",
+        "tags": ["questions"]
+      }
+    },
+    "/api/v1/questions": {
+      "get": {
+        "description": "내 시리즈의 질문 전체를 순번(날짜) 오름차순으로 내려준다.",
+        "operationId": "questionFindAll",
+        "parameters": [
+          {
+            "name": "locale",
+            "required": false,
+            "in": "query",
+            "description": "콘텐츠 로케일 (미지정 시 한국어)",
+            "schema": { "$ref": "#/components/schemas/LocaleType" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetQuestionResponseDto" } }
+              }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.\n- `QUESTION_SERIES_NOT_FOUND`: 존재하지 않는 질문 시리즈입니다.\n- `QUESTION_CONTENT_NOT_FOUND`: 질문 콘텐츠를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "질문 리스트 조회",
+        "tags": ["questions"]
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "authLogin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginRequestDto" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "로그인 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthTokenResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_EMAIL_NOT_FOUND`: 가입되지 않은 이메일입니다.\n- `AUTH_WRONG_PASSWORD`: 비밀번호가 올바르지 않습니다.\n- `AUTH_SOCIAL_ACCOUNT`: 소셜 로그인으로 가입된 계정입니다. 해당 방식으로 로그인해주세요.\n- `AUTH_PASSWORD_NOT_SET`: 비밀번호가 설정되지 않은 계정입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `AUTH_ACCOUNT_INACTIVE`: 사용할 수 없는 계정입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "summary": "로컬 로그인",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "operationId": "authRegister",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RegisterRequestDto" } } }
+        },
+        "responses": {
+          "201": {
+            "description": "회원가입 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RegisterResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.\n- `INVITE_CODE_INVALID`: 유효하지 않은 친구 초대 코드입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "409": {
+            "description": "- `EMAIL_ALREADY_EXISTS`: 이미 존재하는 이메일입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "summary": "로컬 회원가입",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/kakao": {
+      "post": {
+        "description": "프론트에서 받은 kakaoAccessToken으로 로그인/가입합니다.",
+        "operationId": "authKakaoLogin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/KakaoLoginRequestDto" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "로그인 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthTokenResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `KAKAO_TOKEN_INVALID`: 유효하지 않은 카카오 Access Token입니다.\n- `KAKAO_PROFILE_UNAVAILABLE`: 카카오 사용자 정보를 확인할 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `AUTH_ACCOUNT_INACTIVE`: 사용할 수 없는 계정입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "502": {
+            "description": "- `KAKAO_UPSTREAM_ERROR`: 카카오 서버와 통신할 수 없습니다. 잠시 후 다시 시도해주세요.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "summary": "카카오 로그인",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "description": "Access Token이 만료되면(AUTH_TOKEN_EXPIRED) Refresh Token으로 새 토큰 쌍을 받는다. 쓴 Refresh Token은 폐기되므로 응답의 새 값으로 바꿔 저장한다. 같은 토큰으로 동시에 요청하면 하나만 성공하므로 갱신 요청은 한 번만 보낸다.",
+        "operationId": "authRefresh",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RefreshTokenRequestDto" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "갱신 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthTokenResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_REFRESH_TOKEN_INVALID`: 로그인이 만료되었습니다. 다시 로그인해주세요.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `AUTH_ACCOUNT_INACTIVE`: 사용할 수 없는 계정입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "summary": "토큰 갱신",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "description": "이 기기의 Refresh Token을 폐기한다. 이미 폐기된 토큰이어도 성공한다. Access Token은 만료(최대 1시간)까지 유효하므로 클라이언트에서 지운다.",
+        "operationId": "authLogout",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RefreshTokenRequestDto" } } }
+        },
+        "responses": {
+          "204": { "description": "로그아웃 성공" },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "summary": "로그아웃",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "operationId": "authGetMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetUserResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "내 프로필 조회",
+        "tags": ["auth"]
+      },
+      "patch": {
+        "description": "보낸 필드만 바꾼다. 온보딩에서 닉네임과 친구 초대 코드(선택)를 함께 보낼 수 있다. 초대 코드가 잘못되면 아무것도 바꾸지 않는다.",
+        "operationId": "authUpdateMe",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateMeRequestDto" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "수정 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetUserResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.\n- `INVITE_CODE_INVALID`: 유효하지 않은 친구 초대 코드입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.\n- `QUESTION_SERIES_NOT_FOUND`: 존재하지 않는 질문 시리즈입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "409": {
+            "description": "- `INVITE_ALREADY_REGISTERED`: 이미 친구 초대 코드를 등록했습니다.\n- `INVITE_CODE_TOO_LATE`: 친구 초대 코드는 첫 일지를 쓰기 전에만 입력할 수 있습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "내 프로필 수정",
+        "tags": ["auth"]
+      },
+      "delete": {
+        "description": "계정을 소프트 삭제(status=deleted)하고 모든 기기의 Refresh Token을 폐기한다. 이메일·카카오 연결을 비우므로 같은 이메일·카카오 계정으로 새로 가입할 수 있다(이전 기록은 이어지지 않음). 탈퇴한 사용자의 일지는 휴게실에서 내려간다.",
+        "operationId": "authWithdraw",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "탈퇴 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeleteUserResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "본인 탈퇴",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/me/settings": {
+      "get": {
+        "operationId": "authGetMySetting",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetUserSettingResponseDto" } }
+            }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "내 설정 조회",
+        "tags": ["auth"]
+      },
+      "patch": {
+        "description": "보낸 필드만 갱신한다.",
+        "operationId": "authUpdateMySetting",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateUserSettingRequestDto" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "수정 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetUserSettingResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "내 설정 수정",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "description": "사용자 목록을 반환합니다. status 쿼리로 필터링할 수 있습니다.",
+        "operationId": "userFindAll",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "계정 상태로 필터링",
+            "schema": { "$ref": "#/components/schemas/UserStatus" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetUserResponseDto" } }
+              }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "사용자 목록 조회",
+        "tags": ["users"]
+      },
+      "post": {
+        "description": "로컬 로그인 사용자를 생성합니다.",
+        "operationId": "userCreate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateUserRequestDto" } } }
+        },
+        "responses": {
+          "201": {
+            "description": "생성 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateUserResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.\n- `INVITE_CODE_INVALID`: 유효하지 않은 친구 초대 코드입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "409": {
+            "description": "- `EMAIL_ALREADY_EXISTS`: 이미 존재하는 이메일입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "사용자 생성 (관리자용)",
+        "tags": ["users"]
+      }
+    },
+    "/api/v1/users/{id}": {
+      "get": {
+        "description": "경로의 id에 해당하는 사용자를 반환합니다.",
+        "operationId": "userFindOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "사용자 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetUserResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "사용자 단건 조회",
+        "tags": ["users"]
+      },
+      "patch": {
+        "description": "보낸 필드만 갱신합니다.",
+        "operationId": "userUpdate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "사용자 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateUserRequestDto" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "수정 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateUserResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.\n- `QUESTION_SERIES_NOT_FOUND`: 존재하지 않는 질문 시리즈입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "사용자 부분 수정",
+        "tags": ["users"]
+      },
+      "delete": {
+        "description": "사용자를 소프트 삭제(status=deleted) 처리합니다.",
+        "operationId": "userRemove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "사용자 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "삭제 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeleteUserResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "사용자 삭제",
+        "tags": ["users"]
+      }
+    },
+    "/api/v1/items": {
+      "get": {
+        "description": "일반 사용자는 판매 중인 아이템만 받는다. 관리자는 isOnSale로 거를 수 있다.",
+        "operationId": "itemFindAll",
+        "parameters": [
+          {
+            "name": "itemType",
+            "required": false,
+            "in": "query",
+            "description": "아이템 유형(꾸미기 탭)으로 필터링",
+            "schema": { "$ref": "#/components/schemas/ItemType" }
+          },
+          {
+            "name": "isOnSale",
+            "required": false,
+            "in": "query",
+            "description": "판매 여부로 필터링 (관리자 전용, 생략하면 전체)",
+            "schema": { "example": false, "type": "boolean" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetItemResponseDto" } }
+              }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "아이템 목록 조회",
+        "tags": ["items"]
+      },
+      "post": {
+        "operationId": "itemCreate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateItemRequestDto" } } }
+        },
+        "responses": {
+          "201": {
+            "description": "생성 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetItemResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "아이템 생성 (관리자용)",
+        "tags": ["items"]
+      }
+    },
+    "/api/v1/items/{id}": {
+      "patch": {
+        "operationId": "itemUpdate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "아이템 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateItemRequestDto" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "수정 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetItemResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `ITEM_NOT_FOUND`: 아이템을 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "아이템 부분 수정 (관리자용)",
+        "tags": ["items"]
+      },
+      "delete": {
+        "description": "행을 지우지 않고 판매만 멈춘다(isOnSale=false). 상점에서 사라지고 새로 살 수 없지만 이미 산 사람은 계속 갖고 있다. 다시 팔려면 PATCH로 isOnSale=true.",
+        "operationId": "itemStopSale",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "아이템 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "중지 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeleteItemResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `ITEM_NOT_FOUND`: 아이템을 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "아이템 판매 중지 (관리자용)",
+        "tags": ["items"]
+      }
+    },
+    "/api/v1/letters": {
+      "get": {
+        "operationId": "letterFindAll",
+        "parameters": [
+          {
+            "name": "questionId",
+            "required": false,
+            "in": "query",
+            "description": "질문 ID (같은 질문에 쓴 이전 기록만 조회)",
+            "schema": { "example": "1", "type": "string" }
+          },
+          {
+            "name": "take",
+            "required": false,
+            "in": "query",
+            "description": "조회 개수",
+            "schema": { "default": 20, "example": 20, "type": "number" }
+          },
+          {
+            "name": "skip",
+            "required": false,
+            "in": "query",
+            "description": "건너뛸 개수",
+            "schema": { "default": 0, "example": 0, "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetLetterResponseDto" } }
+              }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "내 일지 목록 조회",
+        "tags": ["letters"]
+      },
+      "post": {
+        "description": "날짜별 질문에 하루 한 통. 오늘 일지는 꿈조각 1개(연속 5일째면 +5)를 받고, 지난 날짜 일지는 3개가 차감된다.",
+        "operationId": "letterCreate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateLetterRequestDto" } } }
+        },
+        "responses": {
+          "201": {
+            "description": "작성 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateLetterResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.\n- `DATE_IN_FUTURE`: 미래 날짜는 사용할 수 없습니다.\n- `REWARD_INSUFFICIENT`: 리워드(꿈조각)가 부족합니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.\n- `QUESTION_SERIES_NOT_FOUND`: 존재하지 않는 질문 시리즈입니다.\n- `QUESTION_NOT_FOUND`: 해당 날짜의 질문을 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "409": {
+            "description": "- `LETTER_ALREADY_EXISTS`: 해당 날짜에는 이미 일지를 작성했습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "일지 작성",
+        "tags": ["letters"]
+      }
+    },
+    "/api/v1/letters/public": {
+      "get": {
+        "description": "익명으로 내려가며, 내가 차단한 사용자의 일지는 제외된다.",
+        "operationId": "letterFindPublic",
+        "parameters": [
+          {
+            "name": "questionId",
+            "required": true,
+            "in": "query",
+            "description": "질문 ID",
+            "schema": { "example": "1", "type": "string" }
+          },
+          {
+            "name": "take",
+            "required": false,
+            "in": "query",
+            "description": "조회 개수",
+            "schema": { "default": 20, "example": 20, "type": "number" }
+          },
+          {
+            "name": "skip",
+            "required": false,
+            "in": "query",
+            "description": "건너뛸 개수",
+            "schema": { "default": 0, "example": 0, "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetPublicLetterResponseDto" } }
+              }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "휴게실: 같은 질문에 다른 사람이 쓴 공개 일지 목록 조회",
+        "tags": ["letters"]
+      }
+    },
+    "/api/v1/letters/calendar": {
+      "get": {
+        "operationId": "letterFindCalendar",
+        "parameters": [
+          {
+            "name": "year",
+            "required": true,
+            "in": "query",
+            "description": "연도",
+            "schema": { "example": 2026, "type": "number" }
+          },
+          {
+            "name": "month",
+            "required": true,
+            "in": "query",
+            "description": "월 (1~12)",
+            "schema": { "example": 5, "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetLetterCalendarResponseDto" } }
+              }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "월간 캘린더: 일지를 쓴 날짜 목록 조회",
+        "tags": ["letters"]
+      }
+    },
+    "/api/v1/letters/{id}": {
+      "get": {
+        "operationId": "letterFindOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "편지 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetLetterResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `LETTER_NOT_FOUND`: 일지를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "내 일지 단건 조회",
+        "tags": ["letters"]
+      },
+      "patch": {
+        "description": "공개 여부·기분은 언제든, 본문(answer)은 작성 당일(KST)에만 수정할 수 있다. 공개 여부(isPrivate, isPrivateSns)를 보내면 내 설정에도 저장돼 다음 일지의 기본값이 된다.",
+        "operationId": "letterUpdate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "편지 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateLetterRequestDto" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "수정 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetLetterResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `LETTER_EDIT_EXPIRED`: 일지 내용은 작성한 당일에만 수정할 수 있습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `LETTER_NOT_FOUND`: 일지를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "내 일지 부분 수정",
+        "tags": ["letters"]
+      }
+    },
+    "/api/v1/letters/{id}/ai-replies": {
+      "get": {
+        "operationId": "letterFindAiReplies",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "편지 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetAiReplyResponseDto" } }
+              }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `LETTER_NOT_FOUND`: 일지를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "내 일지에 달린 AI 답장 목록 조회",
+        "tags": ["letters"]
+      }
+    },
+    "/api/v1/letters/{id}/reactions": {
+      "post": {
+        "operationId": "letterAddReaction",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "편지 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateLetterReactionRequestDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "등록 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetLetterReactionResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `LETTER_NOT_FOUND`: 일지를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "편지에 반응(스티커) 남기기",
+        "tags": ["letters"]
+      }
+    },
+    "/api/v1/letters/{id}/reports": {
+      "post": {
+        "description": "사유(reasonType)는 선택이다. 같은 일지는 한 번만 신고할 수 있다.",
+        "operationId": "letterAddReport",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "편지 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateLetterReportRequestDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "신고 접수 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetLetterReportResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `LETTER_REPORT_OWN_LETTER`: 본인 일지는 신고할 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `LETTER_NOT_FOUND`: 일지를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "409": {
+            "description": "- `LETTER_REPORT_ALREADY_EXISTS`: 이미 신고한 일지입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "편지 신고",
+        "tags": ["letters"]
+      }
+    },
+    "/api/v1/ai-replies/{id}/read": {
+      "patch": {
+        "operationId": "aiReplyMarkAsRead",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "AI 답장 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "처리 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetAiReplyResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `AI_REPLY_NOT_FOUND`: AI 답장을 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "AI 답장 읽음 처리",
+        "tags": ["ai-replies"]
+      }
+    },
+    "/api/v1/letter-reports": {
+      "get": {
+        "description": "status로 거를 수 있고 오래된 신고부터 내려준다.",
+        "operationId": "letterReportFindAll",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "처리 상태 (생략하면 전체)",
+            "schema": { "$ref": "#/components/schemas/LetterReportStatus" }
+          },
+          {
+            "name": "take",
+            "required": false,
+            "in": "query",
+            "description": "조회 개수",
+            "schema": { "default": 20, "example": 20, "type": "number" }
+          },
+          {
+            "name": "skip",
+            "required": false,
+            "in": "query",
+            "description": "건너뛸 개수",
+            "schema": { "default": 0, "example": 0, "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetLetterReportResponseDto" } }
+              }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "신고 목록 조회 (관리자)",
+        "tags": ["letter-reports"]
+      }
+    },
+    "/api/v1/letter-reports/{id}": {
+      "patch": {
+        "description": "resolved(신고 인정)로 바꾸면 그 일지는 휴게실(GET /letters/public)에서 내려간다.",
+        "operationId": "letterReportUpdateStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "신고 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateLetterReportRequestDto" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "변경 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetLetterReportResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `LETTER_REPORT_NOT_FOUND`: 신고를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "신고 처리 상태 변경 (관리자)",
+        "tags": ["letter-reports"]
+      }
+    },
+    "/api/v1/rewards/history": {
+      "get": {
+        "operationId": "rewardFindMyHistory",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetRewardHistoryResponseDto" } }
+              }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "내 리워드 적립 이력 조회",
+        "tags": ["rewards"]
+      }
+    },
+    "/api/v1/rewards/ad-view": {
+      "post": {
+        "description": "광고를 볼 때마다 꿈조각 3개가 지급된다(횟수 제한 없음). 출석체크는 POST /rewards/attendance를 쓴다.",
+        "operationId": "rewardRecordAdView",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateAdViewRequestDto" } } }
+        },
+        "responses": {
+          "201": {
+            "description": "기록 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateAdViewResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "광고 시청 기록 및 리워드 지급",
+        "tags": ["rewards"]
+      }
+    },
+    "/api/v1/rewards/attendance": {
+      "get": {
+        "operationId": "rewardFindTodayAttendance",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetAttendanceResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "오늘 출석체크 여부 조회",
+        "tags": ["rewards"]
+      },
+      "post": {
+        "description": "하루(KST) 1회 꿈조각 1개가 지급된다.",
+        "operationId": "rewardCheckAttendance",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "출석 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CreateAttendanceResponseDto" } }
+            }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "409": {
+            "description": "- `ATTENDANCE_ALREADY_CHECKED`: 오늘은 이미 출석체크를 했습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "출석체크 및 리워드 지급",
+        "tags": ["rewards"]
+      }
+    },
+    "/api/v1/characters/me": {
+      "get": {
+        "description": "키우는 캐릭터가 없으면 사용 중인 종류 중 랜덤으로 새로 만든다. 레벨은 사이클 동안 쓴 편지 수로 계산한다(90통마다 +1, 최대 4). canGraduate가 true면 졸업 연출 후 POST /characters/graduate를 호출한다.",
+        "operationId": "characterFindMine",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetCharacterResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "500": {
+            "description": "- `CHARACTER_TYPE_NOT_REGISTERED`: 배정할 캐릭터 종류가 등록되어 있지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "내 캐릭터 조회",
+        "tags": ["characters"]
+      }
+    },
+    "/api/v1/characters/graduate": {
+      "post": {
+        "description": "시작일부터 1년(졸업일)이 지나야 한다. 졸업 카드를 발급하고 새 캐릭터(랜덤 종류)를 오늘이 속한 사이클에서 시작한다. 산 아이템은 캐릭터에 묶여 있어 넘어가지 않는다.",
+        "operationId": "characterGraduate",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "졸업 처리 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetGraduationCardResponseDto" } }
+            }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `CHARACTER_NOT_FOUND`: 졸업 가능한 캐릭터를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "409": {
+            "description": "- `CHARACTER_GRADUATION_NOT_READY`: 아직 졸업할 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "500": {
+            "description": "- `CHARACTER_TYPE_NOT_REGISTERED`: 배정할 캐릭터 종류가 등록되어 있지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "캐릭터 졸업 처리",
+        "tags": ["characters"]
+      }
+    },
+    "/api/v1/characters/graduation-cards": {
+      "get": {
+        "operationId": "characterFindMyGraduationCards",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetGraduationCardResponseDto" } }
+              }
+            }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "내 졸업 카드 목록 조회",
+        "tags": ["characters"]
+      }
+    },
+    "/api/v1/character-items": {
+      "get": {
+        "operationId": "characterItemFindMine",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetCharacterItemResponseDto" } }
+              }
+            }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "내 캐릭터 보유 아이템 목록 조회",
+        "tags": ["character-items"]
+      },
+      "post": {
+        "operationId": "characterItemPurchase",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateCharacterItemRequestDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "구매 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetCharacterItemResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.\n- `REWARD_INSUFFICIENT`: 리워드(꿈조각)가 부족합니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `ITEM_NOT_FOUND`: 아이템을 찾을 수 없습니다.\n- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "409": {
+            "description": "- `ITEM_NOT_ON_SALE`: 판매가 중지된 아이템입니다.\n- `CHARACTER_ITEM_ALREADY_OWNED`: 이미 보유한 아이템입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "아이템 구매",
+        "tags": ["character-items"]
+      }
+    },
+    "/api/v1/character-items/{id}": {
+      "patch": {
+        "operationId": "characterItemUpdateEquip",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "캐릭터-아이템 매핑 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateCharacterItemRequestDto" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "처리 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetCharacterItemResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `CHARACTER_ITEM_NOT_OWNED`: 보유한 아이템을 찾을 수 없습니다.\n- `USER_NOT_FOUND`: 사용자를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "아이템 장착/해제",
+        "tags": ["character-items"]
+      }
+    },
+    "/api/v1/character-types": {
+      "get": {
+        "operationId": "characterTypeFindAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetCharacterTypeResponseDto" } }
+              }
+            }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "캐릭터 종류 목록 조회 (관리자)",
+        "tags": ["character-types"]
+      },
+      "post": {
+        "description": "추가하면 바로 새 캐릭터 랜덤 배정 대상이 된다.",
+        "operationId": "characterTypeCreate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateCharacterTypeRequestDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "추가 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetCharacterTypeResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "409": {
+            "description": "- `DUPLICATE_RESOURCE`: 이미 존재하는 값입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "캐릭터 종류 추가 (관리자)",
+        "tags": ["character-types"]
+      }
+    },
+    "/api/v1/character-types/{id}": {
+      "patch": {
+        "description": "isActive=false면 새 캐릭터로 배정하지 않는다. 지우는 API는 없다(키우던 캐릭터·졸업 카드가 참조).",
+        "operationId": "characterTypeUpdate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "캐릭터 종류 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateCharacterTypeRequestDto" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "수정 성공",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetCharacterTypeResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `CHARACTER_TYPE_NOT_FOUND`: 캐릭터 종류를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "409": {
+            "description": "- `DUPLICATE_RESOURCE`: 이미 존재하는 값입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "캐릭터 종류 수정 (관리자)",
+        "tags": ["character-types"]
+      }
+    },
+    "/api/v1/notices": {
+      "get": {
+        "operationId": "noticeFindAll",
+        "parameters": [
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "공지 유형으로 필터링",
+            "schema": { "$ref": "#/components/schemas/NoticeType" }
+          },
+          {
+            "name": "isPublished",
+            "required": false,
+            "in": "query",
+            "description": "게시 여부로 필터링 (관리자 전용)",
+            "schema": { "example": true, "type": "boolean" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/GetNoticeResponseDto" } }
+              }
+            }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "공지 목록 조회",
+        "tags": ["notices"]
+      },
+      "post": {
+        "operationId": "noticeCreate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateNoticeRequestDto" } } }
+        },
+        "responses": {
+          "201": {
+            "description": "생성 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetNoticeResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "공지 생성 (관리자용)",
+        "tags": ["notices"]
+      }
+    },
+    "/api/v1/notices/{id}": {
+      "get": {
+        "operationId": "noticeFindOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "공지 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetNoticeResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `NOTICE_NOT_FOUND`: 공지를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "공지 단건 조회",
+        "tags": ["notices"]
+      },
+      "patch": {
+        "operationId": "noticeUpdate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "공지 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateNoticeRequestDto" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "수정 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetNoticeResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `NOTICE_NOT_FOUND`: 공지를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "공지 부분 수정 (관리자용)",
+        "tags": ["notices"]
+      },
+      "delete": {
+        "operationId": "noticeRemove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "공지 ID",
+            "schema": { "example": "1", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "삭제 성공",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeleteNoticeResponseDto" } } }
+          },
+          "400": {
+            "description": "- `VALIDATION_FAILED`: 요청 값이 올바르지 않습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "401": {
+            "description": "- `AUTH_TOKEN_MISSING`: 인증 토큰이 없습니다.\n- `AUTH_TOKEN_EXPIRED`: 인증 토큰이 만료되었습니다.\n- `AUTH_TOKEN_INVALID`: 유효하지 않은 인증 토큰입니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "403": {
+            "description": "- `FORBIDDEN_ROLE`: 접근 권한이 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          },
+          "404": {
+            "description": "- `NOTICE_NOT_FOUND`: 공지를 찾을 수 없습니다.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } } }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "공지 삭제 (관리자용)",
+        "tags": ["notices"]
+      }
+    }
+  },
+  "info": {
+    "title": "몽몽유치원 API",
+    "description": "JSON 구조 [링크](/api-docs-json)",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": { "bearer": { "scheme": "bearer", "bearerFormat": "JWT", "type": "http" } },
+    "schemas": {
+      "CreateQuestionSeriesRequestDto": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "description": "시리즈 제목", "example": "나를 알아가는 1년" },
+          "description": { "type": "string", "description": "설명", "maxLength": 500 },
+          "thumbnailUrl": { "type": "string", "description": "썸네일 URL", "maxLength": 500 }
+        },
+        "required": ["title"]
+      },
+      "GetQuestionSeriesResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "질문 시리즈 ID", "example": "1" },
+          "title": { "type": "string", "description": "시리즈 제목", "example": "나를 알아가는 질문" },
+          "description": { "type": "string", "description": "시리즈 설명", "example": null, "nullable": true },
+          "thumbnailUrl": { "type": "string", "description": "썸네일 이미지 URL", "example": null, "nullable": true }
+        },
+        "required": ["id", "title", "description", "thumbnailUrl"]
+      },
+      "ErrorCode": {
+        "type": "string",
+        "enum": [
+          "VALIDATION_FAILED",
+          "BAD_REQUEST",
+          "UNAUTHORIZED",
+          "FORBIDDEN",
+          "NOT_FOUND",
+          "CONFLICT",
+          "DUPLICATE_RESOURCE",
+          "RESOURCE_IN_USE",
+          "TOO_MANY_REQUESTS",
+          "INTERNAL_ERROR",
+          "AUTH_EMAIL_NOT_FOUND",
+          "AUTH_WRONG_PASSWORD",
+          "AUTH_SOCIAL_ACCOUNT",
+          "AUTH_PASSWORD_NOT_SET",
+          "AUTH_ACCOUNT_INACTIVE",
+          "AUTH_TOKEN_MISSING",
+          "AUTH_TOKEN_EXPIRED",
+          "AUTH_TOKEN_INVALID",
+          "AUTH_REFRESH_TOKEN_INVALID",
+          "FORBIDDEN_ROLE",
+          "KAKAO_TOKEN_INVALID",
+          "KAKAO_PROFILE_UNAVAILABLE",
+          "KAKAO_UPSTREAM_ERROR",
+          "USER_NOT_FOUND",
+          "EMAIL_ALREADY_EXISTS",
+          "INVITE_CODE_INVALID",
+          "INVITE_ALREADY_REGISTERED",
+          "INVITE_CODE_TOO_LATE",
+          "QUESTION_SERIES_NOT_FOUND",
+          "QUESTION_NOT_FOUND",
+          "QUESTION_CONTENT_NOT_FOUND",
+          "DATE_IN_FUTURE",
+          "LETTER_NOT_FOUND",
+          "LETTER_REPORT_OWN_LETTER",
+          "LETTER_REPORT_NOT_FOUND",
+          "LETTER_REPORT_ALREADY_EXISTS",
+          "LETTER_ALREADY_EXISTS",
+          "LETTER_EDIT_EXPIRED",
+          "AI_REPLY_NOT_FOUND",
+          "ITEM_NOT_FOUND",
+          "ITEM_NOT_ON_SALE",
+          "CHARACTER_ITEM_ALREADY_OWNED",
+          "CHARACTER_ITEM_NOT_OWNED",
+          "REWARD_INSUFFICIENT",
+          "CHARACTER_NOT_FOUND",
+          "CHARACTER_GRADUATION_NOT_READY",
+          "CHARACTER_TYPE_NOT_FOUND",
+          "CHARACTER_TYPE_NOT_REGISTERED",
+          "ATTENDANCE_ALREADY_CHECKED",
+          "NOTICE_NOT_FOUND"
+        ],
+        "description": "프론트 분기용 에러 코드"
+      },
+      "ValidationErrorItemDto": {
+        "type": "object",
+        "properties": {
+          "field": { "type": "string", "description": "오류가 난 필드 (중첩은 a.b)", "example": "email" },
+          "code": { "type": "string", "description": "규칙 단위 사유 코드", "example": "EMAIL_INVALID" },
+          "message": { "type": "string", "example": "이메일 형식이 올바르지 않습니다." },
+          "details": {
+            "type": "object",
+            "description": "부가정보 (MIN_LENGTH: {limit}, INVALID_ENUM: {allowed[]} 등)",
+            "additionalProperties": true
+          }
+        },
+        "required": ["field", "code", "message"]
+      },
+      "ErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "timestamp": { "type": "string" },
+          "path": { "type": "string", "example": "/api/v1/character-items" },
+          "statusCode": { "type": "number", "example": 400 },
+          "code": { "description": "프론트 분기용 에러 코드", "allOf": [{ "$ref": "#/components/schemas/ErrorCode" }] },
+          "message": { "type": "string", "example": "리워드(꿈조각)가 부족합니다." },
+          "details": {
+            "type": "object",
+            "description": "사유별 부가정보 (예: REWARD_INSUFFICIENT → {required, current})",
+            "additionalProperties": true
+          },
+          "errors": {
+            "description": "VALIDATION_FAILED일 때 필드별 사유",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ValidationErrorItemDto" }
+          }
+        },
+        "required": ["success", "timestamp", "path", "statusCode", "code", "message"]
+      },
+      "LocaleType": { "type": "string", "enum": ["ko", "en", "ja"], "description": "언어" },
+      "QuestionContentInputDto": {
+        "type": "object",
+        "properties": {
+          "localeType": {
+            "description": "언어",
+            "example": "ko",
+            "allOf": [{ "$ref": "#/components/schemas/LocaleType" }]
+          },
+          "content": { "type": "string", "description": "질문 문구", "example": "기억에 남는 생일은 언제인가요?" }
+        },
+        "required": ["localeType", "content"]
+      },
+      "QuestionInputDto": {
+        "type": "object",
+        "properties": {
+          "orderNum": {
+            "type": "number",
+            "description": "날짜 순번 (1월 1일 = 1 ~ 12월 31일 = 365)",
+            "example": 1,
+            "minimum": 1,
+            "maximum": 365
+          },
+          "contents": { "type": "array", "items": { "$ref": "#/components/schemas/QuestionContentInputDto" } }
+        },
+        "required": ["orderNum", "contents"]
+      },
+      "UpsertQuestionsRequestDto": {
+        "type": "object",
+        "properties": {
+          "questions": {
+            "description": "등록할 질문. 같은 순번이 이미 있으면 문구를 덮어쓰고, 보내지 않은 순번은 그대로 둔다",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/QuestionInputDto" }
+          }
+        },
+        "required": ["questions"]
+      },
+      "UpsertQuestionsResponseDto": {
+        "type": "object",
+        "properties": {
+          "questionSeriesId": { "type": "string", "description": "시리즈 ID", "example": "1" },
+          "upsertedCount": { "type": "number", "description": "이번에 등록·수정한 질문 수", "example": 365 },
+          "missingOrderNums": {
+            "description": "아직 질문이 없는 순번 (비어 있으면 그 날짜에 GET /questions/daily가 실패한다)",
+            "example": [],
+            "type": "array",
+            "items": { "type": "number" }
+          }
+        },
+        "required": ["questionSeriesId", "upsertedCount", "missingOrderNums"]
+      },
+      "GetDailyQuestionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "질문 ID", "example": "1" },
+          "questionSeriesId": { "type": "string", "description": "질문 시리즈 ID", "example": "1" },
+          "orderNum": { "type": "number", "description": "질문 순번 (1월 1일 = 1, 최대 365)", "example": 125 },
+          "date": { "type": "string", "description": "질문 날짜 (KST)", "example": "2026-05-05" },
+          "content": {
+            "type": "string",
+            "description": "질문 본문 (요청 로케일, 없으면 한국어로 대체)",
+            "example": "기억에 남는 생일은 언제인가요?"
+          },
+          "localeType": {
+            "description": "실제로 반환된 콘텐츠의 로케일",
+            "example": "ko",
+            "allOf": [{ "$ref": "#/components/schemas/LocaleType" }]
+          },
+          "letterId": {
+            "type": "string",
+            "description": "이 날짜에 내가 쓴 일지 ID (아직 안 썼거나 비회원이면 null)",
+            "example": null,
+            "nullable": true
+          }
+        },
+        "required": ["id", "questionSeriesId", "orderNum", "date", "content", "localeType", "letterId"]
+      },
+      "GetQuestionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "질문 ID", "example": "1" },
+          "orderNum": { "type": "number", "description": "질문 순번 (1월 1일 = 1, 최대 365)", "example": 1 },
+          "content": {
+            "type": "string",
+            "description": "질문 본문 (요청 로케일, 없으면 한국어로 대체)",
+            "example": "기억에 남는 생일은 언제인가요?"
+          },
+          "localeType": {
+            "description": "실제로 반환된 콘텐츠의 로케일",
+            "example": "ko",
+            "allOf": [{ "$ref": "#/components/schemas/LocaleType" }]
+          }
+        },
+        "required": ["id", "orderNum", "content", "localeType"]
+      },
+      "LoginRequestDto": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "description": "이메일", "example": "user@example.com" },
+          "password": { "type": "string", "description": "비밀번호", "example": "password123" }
+        },
+        "required": ["email", "password"]
+      },
+      "LoginType": { "type": "string", "enum": ["local", "kakao"], "description": "로그인 유형" },
+      "UserStatus": { "type": "string", "enum": ["active", "inactive", "deleted"], "description": "계정 상태" },
+      "UserRole": { "type": "string", "enum": ["user", "admin"], "description": "권한" },
+      "GetUserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "사용자 ID", "example": "1" },
+          "email": {
+            "type": "string",
+            "description": "이메일 (카카오가 이메일을 주지 않으면 null)",
+            "example": "user@example.com",
+            "nullable": true
+          },
+          "nickname": {
+            "type": "string",
+            "description": "닉네임 (null이면 이름 설정 온보딩 필요)",
+            "example": "몽몽이",
+            "nullable": true
+          },
+          "loginType": {
+            "description": "로그인 유형",
+            "example": "local",
+            "allOf": [{ "$ref": "#/components/schemas/LoginType" }]
+          },
+          "providerId": {
+            "type": "string",
+            "description": "소셜 제공자 사용자 ID (로컬은 null)",
+            "example": null,
+            "nullable": true
+          },
+          "rewardCount": { "type": "number", "description": "리워드 보유량", "example": 0 },
+          "aiReplyCycle": { "type": "number", "description": "AI 답장 사이클", "example": 0 },
+          "myInviteCode": { "type": "string", "description": "내 초대 코드", "example": "AB12CD34" },
+          "status": {
+            "description": "계정 상태",
+            "example": "active",
+            "allOf": [{ "$ref": "#/components/schemas/UserStatus" }]
+          },
+          "role": { "description": "권한", "example": "user", "allOf": [{ "$ref": "#/components/schemas/UserRole" }] },
+          "lastLoginDate": {
+            "type": "string",
+            "description": "마지막 로그인 일시",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "questionSeriesId": {
+            "type": "string",
+            "description": "선택한 질문 시리즈 ID",
+            "example": null,
+            "nullable": true
+          },
+          "deletedRequestAt": {
+            "type": "string",
+            "description": "탈퇴 요청 일시",
+            "format": "date-time",
+            "nullable": true,
+            "example": null
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "생성 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "updatedDate": {
+            "type": "string",
+            "description": "수정 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "nickname",
+          "loginType",
+          "providerId",
+          "rewardCount",
+          "aiReplyCycle",
+          "myInviteCode",
+          "status",
+          "role",
+          "lastLoginDate",
+          "questionSeriesId",
+          "deletedRequestAt",
+          "createdDate",
+          "updatedDate"
+        ]
+      },
+      "AuthTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "JWT Access Token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh Token. Access Token이 만료되면 POST /auth/refresh로 새 토큰 쌍을 받는다. 갱신하면 이전 값은 못 쓴다",
+            "example": "kM2x9..."
+          },
+          "user": {
+            "description": "로그인한 사용자 정보",
+            "allOf": [{ "$ref": "#/components/schemas/GetUserResponseDto" }]
+          }
+        },
+        "required": ["accessToken", "refreshToken", "user"]
+      },
+      "RegisterRequestDto": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "description": "이메일", "example": "user@example.com" },
+          "password": {
+            "type": "string",
+            "description": "비밀번호 (8자 이상)",
+            "example": "password123",
+            "minLength": 8
+          },
+          "nickname": {
+            "type": "string",
+            "description": "닉네임 (2~8자, 한글·일본어·영문 소문자·숫자)",
+            "example": "몽몽이",
+            "minLength": 2,
+            "maxLength": 8
+          },
+          "friendInviteCode": {
+            "type": "string",
+            "description": "친구 초대 코드",
+            "example": "AB12CD34",
+            "maxLength": 20
+          }
+        },
+        "required": ["email", "password", "nickname"]
+      },
+      "RegisterResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "사용자 ID", "example": "1" },
+          "email": {
+            "type": "string",
+            "description": "이메일 (카카오가 이메일을 주지 않으면 null)",
+            "example": "user@example.com",
+            "nullable": true
+          },
+          "nickname": {
+            "type": "string",
+            "description": "닉네임 (null이면 이름 설정 온보딩 필요)",
+            "example": "몽몽이",
+            "nullable": true
+          },
+          "loginType": {
+            "description": "로그인 유형",
+            "example": "local",
+            "allOf": [{ "$ref": "#/components/schemas/LoginType" }]
+          },
+          "providerId": {
+            "type": "string",
+            "description": "소셜 제공자 사용자 ID (로컬은 null)",
+            "example": null,
+            "nullable": true
+          },
+          "rewardCount": { "type": "number", "description": "리워드 보유량", "example": 0 },
+          "aiReplyCycle": { "type": "number", "description": "AI 답장 사이클", "example": 0 },
+          "myInviteCode": { "type": "string", "description": "내 초대 코드", "example": "AB12CD34" },
+          "status": {
+            "description": "계정 상태",
+            "example": "active",
+            "allOf": [{ "$ref": "#/components/schemas/UserStatus" }]
+          },
+          "role": { "description": "권한", "example": "user", "allOf": [{ "$ref": "#/components/schemas/UserRole" }] },
+          "lastLoginDate": {
+            "type": "string",
+            "description": "마지막 로그인 일시",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "questionSeriesId": {
+            "type": "string",
+            "description": "선택한 질문 시리즈 ID",
+            "example": null,
+            "nullable": true
+          },
+          "deletedRequestAt": {
+            "type": "string",
+            "description": "탈퇴 요청 일시",
+            "format": "date-time",
+            "nullable": true,
+            "example": null
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "생성 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "updatedDate": {
+            "type": "string",
+            "description": "수정 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "nickname",
+          "loginType",
+          "providerId",
+          "rewardCount",
+          "aiReplyCycle",
+          "myInviteCode",
+          "status",
+          "role",
+          "lastLoginDate",
+          "questionSeriesId",
+          "deletedRequestAt",
+          "createdDate",
+          "updatedDate"
+        ]
+      },
+      "KakaoLoginRequestDto": {
+        "type": "object",
+        "properties": {
+          "kakaoAccessToken": {
+            "type": "string",
+            "description": "카카오 Access Token",
+            "example": "kakao_access_token_example"
+          }
+        },
+        "required": ["kakaoAccessToken"]
+      },
+      "RefreshTokenRequestDto": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "로그인 응답으로 받은 Refresh Token",
+            "example": "kM2x9..."
+          }
+        },
+        "required": ["refreshToken"]
+      },
+      "UpdateMeRequestDto": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": "string",
+            "description": "닉네임 (2~8자, 한글·일본어·영문 소문자·숫자)",
+            "example": "진주",
+            "minLength": 2,
+            "maxLength": 8
+          },
+          "friendInviteCode": {
+            "type": "string",
+            "description": "친구 초대 코드 (온보딩에서 선택 입력). 첫 일지를 쓰면 초대한 사람·나 모두 보상. 한 번만, 첫 일지 전에만 등록 가능",
+            "example": "AB12CD34",
+            "maxLength": 20
+          },
+          "questionSeriesId": { "type": "string", "description": "선택한 질문 시리즈 ID", "example": "1" }
+        }
+      },
+      "DeleteUserResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string", "description": "처리 결과 메시지", "example": "사용자 삭제를 완료했습니다." },
+          "id": { "type": "string", "description": "대상 사용자 ID", "example": "1" },
+          "statusCode": { "type": "number", "description": "응답 본문에 담긴 상태 코드 값", "example": 200 }
+        },
+        "required": ["message", "id", "statusCode"]
+      },
+      "GetUserSettingResponseDto": {
+        "type": "object",
+        "properties": {
+          "localeType": {
+            "description": "언어",
+            "example": "ko",
+            "allOf": [{ "$ref": "#/components/schemas/LocaleType" }]
+          },
+          "setLetterIsPrivate": {
+            "type": "boolean",
+            "description": "내 일지를 다른 사람에게 보여줄지(false=공개). 작성 후 \"답장을 공개할까요?\"의 마지막 선택이 저장되고 다음 일지의 기본값이 된다",
+            "example": false
+          },
+          "setLetterIsPrivateSns": {
+            "type": "boolean",
+            "description": "몽몽이가 내 일지를 SNS(인스타그램 피드)에 소개해도 되는지(false=허용). 마지막 선택이 저장되고 다음 일지의 기본값이 된다",
+            "example": false
+          },
+          "pushEnabled": { "type": "boolean", "description": "푸시 알림 수신 여부", "example": true }
+        },
+        "required": ["localeType", "setLetterIsPrivate", "setLetterIsPrivateSns", "pushEnabled"]
+      },
+      "UpdateUserSettingRequestDto": {
+        "type": "object",
+        "properties": {
+          "localeType": {
+            "description": "언어",
+            "example": "ko",
+            "allOf": [{ "$ref": "#/components/schemas/LocaleType" }]
+          },
+          "setLetterIsPrivate": {
+            "type": "boolean",
+            "description": "내 일지를 다른 사람에게 보여줄지(false=공개). 작성 후 \"답장을 공개할까요?\"의 마지막 선택이 저장되고 다음 일지의 기본값이 된다",
+            "example": true
+          },
+          "setLetterIsPrivateSns": {
+            "type": "boolean",
+            "description": "몽몽이가 내 일지를 SNS(인스타그램 피드)에 소개해도 되는지(false=허용). 마지막 선택이 저장되고 다음 일지의 기본값이 된다",
+            "example": true
+          },
+          "pushEnabled": { "type": "boolean", "description": "푸시 알림 수신 여부", "example": false }
+        }
+      },
+      "CreateUserRequestDto": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "description": "이메일", "example": "user@example.com" },
+          "password": {
+            "type": "string",
+            "description": "비밀번호 (8자 이상)",
+            "example": "password123",
+            "minLength": 8
+          },
+          "nickname": {
+            "type": "string",
+            "description": "닉네임 (2~8자, 한글·일본어·영문 소문자·숫자)",
+            "example": "몽몽이",
+            "minLength": 2,
+            "maxLength": 8
+          },
+          "friendInviteCode": {
+            "type": "string",
+            "description": "친구 초대 코드",
+            "example": "AB12CD34",
+            "maxLength": 20
+          }
+        },
+        "required": ["email", "password", "nickname"]
+      },
+      "CreateUserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "사용자 ID", "example": "1" },
+          "email": {
+            "type": "string",
+            "description": "이메일 (카카오가 이메일을 주지 않으면 null)",
+            "example": "user@example.com",
+            "nullable": true
+          },
+          "nickname": {
+            "type": "string",
+            "description": "닉네임 (null이면 이름 설정 온보딩 필요)",
+            "example": "몽몽이",
+            "nullable": true
+          },
+          "loginType": {
+            "description": "로그인 유형",
+            "example": "local",
+            "allOf": [{ "$ref": "#/components/schemas/LoginType" }]
+          },
+          "providerId": {
+            "type": "string",
+            "description": "소셜 제공자 사용자 ID (로컬은 null)",
+            "example": null,
+            "nullable": true
+          },
+          "rewardCount": { "type": "number", "description": "리워드 보유량", "example": 0 },
+          "aiReplyCycle": { "type": "number", "description": "AI 답장 사이클", "example": 0 },
+          "myInviteCode": { "type": "string", "description": "내 초대 코드", "example": "AB12CD34" },
+          "status": {
+            "description": "계정 상태",
+            "example": "active",
+            "allOf": [{ "$ref": "#/components/schemas/UserStatus" }]
+          },
+          "role": { "description": "권한", "example": "user", "allOf": [{ "$ref": "#/components/schemas/UserRole" }] },
+          "lastLoginDate": {
+            "type": "string",
+            "description": "마지막 로그인 일시",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "questionSeriesId": {
+            "type": "string",
+            "description": "선택한 질문 시리즈 ID",
+            "example": null,
+            "nullable": true
+          },
+          "deletedRequestAt": {
+            "type": "string",
+            "description": "탈퇴 요청 일시",
+            "format": "date-time",
+            "nullable": true,
+            "example": null
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "생성 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "updatedDate": {
+            "type": "string",
+            "description": "수정 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "nickname",
+          "loginType",
+          "providerId",
+          "rewardCount",
+          "aiReplyCycle",
+          "myInviteCode",
+          "status",
+          "role",
+          "lastLoginDate",
+          "questionSeriesId",
+          "deletedRequestAt",
+          "createdDate",
+          "updatedDate"
+        ]
+      },
+      "UpdateUserRequestDto": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": "string",
+            "description": "닉네임 (2~8자, 한글·일본어·영문 소문자·숫자)",
+            "example": "새닉네임",
+            "minLength": 2,
+            "maxLength": 8
+          },
+          "status": {
+            "description": "계정 상태",
+            "example": "active",
+            "allOf": [{ "$ref": "#/components/schemas/UserStatus" }]
+          },
+          "questionSeriesId": {
+            "type": "string",
+            "description": "선택한 질문 시리즈 ID (온보딩 시 선택)",
+            "example": "1"
+          }
+        }
+      },
+      "UpdateUserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "사용자 ID", "example": "1" },
+          "email": {
+            "type": "string",
+            "description": "이메일 (카카오가 이메일을 주지 않으면 null)",
+            "example": "user@example.com",
+            "nullable": true
+          },
+          "nickname": {
+            "type": "string",
+            "description": "닉네임 (null이면 이름 설정 온보딩 필요)",
+            "example": "몽몽이",
+            "nullable": true
+          },
+          "loginType": {
+            "description": "로그인 유형",
+            "example": "local",
+            "allOf": [{ "$ref": "#/components/schemas/LoginType" }]
+          },
+          "providerId": {
+            "type": "string",
+            "description": "소셜 제공자 사용자 ID (로컬은 null)",
+            "example": null,
+            "nullable": true
+          },
+          "rewardCount": { "type": "number", "description": "리워드 보유량", "example": 0 },
+          "aiReplyCycle": { "type": "number", "description": "AI 답장 사이클", "example": 0 },
+          "myInviteCode": { "type": "string", "description": "내 초대 코드", "example": "AB12CD34" },
+          "status": {
+            "description": "계정 상태",
+            "example": "active",
+            "allOf": [{ "$ref": "#/components/schemas/UserStatus" }]
+          },
+          "role": { "description": "권한", "example": "user", "allOf": [{ "$ref": "#/components/schemas/UserRole" }] },
+          "lastLoginDate": {
+            "type": "string",
+            "description": "마지막 로그인 일시",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "questionSeriesId": {
+            "type": "string",
+            "description": "선택한 질문 시리즈 ID",
+            "example": null,
+            "nullable": true
+          },
+          "deletedRequestAt": {
+            "type": "string",
+            "description": "탈퇴 요청 일시",
+            "format": "date-time",
+            "nullable": true,
+            "example": null
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "생성 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "updatedDate": {
+            "type": "string",
+            "description": "수정 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "nickname",
+          "loginType",
+          "providerId",
+          "rewardCount",
+          "aiReplyCycle",
+          "myInviteCode",
+          "status",
+          "role",
+          "lastLoginDate",
+          "questionSeriesId",
+          "deletedRequestAt",
+          "createdDate",
+          "updatedDate"
+        ]
+      },
+      "ItemType": { "type": "string", "enum": ["clothes", "face", "background"] },
+      "GetItemResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "아이템 ID", "example": "1" },
+          "name": { "type": "string", "description": "아이템 이름", "example": "왕관" },
+          "itemType": {
+            "description": "아이템 유형",
+            "example": "clothes",
+            "allOf": [{ "$ref": "#/components/schemas/ItemType" }]
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "이미지 URL",
+            "example": "https://cdn.mongmong.com/items/crown.png"
+          },
+          "cost": { "type": "number", "description": "구매 비용(꿈조각)", "example": 100 },
+          "isOnSale": {
+            "type": "boolean",
+            "description": "판매 중 여부 (false면 판매 중지: 상점에서 숨김)",
+            "example": true
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "생성 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "updatedDate": {
+            "type": "string",
+            "description": "수정 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          }
+        },
+        "required": ["id", "name", "itemType", "imageUrl", "cost", "isOnSale", "createdDate", "updatedDate"]
+      },
+      "CreateItemRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "description": "아이템 이름", "example": "왕관", "maxLength": 100 },
+          "itemType": {
+            "description": "아이템 유형",
+            "example": "clothes",
+            "allOf": [{ "$ref": "#/components/schemas/ItemType" }]
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "이미지 URL",
+            "example": "https://cdn.mongmong.com/items/crown.png",
+            "maxLength": 500
+          },
+          "cost": { "type": "number", "description": "구매 비용(꿈조각)", "example": 100 }
+        },
+        "required": ["name", "itemType", "imageUrl", "cost"]
+      },
+      "UpdateItemRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "description": "아이템 이름", "maxLength": 100 },
+          "itemType": { "description": "아이템 유형", "allOf": [{ "$ref": "#/components/schemas/ItemType" }] },
+          "imageUrl": { "type": "string", "description": "이미지 URL", "maxLength": 500 },
+          "cost": { "type": "number", "description": "구매 비용(꿈조각)" },
+          "isOnSale": { "type": "boolean", "description": "판매 중 여부 (판매를 다시 시작할 때 true)", "example": true }
+        }
+      },
+      "DeleteItemResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string", "description": "메시지", "example": "아이템 판매를 중지했습니다." },
+          "id": { "type": "string", "description": "아이템 ID", "example": "1" },
+          "statusCode": { "type": "number", "description": "HTTP 상태 코드", "example": 200 }
+        },
+        "required": ["message", "id", "statusCode"]
+      },
+      "MoodType": {
+        "type": "string",
+        "enum": ["good", "excited", "soso", "angry", "sad", "depressed"],
+        "description": "오늘의 기분 (good 기분 좋아, excited 신나, soso 그냥그래, angry 화가 나, sad 슬퍼, depressed 우울해)"
+      },
+      "GetLetterResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "편지 ID", "example": "1" },
+          "questionId": { "type": "string", "description": "질문 ID", "example": "1" },
+          "letterDate": { "type": "string", "description": "일지 날짜 (KST)", "example": "2026-05-05" },
+          "answer": {
+            "type": "string",
+            "description": "답변 내용",
+            "example": "오늘은 친구랑 블록 놀이를 해서 정말 즐거웠어요."
+          },
+          "mood": {
+            "description": "오늘의 기분 (good 기분 좋아, excited 신나, soso 그냥그래, angry 화가 나, sad 슬퍼, depressed 우울해)",
+            "example": "good",
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/MoodType" }]
+          },
+          "isPrivate": { "type": "boolean", "description": "비공개 여부", "example": false },
+          "isPrivateSns": { "type": "boolean", "description": "SNS 공유 비공개 여부", "example": false },
+          "localeType": {
+            "description": "작성 로케일",
+            "example": "ko",
+            "allOf": [{ "$ref": "#/components/schemas/LocaleType" }]
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "생성 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "updatedDate": {
+            "type": "string",
+            "description": "수정 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "questionId",
+          "letterDate",
+          "answer",
+          "mood",
+          "isPrivate",
+          "isPrivateSns",
+          "localeType",
+          "createdDate",
+          "updatedDate"
+        ]
+      },
+      "GetPublicLetterResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "편지 ID", "example": "1" },
+          "questionId": { "type": "string", "description": "질문 ID", "example": "1" },
+          "answer": {
+            "type": "string",
+            "description": "답변 내용",
+            "example": "열 살 생일에 가족이랑 바다에 갔던 날이요."
+          },
+          "createdDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "작성 일시",
+            "example": "2026-05-05T03:00:00.000Z"
+          }
+        },
+        "required": ["id", "questionId", "answer", "createdDate"]
+      },
+      "GetLetterCalendarResponseDto": {
+        "type": "object",
+        "properties": {
+          "date": { "type": "string", "description": "일지 날짜 (KST)", "example": "2026-05-05" },
+          "letterId": { "type": "string", "description": "편지 ID", "example": "1" },
+          "mood": {
+            "description": "오늘의 기분 (good 기분 좋아, excited 신나, soso 그냥그래, angry 화가 나, sad 슬퍼, depressed 우울해)",
+            "example": "good",
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/MoodType" }]
+          }
+        },
+        "required": ["date", "letterId", "mood"]
+      },
+      "UpdateLetterRequestDto": {
+        "type": "object",
+        "properties": {
+          "answer": {
+            "type": "string",
+            "description": "답변 내용 (작성 당일에만 수정 가능)",
+            "example": "다시 생각해보니 열 살 생일이 제일 기억에 남아요.",
+            "maxLength": 1000
+          },
+          "mood": {
+            "description": "오늘의 기분 (good 기분 좋아, excited 신나, soso 그냥그래, angry 화가 나, sad 슬퍼, depressed 우울해)",
+            "example": "good",
+            "allOf": [{ "$ref": "#/components/schemas/MoodType" }]
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "description": "비공개 여부 (false면 휴게실에 익명으로 공개). 보내면 내 설정 setLetterIsPrivate도 같은 값으로 바뀐다",
+            "example": false
+          },
+          "isPrivateSns": {
+            "type": "boolean",
+            "description": "SNS 공유 비공개 여부. 보내면 내 설정 setLetterIsPrivateSns도 같은 값으로 바뀐다",
+            "example": true
+          }
+        }
+      },
+      "CreateLetterRequestDto": {
+        "type": "object",
+        "properties": {
+          "letterDate": {
+            "type": "string",
+            "description": "일지 날짜 (KST, 미지정 시 오늘). 지난 날짜는 꿈조각 3개가 차감되고 미래 날짜는 쓸 수 없다",
+            "example": "2026-05-05"
+          },
+          "answer": {
+            "type": "string",
+            "description": "답변 내용",
+            "example": "오늘은 친구랑 블록 놀이를 해서 정말 즐거웠어요.",
+            "maxLength": 1000
+          },
+          "mood": {
+            "description": "오늘의 기분 (good 기분 좋아, excited 신나, soso 그냥그래, angry 화가 나, sad 슬퍼, depressed 우울해)",
+            "example": "good",
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/MoodType" }]
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "description": "비공개 여부. 미지정 시 내 설정(setLetterIsPrivate, 마지막 선택)을 따른다. 작성 후 \"답장을 공개할까요?\"의 선택은 PATCH /letters/:id로 보낸다",
+            "example": true
+          },
+          "isPrivateSns": {
+            "type": "boolean",
+            "description": "SNS 공유 비공개 여부. 미지정 시 내 설정(setLetterIsPrivateSns, 마지막 선택)을 따른다",
+            "example": true
+          },
+          "localeType": {
+            "description": "작성 로케일 (미지정 시 한국어)",
+            "example": "ko",
+            "allOf": [{ "$ref": "#/components/schemas/LocaleType" }]
+          }
+        },
+        "required": ["answer"]
+      },
+      "CreateLetterResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "편지 ID", "example": "1" },
+          "questionId": { "type": "string", "description": "질문 ID", "example": "1" },
+          "letterDate": { "type": "string", "description": "일지 날짜 (KST)", "example": "2026-05-05" },
+          "answer": {
+            "type": "string",
+            "description": "답변 내용",
+            "example": "오늘은 친구랑 블록 놀이를 해서 정말 즐거웠어요."
+          },
+          "mood": {
+            "description": "오늘의 기분 (good 기분 좋아, excited 신나, soso 그냥그래, angry 화가 나, sad 슬퍼, depressed 우울해)",
+            "example": "good",
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/MoodType" }]
+          },
+          "isPrivate": { "type": "boolean", "description": "비공개 여부", "example": false },
+          "isPrivateSns": { "type": "boolean", "description": "SNS 공유 비공개 여부", "example": false },
+          "localeType": {
+            "description": "작성 로케일",
+            "example": "ko",
+            "allOf": [{ "$ref": "#/components/schemas/LocaleType" }]
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "생성 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "updatedDate": {
+            "type": "string",
+            "description": "수정 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "rewardAmount": {
+            "type": "number",
+            "description": "이번 작성으로 바뀐 꿈조각 수량 (오늘 일지 +1, 연속 5일째 +6, 지난 날짜 일지 -3). 친구 초대 보상은 포함하지 않는다",
+            "example": 1
+          }
+        },
+        "required": [
+          "id",
+          "questionId",
+          "letterDate",
+          "answer",
+          "mood",
+          "isPrivate",
+          "isPrivateSns",
+          "localeType",
+          "createdDate",
+          "updatedDate",
+          "rewardAmount"
+        ]
+      },
+      "GetAiReplyResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "AI 답장 ID", "example": "1" },
+          "letterId": { "type": "string", "description": "편지 ID", "example": "1" },
+          "content": { "type": "string", "description": "내용", "example": "오늘도 정말 잘했어요!" },
+          "isRead": { "type": "boolean", "description": "읽음 여부", "example": false },
+          "createdDate": {
+            "type": "string",
+            "description": "생성 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          }
+        },
+        "required": ["id", "letterId", "content", "isRead", "createdDate"]
+      },
+      "LetterReactionType": { "type": "string", "enum": ["like", "empathy", "cheer"], "description": "반응 유형" },
+      "CreateLetterReactionRequestDto": {
+        "type": "object",
+        "properties": {
+          "reactionType": {
+            "description": "반응 유형",
+            "example": "like",
+            "allOf": [{ "$ref": "#/components/schemas/LetterReactionType" }]
+          }
+        },
+        "required": ["reactionType"]
+      },
+      "GetLetterReactionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "반응 ID", "example": "1" },
+          "letterId": { "type": "string", "description": "편지 ID", "example": "1" },
+          "reactionType": {
+            "description": "반응 유형",
+            "example": "like",
+            "allOf": [{ "$ref": "#/components/schemas/LetterReactionType" }]
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "생성 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          }
+        },
+        "required": ["id", "letterId", "reactionType", "createdDate"]
+      },
+      "LetterReportReasonType": {
+        "type": "string",
+        "enum": ["spam", "abuse", "inappropriate", "other"],
+        "description": "신고 사유 (선택)"
+      },
+      "CreateLetterReportRequestDto": {
+        "type": "object",
+        "properties": {
+          "reasonType": {
+            "description": "신고 사유 (선택)",
+            "example": "inappropriate",
+            "allOf": [{ "$ref": "#/components/schemas/LetterReportReasonType" }]
+          },
+          "reasonDetail": {
+            "type": "string",
+            "description": "신고 상세 사유",
+            "example": "부적절한 표현이 포함되어 있어요.",
+            "maxLength": 500
+          }
+        }
+      },
+      "LetterReportStatus": {
+        "type": "string",
+        "enum": ["pending", "reviewing", "resolved", "rejected"],
+        "description": "처리 상태"
+      },
+      "GetLetterReportResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "신고 ID", "example": "1" },
+          "letterId": { "type": "string", "description": "편지 ID", "example": "1" },
+          "reasonType": {
+            "description": "신고 사유 (선택하지 않았으면 null)",
+            "example": "inappropriate",
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/LetterReportReasonType" }]
+          },
+          "reasonDetail": { "type": "string", "description": "신고 상세 사유", "example": null, "nullable": true },
+          "status": {
+            "description": "처리 상태",
+            "example": "pending",
+            "allOf": [{ "$ref": "#/components/schemas/LetterReportStatus" }]
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "생성 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          }
+        },
+        "required": ["id", "letterId", "reasonType", "reasonDetail", "status", "createdDate"]
+      },
+      "UpdateLetterReportRequestDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "description": "처리 상태. resolved(신고 인정)로 바꾸면 그 일지는 휴게실에서 내려간다",
+            "example": "resolved",
+            "allOf": [{ "$ref": "#/components/schemas/LetterReportStatus" }]
+          }
+        },
+        "required": ["status"]
+      },
+      "RewardType": {
+        "type": "string",
+        "enum": ["ad", "invite", "letter", "admin", "attendance", "streak", "past_letter", "item_purchase"],
+        "description": "적립 유형"
+      },
+      "GetRewardHistoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "리워드 이력 ID", "example": "1" },
+          "type": {
+            "description": "적립 유형",
+            "example": "ad",
+            "allOf": [{ "$ref": "#/components/schemas/RewardType" }]
+          },
+          "amount": { "type": "number", "description": "적립 수량(꿈조각)", "example": 20 },
+          "createdDate": {
+            "type": "string",
+            "description": "생성 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          }
+        },
+        "required": ["id", "type", "amount", "createdDate"]
+      },
+      "AdType": {
+        "type": "string",
+        "enum": ["rewarded", "interstitial"],
+        "description": "광고 유형 (기록용, 유형과 무관하게 리워드 지급)"
+      },
+      "CreateAdViewRequestDto": {
+        "type": "object",
+        "properties": {
+          "adType": {
+            "description": "광고 유형 (기록용, 유형과 무관하게 리워드 지급)",
+            "example": "rewarded",
+            "allOf": [{ "$ref": "#/components/schemas/AdType" }]
+          }
+        },
+        "required": ["adType"]
+      },
+      "CreateAdViewResponseDto": {
+        "type": "object",
+        "properties": {
+          "adType": {
+            "description": "광고 유형",
+            "example": "rewarded",
+            "allOf": [{ "$ref": "#/components/schemas/AdType" }]
+          },
+          "viewDate": { "type": "string", "description": "시청 일자", "example": "2026-07-26" },
+          "rewardAmount": { "type": "number", "description": "지급된 리워드 수량(꿈조각)", "example": 3 }
+        },
+        "required": ["adType", "viewDate", "rewardAmount"]
+      },
+      "GetAttendanceResponseDto": {
+        "type": "object",
+        "properties": {
+          "attendanceDate": { "type": "string", "description": "오늘 날짜 (KST)", "example": "2026-05-05" },
+          "isChecked": { "type": "boolean", "description": "오늘 출석체크를 했는지 여부", "example": false }
+        },
+        "required": ["attendanceDate", "isChecked"]
+      },
+      "CreateAttendanceResponseDto": {
+        "type": "object",
+        "properties": {
+          "attendanceDate": { "type": "string", "description": "출석 일자 (KST)", "example": "2026-05-05" },
+          "rewardAmount": { "type": "number", "description": "지급된 리워드 수량(꿈조각)", "example": 1 }
+        },
+        "required": ["attendanceDate", "rewardAmount"]
+      },
+      "GetCharacterTypeResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "캐릭터 종류 ID", "example": "1" },
+          "name": { "type": "string", "description": "캐릭터 이름", "example": "햄몽이" },
+          "imageUrl": {
+            "type": "string",
+            "description": "이미지 URL",
+            "example": "https://cdn.mongmong.com/characters/hammong.png",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "새 캐릭터 배정 대상 여부 (false면 더 이상 새로 배정하지 않음)",
+            "example": true
+          }
+        },
+        "required": ["id", "name", "imageUrl", "isActive"]
+      },
+      "CharacterStatus": { "type": "string", "enum": ["growing", "graduated", "inactive"], "description": "상태" },
+      "GetCharacterResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "캐릭터 ID", "example": "1" },
+          "characterType": {
+            "description": "캐릭터 종류",
+            "allOf": [{ "$ref": "#/components/schemas/GetCharacterTypeResponseDto" }]
+          },
+          "level": {
+            "type": "number",
+            "description": "레벨 (1~4). 사이클 동안 쓴 편지 90통마다 1씩 오른다",
+            "example": 2
+          },
+          "maxLevel": { "type": "number", "description": "최대 레벨", "example": 4 },
+          "letterCount": {
+            "type": "number",
+            "description": "사이클(cycleStartDate ~ graduationDate 전날) 동안 쓴 편지 수. 편지 날짜(letterDate) 기준",
+            "example": 95
+          },
+          "nextLevelLetterCount": {
+            "type": "number",
+            "description": "다음 레벨이 되는 편지 수 (최대 레벨이면 null)",
+            "example": 180,
+            "nullable": true
+          },
+          "status": {
+            "description": "상태",
+            "example": "growing",
+            "allOf": [{ "$ref": "#/components/schemas/CharacterStatus" }]
+          },
+          "cycleStartDate": {
+            "type": "string",
+            "description": "키우기 시작한 날 (KST, YYYY-MM-DD)",
+            "example": "2026-10-18"
+          },
+          "graduationDate": {
+            "type": "string",
+            "description": "졸업일 (시작일 + 1년, KST). 이 날부터 졸업할 수 있다",
+            "example": "2027-10-18"
+          },
+          "canGraduate": {
+            "type": "boolean",
+            "description": "오늘 졸업할 수 있는지. true면 졸업 연출 후 POST /characters/graduate를 호출한다",
+            "example": false
+          },
+          "graduatedAt": {
+            "type": "string",
+            "description": "졸업 일시",
+            "format": "date-time",
+            "example": null,
+            "nullable": true
+          },
+          "lastWateredAt": {
+            "type": "string",
+            "description": "마지막 물주기 일시",
+            "format": "date-time",
+            "example": null,
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "생성 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "characterType",
+          "level",
+          "maxLevel",
+          "letterCount",
+          "nextLevelLetterCount",
+          "status",
+          "cycleStartDate",
+          "graduationDate",
+          "canGraduate",
+          "graduatedAt",
+          "lastWateredAt",
+          "createdDate"
+        ]
+      },
+      "GetGraduationCardResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "졸업 카드 ID", "example": "1" },
+          "characterId": { "type": "string", "description": "캐릭터 ID", "example": "1" },
+          "graduatedAt": {
+            "type": "string",
+            "description": "졸업 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "levelSnapshot": { "type": "number", "description": "졸업 시점 레벨", "example": 4 },
+          "characterName": { "type": "string", "description": "캐릭터 이름", "example": "햄몽이" },
+          "letterCount": { "type": "number", "description": "사이클 동안 보낸 편지 수", "example": 234 },
+          "topMood": {
+            "description": "가장 많이 보낸 기분 (기분을 고른 편지가 없으면 null)",
+            "example": "good",
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/MoodType" }]
+          },
+          "periodStart": { "type": "object", "description": "사이클 시작일 (KST)", "example": "2025-10-18" },
+          "periodEnd": { "type": "object", "description": "사이클 마지막 날 (KST)", "example": "2026-10-17" },
+          "equippedItemsSnapshot": {
+            "type": "object",
+            "description": "졸업 시점 장착 아이템 스냅샷",
+            "example": null,
+            "nullable": true
+          },
+          "cardImageUrl": { "type": "string", "description": "카드 이미지 URL", "example": null, "nullable": true }
+        },
+        "required": [
+          "id",
+          "characterId",
+          "graduatedAt",
+          "levelSnapshot",
+          "characterName",
+          "letterCount",
+          "topMood",
+          "periodStart",
+          "periodEnd",
+          "equippedItemsSnapshot",
+          "cardImageUrl"
+        ]
+      },
+      "GetCharacterItemResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "캐릭터-아이템 매핑 ID", "example": "1" },
+          "itemId": { "type": "string", "description": "아이템 ID", "example": "1" },
+          "itemName": { "type": "string", "description": "아이템 이름", "example": "왕관" },
+          "itemType": {
+            "description": "아이템 유형",
+            "example": "clothes",
+            "allOf": [{ "$ref": "#/components/schemas/ItemType" }]
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "이미지 URL",
+            "example": "https://cdn.mongmong.com/items/crown.png"
+          },
+          "isEquipped": { "type": "boolean", "description": "장착 여부", "example": false },
+          "createdDate": {
+            "type": "string",
+            "description": "구매 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          }
+        },
+        "required": ["id", "itemId", "itemName", "itemType", "imageUrl", "isEquipped", "createdDate"]
+      },
+      "CreateCharacterItemRequestDto": {
+        "type": "object",
+        "properties": { "itemId": { "type": "string", "description": "구매할 아이템 ID", "example": "1" } },
+        "required": ["itemId"]
+      },
+      "UpdateCharacterItemRequestDto": {
+        "type": "object",
+        "properties": { "isEquipped": { "type": "boolean", "description": "장착 여부", "example": true } },
+        "required": ["isEquipped"]
+      },
+      "CreateCharacterTypeRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "description": "캐릭터 이름", "example": "햄몽이", "maxLength": 50 },
+          "imageUrl": {
+            "type": "string",
+            "description": "이미지 URL",
+            "example": "https://cdn.mongmong.com/characters/hammong.png",
+            "maxLength": 500
+          }
+        },
+        "required": ["name"]
+      },
+      "UpdateCharacterTypeRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "description": "캐릭터 이름", "example": "햄몽이", "maxLength": 50 },
+          "imageUrl": { "type": "string", "description": "이미지 URL", "maxLength": 500 },
+          "isActive": { "type": "boolean", "description": "새 캐릭터 배정 대상 여부", "example": false }
+        }
+      },
+      "NoticeType": { "type": "string", "enum": ["notice", "event", "update"] },
+      "GetNoticeResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "공지 ID", "example": "1" },
+          "type": {
+            "description": "공지 유형",
+            "example": "notice",
+            "allOf": [{ "$ref": "#/components/schemas/NoticeType" }]
+          },
+          "title": { "type": "string", "description": "제목", "example": "앱 업데이트 안내" },
+          "content": {
+            "type": "string",
+            "description": "본문",
+            "example": "이번 업데이트에서는 꾸미기 기능이 추가되었어요."
+          },
+          "isPublished": { "type": "boolean", "description": "게시 여부", "example": true },
+          "createdDate": {
+            "type": "string",
+            "description": "생성 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          },
+          "updatedDate": {
+            "type": "string",
+            "description": "수정 일시",
+            "format": "date-time",
+            "example": "2026-07-26T12:00:00.000Z"
+          }
+        },
+        "required": ["id", "type", "title", "content", "isPublished", "createdDate", "updatedDate"]
+      },
+      "CreateNoticeRequestDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "공지 유형",
+            "example": "notice",
+            "allOf": [{ "$ref": "#/components/schemas/NoticeType" }]
+          },
+          "title": { "type": "string", "description": "제목", "example": "앱 업데이트 안내", "maxLength": 200 },
+          "content": {
+            "type": "string",
+            "description": "본문",
+            "example": "이번 업데이트에서는 꾸미기 기능이 추가되었어요."
+          },
+          "isPublished": { "type": "boolean", "description": "게시 여부", "example": true, "default": false }
+        },
+        "required": ["type", "title", "content"]
+      },
+      "UpdateNoticeRequestDto": {
+        "type": "object",
+        "properties": {
+          "type": { "description": "공지 유형", "allOf": [{ "$ref": "#/components/schemas/NoticeType" }] },
+          "title": { "type": "string", "description": "제목", "maxLength": 200 },
+          "content": { "type": "string", "description": "본문" },
+          "isPublished": { "type": "boolean", "description": "게시 여부" }
+        }
+      },
+      "DeleteNoticeResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string", "description": "메시지", "example": "공지 삭제를 완료했습니다." },
+          "id": { "type": "string", "description": "공지 ID", "example": "1" },
+          "statusCode": { "type": "number", "description": "HTTP 상태 코드", "example": 200 }
+        },
+        "required": ["message", "id", "statusCode"]
+      }
+    }
+  }
+}

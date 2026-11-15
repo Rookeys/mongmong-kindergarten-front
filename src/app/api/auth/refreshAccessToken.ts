@@ -1,4 +1,5 @@
-import { refreshAuthToken, type AuthToken } from "@/apis/auth"
+import { authRefresh } from "@/apis/generated/auth/auth"
+import type { AuthTokenResponseDto } from "@/apis/generated/model"
 
 /*
  * 백엔드는 Refresh Token을 한 번 쓰면 폐기한다. 여러 요청이 같은 토큰으로 동시에 갱신하면 하나만 성공하므로,
@@ -6,11 +7,11 @@ import { refreshAuthToken, type AuthToken } from "@/apis/auth"
  * 서버 프로세스 메모리 기준이라 프론트 서버를 여러 대 띄우면 Redis 같은 공유 저장소로 옮겨야 한다.
  */
 const KEEP_RESULT_MS = 10_000
-const pendingRefreshes: Record<string, Promise<AuthToken>> = {}
+const pendingRefreshes: Record<string, Promise<AuthTokenResponseDto>> = {}
 
-export function refreshAccessToken(refreshToken: string): Promise<AuthToken> {
+export function refreshAccessToken(refreshToken: string): Promise<AuthTokenResponseDto> {
   if (!pendingRefreshes[refreshToken]) {
-    const request = refreshAuthToken(refreshToken)
+    const request = authRefresh({ refreshToken })
     pendingRefreshes[refreshToken] = request
     request.finally(() => setTimeout(() => delete pendingRefreshes[refreshToken], KEEP_RESULT_MS)).catch(() => {})
   }

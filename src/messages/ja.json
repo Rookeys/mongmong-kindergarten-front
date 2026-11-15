@@ -196,16 +196,15 @@
     "pushEnabled": "プッシュ通知",
     "pushEnabledDescription": "手紙が届いたらお知らせします。",
     "language": "言語",
-    "locale": {
-      "ko": "한국어",
-      "en": "English",
-      "ja": "日本語"
-    },
     "logout": "ログアウト",
     "withdraw": "退会する",
     "withdrawTitle": "本当に退会しますか？",
     "withdrawDescription": "退会すると手紙とキャラクターの記録が消えます。同じアカウントで再登録すると新しいアカウントとして始まります。",
     "withdrawConfirm": "退会する",
     "cancel": "キャンセル"
+  },
+  "common": {
+    "errorTitle": "画面を読み込めませんでした",
+    "retry": "もう一度"
   }
 }

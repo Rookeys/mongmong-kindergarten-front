@@ -3,11 +3,10 @@
 import { useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
 import { BottomSheet, Button, Toast } from "@kojaem/mongmong"
-import type { Character } from "@/apis/character"
-import { getErrorMessage } from "@/apis/fetcher"
-import { updateLetterVisibility, type CreatedLetter } from "@/apis/letter"
+import { useLetterUpdate } from "@/apis/generated/letters/letters"
+import type { CreateLetterResponseDto, GetCharacterResponseDto } from "@/apis/generated/model"
+import { getErrorMessage } from "@/apis/instance"
 import CharacterImage from "@/components/CharacterImage"
-import { DIALOG_SURFACE } from "@/constants/designSystemOverrides"
 import { useToast } from "@/hooks/useToast"
 import { Link } from "@/i18n/navigation"
 
@@ -17,8 +16,8 @@ const SENT_SCREEN_MS = 2500
 type Step = "sent" | "share" | "reward"
 
 interface Props {
-  letter: CreatedLetter
-  character: Character
+  letter: CreateLetterResponseDto
+  character: GetCharacterResponseDto
 }
 
 /** 답장을 보낸 뒤: 보냄 안내 → 공개 여부 (공개하면 SNS 소개 동의) → 받은 꿈조각 */
@@ -26,8 +25,7 @@ export default function LetterSentFlow({ letter, character }: Props) {
   const t = useTranslations("letterSent")
   const [step, setStep] = useState<Step>("sent")
   const [isSnsSheetOpen, setIsSnsSheetOpen] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
-  const [saveError, setSaveError] = useState<string>()
+  const updateLetter = useLetterUpdate()
   const { toastMessage, showToast } = useToast()
 
   useEffect(() => {
@@ -35,23 +33,22 @@ export default function LetterSentFlow({ letter, character }: Props) {
     return () => clearTimeout(timer)
   }, [])
 
-  const saveVisibility = async ({ isPublic, allowSns }: { isPublic: boolean; allowSns: boolean }) => {
-    setIsSaving(true)
-    setSaveError(undefined)
-    try {
-      await updateLetterVisibility(letter.id, { isPrivate: !isPublic, isPrivateSns: !allowSns })
-      setIsSnsSheetOpen(false)
-      showToast(isPublic ? t("savedPublic") : t("savedPrivate"))
-      setStep("reward")
-    } catch (error) {
-      setSaveError(getErrorMessage(error))
-    } finally {
-      setIsSaving(false)
-    }
+  // isPrivate·isPrivateSns는 "비공개 여부"라서 화면의 공개·동의와 반대다
+  const saveVisibility = ({ isPublic, allowSns }: { isPublic: boolean; allowSns: boolean }) => {
+    updateLetter.mutate(
+      { id: letter.id, data: { isPrivate: !isPublic, isPrivateSns: !allowSns } },
+      {
+        onSuccess: () => {
+          setIsSnsSheetOpen(false)
+          showToast(isPublic ? t("savedPublic") : t("savedPrivate"))
+          setStep("reward")
+        }
+      }
+    )
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center px-5 pb-5">
+    <main className="bg-gradient-letter flex min-h-dvh flex-col items-center px-5 pb-5">
       <div className="flex flex-col items-center gap-2 pt-16 text-center">
         <p className="text-title-sm text-text-primary whitespace-pre-line">{getTitle(step, letter.rewardAmount, t)}</p>
         {step === "share" && <p className="text-body-md text-text-secondary">{t("shareDescription")}</p>}
@@ -66,7 +63,9 @@ export default function LetterSentFlow({ letter, character }: Props) {
           {toastMessage}
         </Toast>
       )}
-      {saveError && <p className="text-caption-lg text-text-danger mb-2">{saveError}</p>}
+      {updateLetter.error && (
+        <p className="text-caption-lg text-text-danger mb-2">{getErrorMessage(updateLetter.error)}</p>
+      )}
 
       {step === "share" && (
         <div className="flex w-full gap-2">
@@ -75,7 +74,7 @@ export default function LetterSentFlow({ letter, character }: Props) {
             color="brand"
             variant="weak"
             isFullWidth
-            disabled={isSaving}
+            disabled={updateLetter.isPending}
             onClick={() => saveVisibility({ isPublic: false, allowSns: false })}
           >
             {t("private")}
@@ -85,7 +84,7 @@ export default function LetterSentFlow({ letter, character }: Props) {
             color="brand"
             variant="fill"
             isFullWidth
-            disabled={isSaving}
+            disabled={updateLetter.isPending}
             onClick={() => setIsSnsSheetOpen(true)}
           >
             {t("public")}
@@ -100,7 +99,6 @@ export default function LetterSentFlow({ letter, character }: Props) {
       )}
 
       <BottomSheet
-        className={DIALOG_SURFACE}
         open={isSnsSheetOpen}
         onOpenChange={setIsSnsSheetOpen}
         title={t("snsTitle", { name: character.characterType.name })}
@@ -112,7 +110,7 @@ export default function LetterSentFlow({ letter, character }: Props) {
               color="brand"
               variant="weak"
               isFullWidth
-              disabled={isSaving}
+              disabled={updateLetter.isPending}
               onClick={() => saveVisibility({ isPublic: true, allowSns: false })}
             >
               {t("snsNo")}
@@ -122,7 +120,7 @@ export default function LetterSentFlow({ letter, character }: Props) {
               color="brand"
               variant="fill"
               isFullWidth
-              disabled={isSaving}
+              disabled={updateLetter.isPending}
               onClick={() => saveVisibility({ isPublic: true, allowSns: true })}
             >
               {t("snsYes")}
@@ -130,7 +128,7 @@ export default function LetterSentFlow({ letter, character }: Props) {
           </>
         }
       />
-    </div>
+    </main>
   )
 }
 

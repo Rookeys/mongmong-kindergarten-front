@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { BottomSheet, Button, DatePicker } from "@kojaem/mongmong"
-import { DIALOG_SURFACE } from "@/constants/designSystemOverrides"
 import { useRouter } from "@/i18n/navigation"
 
 const FIRST_YEAR = 2025
@@ -38,7 +37,6 @@ export default function MonthPicker({ title, year, month }: Props) {
         <img src="/assets/icons/arrow-down.png" alt="" width={16} height={16} className="rotate-90" />
       </button>
       <BottomSheet
-        className={DIALOG_SURFACE}
         open={isOpen}
         onOpenChange={setIsOpen}
         title={t("pickMonth")}

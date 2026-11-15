@@ -7,8 +7,8 @@ import { useForm } from "react-hook-form"
 import { motion } from "motion/react"
 import { nicknameSchema } from "@/validations/nicknameSchema"
 import { Button, TextField } from "@kojaem/mongmong"
-import { updateMe } from "@/apis/auth"
-import { ApiError, getErrorMessage } from "@/apis/fetcher"
+import { useAuthUpdateMe } from "@/apis/generated/auth/auth"
+import { getErrorCode, getErrorMessage } from "@/apis/instance"
 
 interface props {
   setSendNext: Dispatch<SetStateAction<"question" | "inputNicknmae" | "goodName" | "bridge">>
@@ -22,7 +22,7 @@ interface nicknameI {
 export default function InputNickname({ setSendNext, onNext }: props) {
   const t = useTranslations("sign-up")
   const { update: updateSession } = useSession()
-  const [submitting, setSubmitting] = useState(false)
+  const updateMe = useAuthUpdateMe()
   // TODO: Figma에 없는 임시 입력칸 (TODO.md). 친구가 첫 일지를 쓰면 초대한 사람과 나 모두 꿈조각을 받는다.
   const [inviteCode, setInviteCode] = useState("")
   const [inviteError, setInviteError] = useState<string>()
@@ -44,26 +44,28 @@ export default function InputNickname({ setSendNext, onNext }: props) {
     trigger("nickname")
   }, [])
 
-  const handleNext = async () => {
+  const handleNext = () => {
     if (errors.nickname?.message) return
     const nickname = watch("nickname")
-    setSubmitting(true)
     setInviteError(undefined)
-    try {
-      await updateMe({ nickname, friendInviteCode: inviteCode.trim() || undefined })
-      await updateSession({ nickname })
-      onNext(nickname)
-      setSendNext("goodName")
-    } catch (error) {
-      // 초대 코드 오류(INVITE_*)는 초대 코드 칸에, 나머지는 닉네임 칸에 보여준다
-      if (error instanceof ApiError && error.code.startsWith("INVITE")) {
-        setInviteError(error.message)
-      } else {
-        setError("nickname", { message: getErrorMessage(error) })
+    updateMe.mutate(
+      { data: { nickname, friendInviteCode: inviteCode.trim() || undefined } },
+      {
+        onSuccess: async () => {
+          await updateSession({ nickname })
+          onNext(nickname)
+          setSendNext("goodName")
+        },
+        onError: (error) => {
+          // 초대 코드 오류(INVITE_*)는 초대 코드 칸에, 나머지는 닉네임 칸에 보여준다
+          if (getErrorCode(error)?.startsWith("INVITE")) {
+            setInviteError(getErrorMessage(error))
+          } else {
+            setError("nickname", { message: getErrorMessage(error) })
+          }
+        }
       }
-    } finally {
-      setSubmitting(false)
-    }
+    )
   }
 
   return (
@@ -104,7 +106,7 @@ export default function InputNickname({ setSendNext, onNext }: props) {
           size="xl"
           color="brand"
           variant="fill"
-          disabled={submitting}
+          disabled={updateMe.isPending}
           isFullWidth={true}
         >
           {t("nextButton")}

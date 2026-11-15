@@ -2,7 +2,6 @@
 
 import { useTranslations } from "next-intl"
 import { Button, Modal } from "@kojaem/mongmong"
-import { DIALOG_SURFACE } from "@/constants/designSystemOverrides"
 
 /** 지난 날짜에 답장하면 꿈조각 3개를 쓴다 (백엔드 POST /letters) */
 export const PAST_LETTER_COST = 3
@@ -21,23 +20,22 @@ export default function PastLetterCostModal({ open, hasEnoughReward, onClose, on
 
   return (
     <Modal
-      className={DIALOG_SURFACE}
       open={open}
       onOpenChange={(nextOpen) => !nextOpen && onClose()}
       title={hasEnoughReward ? t("costTitle", values) : t("costInsufficientTitle", values)}
       description={hasEnoughReward ? t("costDescription", values) : t("costInsufficientDescription")}
       buttons={
         <>
-          <Button size="l" className="whitespace-nowrap" color="brand" variant="weak" isFullWidth onClick={onClose}>
+          <Button size="l" color="brand" variant="weak" isFullWidth onClick={onClose}>
             {t("costLater")}
           </Button>
           {hasEnoughReward ? (
-            <Button size="l" className="whitespace-nowrap" color="brand" variant="fill" isFullWidth onClick={onConfirm}>
+            <Button size="l" color="brand" variant="fill" isFullWidth onClick={onConfirm}>
               {t("costUse")}
             </Button>
           ) : (
             // TODO: AdMob 보상형 광고 연결 전까지 비활성
-            <Button size="l" className="whitespace-nowrap" color="brand" variant="fill" isFullWidth disabled>
+            <Button size="l" color="brand" variant="fill" isFullWidth disabled>
               {t("costWatchAd")}
             </Button>
           )}

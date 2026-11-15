@@ -196,16 +196,15 @@
     "pushEnabled": "Push notifications",
     "pushEnabledDescription": "We'll let you know when a letter arrives.",
     "language": "Language",
-    "locale": {
-      "ko": "한국어",
-      "en": "English",
-      "ja": "日本語"
-    },
     "logout": "Log out",
     "withdraw": "Delete account",
     "withdrawTitle": "Delete your account?",
     "withdrawDescription": "Your letters and character history will be removed. Signing up again with the same account starts fresh.",
     "withdrawConfirm": "Delete",
     "cancel": "Cancel"
+  },
+  "common": {
+    "errorTitle": "Couldn't load this screen",
+    "retry": "Try again"
   }
 }

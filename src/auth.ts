@@ -4,7 +4,8 @@ import GoogleProvider from "next-auth/providers/google"
 import KakaoProvider from "next-auth/providers/kakao"
 import NaverProvider from "next-auth/providers/naver"
 import { refreshAccessToken } from "@/app/api/auth/refreshAccessToken"
-import { loginWithKakao, type AuthToken } from "@/apis/auth"
+import { authKakaoLogin } from "@/apis/generated/auth/auth"
+import type { AuthTokenResponseDto } from "@/apis/generated/model"
 
 declare module "next-auth" {
   interface Session {
@@ -38,7 +39,7 @@ function getExpiresAt(accessToken: string) {
   return payload.exp * 1000
 }
 
-function saveTokens(token: JWT, data: AuthToken): JWT {
+function saveTokens(token: JWT, data: AuthTokenResponseDto): JWT {
   return {
     ...token,
     access_token: data.accessToken,
@@ -83,7 +84,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, account, trigger, session }) {
       if (account) {
         // 카카오 로그인: 없는 계정이면 백엔드가 닉네임 없이 가입시킨다
-        const data = await loginWithKakao(account.access_token!)
+        const data = await authKakaoLogin({ kakaoAccessToken: account.access_token! })
         return saveTokens(token, data)
       }
 
