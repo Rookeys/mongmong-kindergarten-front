@@ -174,7 +174,11 @@
     "moreRewards": "もっともらう",
     "album": "卒業アルバム",
     "notices": "お知らせ",
-    "settings": "設定"
+    "settings": "設定",
+    "faq": "よくある質問",
+    "feedback": "ご意見を送る",
+    "storeReview": "Playストアでレビューする",
+    "makers": "作った人たち"
   },
   "album": {
     "title": "卒業アルバム",
@@ -214,7 +218,8 @@
     "retry": "もう一度",
     "pickDate": "日付を選んでください",
     "adNotReady": "広告はまだ準備中です。(AdMob連携が必要)",
-    "confirm": "確認"
+    "confirm": "確認",
+    "comingSoon": "この機能はまだ準備中です。"
   },
   "questions": {
     "title": "質問リスト",

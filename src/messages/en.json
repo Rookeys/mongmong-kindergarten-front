@@ -174,7 +174,11 @@
     "moreRewards": "Get more",
     "album": "Graduation album",
     "notices": "Notices",
-    "settings": "Settings"
+    "settings": "Settings",
+    "faq": "FAQ",
+    "feedback": "Send feedback",
+    "storeReview": "Review on Play Store",
+    "makers": "Makers"
   },
   "album": {
     "title": "Graduation album",
@@ -214,7 +218,8 @@
     "retry": "Try again",
     "pickDate": "Choose a date",
     "adNotReady": "Ads aren't ready yet. (AdMob integration needed)",
-    "confirm": "Done"
+    "confirm": "Done",
+    "comingSoon": "This feature is still being built."
   },
   "questions": {
     "title": "Question list",

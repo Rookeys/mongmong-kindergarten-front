@@ -173,7 +173,11 @@
     "moreRewards": "더 받기",
     "album": "졸업 앨범",
     "notices": "공지사항",
-    "settings": "설정"
+    "settings": "설정",
+    "faq": "자주 묻는 질문",
+    "feedback": "의견 보내기",
+    "storeReview": "플레이 스토어 리뷰 남기기",
+    "makers": "만든 사람들"
   },
   "album": {
     "title": "졸업 앨범",
@@ -213,7 +217,8 @@
     "retry": "다시 시도",
     "pickDate": "날짜를 선택해주세요",
     "adNotReady": "광고는 아직 준비 중이에요. (AdMob 연동 필요)",
-    "confirm": "확인"
+    "confirm": "확인",
+    "comingSoon": "아직 만들고 있는 기능이에요."
   },
   "questions": {
     "title": "질문 리스트",

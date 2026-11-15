@@ -25,6 +25,7 @@ Figma에 화면이나 동작 기준이 없어 프론트에서 먼저 만들어 �
 | 친구 초대 코드 입력칸 | 이름 작성 화면 아래 선택 입력 | `src/app/[locale]/auth/components/InputNickname.tsx` |
 | 신고 사유 | 휴게실 신고 시트의 칩 (선택 사항) | `src/components/ReportButton.tsx` |
 | 설정·로그아웃·탈퇴 | `/office/settings` | `src/app/[locale]/office/settings/` |
+| 원장실 메뉴 | 자주 묻는 질문·의견 보내기·플레이 스토어 리뷰 남기기·만든 사람들(Figma "서비스 팀원")은 메뉴만 있고, 누르면 "아직 만들고 있는 기능이에요" 알림 | `src/app/[locale]/(main)/office/OfficeScreen.tsx` |
 
 ## Figma에 디자인이 없는 화면·요소
 
@@ -41,7 +42,6 @@ Figma에 화면이나 동작 기준이 없어 프론트에서 먼저 만들어 �
 - 홈 상단 오른쪽 아이콘 3개: Figma에 용도가 없고 임시 하트 아이콘이다.
 - 홈·화면 하단 광고 배너: Figma는 임시 이미지다. AdMob 붙일 때 넣는다.
 - 캐릭터 이미지: 백엔드 `characterType.imageUrl`이 없으면 임시 알 이미지를 쓴다.
-- 원장실: 자주 묻는 질문·의견 보내기·스토어 리뷰·서비스 팀원은 연결할 주소가 없어 메뉴에서 뺐다.
 - 꾸미기: 옷·얼굴 아이템을 캐릭터 위 어디에 그릴지 기준이 없어 캐릭터 크기에 맞춰 겹쳤다. 아이템 탭은 백엔드 기준 옷/얼굴/배경 3개 (Figma 일부 화면은 장식·기타 포함).
 - 졸업 카드 저장·공유: html-to-image로 카드를 PNG로 만든다. 움직이는 캐릭터는 찍는 순간 한 프레임만 들어가고, 다른 도메인 이미지(`cardImageUrl` 등)는 그 서버가 CORS를 허용해야 찍힌다.
 

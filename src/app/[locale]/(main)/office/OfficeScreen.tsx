@@ -10,10 +10,15 @@ import { toKstDate } from "@/utils/date"
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000
 
-// TODO: 자주 묻는 질문·의견 보내기·스토어 리뷰·서비스 팀원 (연결할 주소 없음)
+/** 원장실 메뉴 (Figma 순서). href가 없는 메뉴는 아직 준비 중이라 누르면 안내만 띄운다 */
 const MENUS = [
   { key: "album", href: "/office/album" },
   { key: "notices", href: "/office/notices" },
+  // TODO: 자주 묻는 질문·의견 보내기·스토어 리뷰·만든 사람들은 화면·연결 주소가 정해지면 연결 (TODO.md)
+  { key: "faq", href: undefined },
+  { key: "feedback", href: undefined },
+  { key: "storeReview", href: undefined },
+  { key: "makers", href: undefined },
   { key: "settings", href: "/office/settings" }
 ] as const
 
@@ -24,6 +29,7 @@ function getDaysTogether(joinedAt: string) {
 
 export default function OfficeScreen() {
   const t = useTranslations("office")
+  const tCommon = useTranslations("common")
   const { data: me } = useAuthGetMe()
 
   if (!me) return <LoadingScreen />
@@ -47,11 +53,23 @@ export default function OfficeScreen() {
           </Button>
         }
       />
-      {MENUS.map((menu) => (
-        <Link key={menu.key} href={menu.href} className="block">
-          <ListRow padding="l" title={t(menu.key)} trailingAccessory={<span aria-hidden>›</span>} />
-        </Link>
-      ))}
+      {MENUS.map((menu) => {
+        const row = <ListRow padding="l" title={t(menu.key)} trailingAccessory={<span aria-hidden>›</span>} />
+        return menu.href ? (
+          <Link key={menu.key} href={menu.href} className="block">
+            {row}
+          </Link>
+        ) : (
+          <button
+            key={menu.key}
+            type="button"
+            className="block w-full text-left"
+            onClick={() => alert(tCommon("comingSoon"))}
+          >
+            {row}
+          </button>
+        )
+      })}
     </main>
   )
 }
