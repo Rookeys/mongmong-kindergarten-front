@@ -212,7 +212,8 @@
     "errorTitle": "화면을 불러오지 못했어요",
     "retry": "다시 시도",
     "pickDate": "날짜를 선택해주세요",
-    "adNotReady": "광고는 아직 준비 중이에요. (AdMob 연동 필요)"
+    "adNotReady": "광고는 아직 준비 중이에요. (AdMob 연동 필요)",
+    "confirm": "확인"
   },
   "questions": {
     "title": "질문 리스트",

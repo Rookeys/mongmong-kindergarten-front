@@ -2,9 +2,11 @@
 
 import { useState } from "react"
 import { useFormatter, useTranslations } from "next-intl"
-import { BottomSheet, DatePicker } from "@kojaem/mongmong"
+import { BottomSheet, Button, DatePicker } from "@kojaem/mongmong"
 import { useRouter } from "@/i18n/navigation"
-import { toDateString } from "@/utils/date"
+import { toDateString, toKstDate } from "@/utils/date"
+
+const FIRST_YEAR = 2025
 
 interface Props {
   /** 지금 보고 있는 날짜 YYYY-MM-DD */
@@ -14,34 +16,46 @@ interface Props {
 }
 
 /**
- * 상단의 "2026년 5월 5일 ˅". 누르면 달력 시트에서 날짜를 바꾼다 (미래 날짜는 고를 수 없음).
- * TODO: Figma에 날짜 선택 UI가 없어 디자인시스템 달력으로 임시 구현 (TODO.md)
+ * 상단의 "2026년 5월 5일 ˅". 누르면 시트에서 날짜를 바꾼다. 미래 날짜를 고르면 오늘로 맞춘다.
+ * TODO: Figma에 날짜 선택 UI가 없어 임시 구현 (TODO.md). 디자인시스템 달력은 어두운 화면용이라
+ * 밝은 바텀시트 안에서는 휠을 쓴다 (일지 "달 선택"과 같은 방식).
  */
 export default function DateChangeTitle({ date, path }: Props) {
   const t = useTranslations("common")
   const format = useFormatter()
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
-  const selectedDate = new Date(`${date}T00:00:00`)
+  const [selectedDate, setSelectedDate] = useState(() => new Date(`${date}T00:00:00`))
 
-  const handleSelect = (nextDate: Date) => {
+  const handleConfirm = () => {
     setIsOpen(false)
-    router.push(`${path}?date=${toDateString(nextDate)}`)
+    const today = toKstDate()
+    const picked = toDateString(selectedDate)
+    router.push(`${path}?date=${picked > today ? today : picked}`)
   }
 
   return (
     <>
       <button type="button" className="flex items-center gap-[6px]" onClick={() => setIsOpen(true)}>
-        {format.dateTime(selectedDate, { dateStyle: "long" })}
+        {format.dateTime(new Date(`${date}T00:00:00`), { dateStyle: "long" })}
         <img src="/assets/icons/arrow-down.png" alt="" width={16} height={16} className="rotate-90" />
       </button>
-      <BottomSheet open={isOpen} onOpenChange={setIsOpen} title={t("pickDate")}>
+      <BottomSheet
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        title={t("pickDate")}
+        buttons={
+          <Button size="xl" color="brand" variant="fill" isFullWidth onClick={handleConfirm}>
+            {t("confirm")}
+          </Button>
+        }
+      >
         <DatePicker
-          type="calendar"
+          type="wheel"
           value={selectedDate}
-          defaultMonth={selectedDate}
-          maxDate={new Date()}
-          onChange={handleSelect}
+          onChange={setSelectedDate}
+          minYear={FIRST_YEAR}
+          maxYear={new Date().getFullYear()}
         />
       </BottomSheet>
     </>

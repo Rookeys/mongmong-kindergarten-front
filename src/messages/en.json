@@ -213,7 +213,8 @@
     "errorTitle": "Couldn't load this screen",
     "retry": "Try again",
     "pickDate": "Choose a date",
-    "adNotReady": "Ads aren't ready yet. (AdMob integration needed)"
+    "adNotReady": "Ads aren't ready yet. (AdMob integration needed)",
+    "confirm": "Done"
   },
   "questions": {
     "title": "Question list",

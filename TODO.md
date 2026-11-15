@@ -15,7 +15,7 @@ Figma에 화면이나 동작 기준이 없어 프론트에서 먼저 만들어 �
 
 | 무엇 | 지금 동작 | 파일 |
 |---|---|---|
-| 날짜 변경 | 답장 쓰기·휴게실 상단 "2026년 5월 5일 ˅"을 누르면 디자인시스템 달력 시트에서 날짜 선택 (미래 날짜 불가) | `src/components/DateChangeTitle.tsx` |
+| 날짜 변경 | 답장 쓰기·휴게실 상단 "2026년 5월 5일 ˅"을 누르면 바텀시트 휠(연·월·일)에서 날짜 선택, 미래 날짜는 오늘로 맞춤. 디자인시스템 달력은 어두운 화면용(Figma 기준)이라 밝은 시트에는 휠을 씀 | `src/components/DateChangeTitle.tsx` |
 | 질문 리스트 | 일지 탭 오른쪽 위 메뉴 → `/questions`. 질문 순번을 올해 날짜로 바꿔(1번 = 1월 1일) 그 날짜 답장 쓰기로 이동, 미래 날짜는 비활성. 윤년 2월 29일 처리는 백엔드 규칙 확인 필요 | `src/app/[locale]/questions/` |
 | 편지 도착 팝업 | 오늘 편지에 아직 답장하지 않았으면 홈에 들어올 때 하루 한 번 (기기별, localStorage) | `src/app/[locale]/(main)/LetterArrivalSheet.tsx` |
 | 홈 답장 카드 | 오늘 답장한 뒤에는 질문 카드 대신 같은 질문의 다른 사람 공개 답장 1개 (Figma 홈 `5390:22240`). 공개 답장이 없으면 질문 카드 그대로 | `src/app/[locale]/(main)/HomeScreen.tsx` |
@@ -53,6 +53,9 @@ Figma에 화면이나 동작 기준이 없어 프론트에서 먼저 만들어 �
 - BottomSheet·Modal 제목 줄바꿈(`\n`) 미지원 → 지금은 한 줄로 이어서 보임
 - DatePicker wheel에 연·월만 고르는 옵션 없음 → 일지 달 선택에 일(day) 열도 보임
 - Dark 테마 Chip 선택 색 Figma 대조
+- DatePicker 휠 글자색: 지금 배포본(0.0.7)은 Dark에서 선택된 줄이 흐리다 → 같은 브랜치에서 Figma 기준으로 고침 (날짜 변경·달 선택 시트에 영향)
+
+배포되면 프론트에서 할 일: `@kojaem/mongmong` 올리기, Popover `w-auto!` → `fixedWidth={false}`, 일지 달 선택을 `DatePicker type="wheel" unit="month"`로, 화면 확인
 
 ## 로그인
 

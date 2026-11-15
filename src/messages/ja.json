@@ -213,7 +213,8 @@
     "errorTitle": "画面を読み込めませんでした",
     "retry": "もう一度",
     "pickDate": "日付を選んでください",
-    "adNotReady": "広告はまだ準備中です。(AdMob連携が必要)"
+    "adNotReady": "広告はまだ準備中です。(AdMob連携が必要)",
+    "confirm": "確認"
   },
   "questions": {
     "title": "質問リスト",
