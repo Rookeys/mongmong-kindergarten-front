@@ -173,7 +173,7 @@
   --color-text-inverse-primary: var(--color-gray-opacity-50);
   --color-text-inverse-secondary: var(--color-gray-opacity-100);
   --color-text-inverse-tertiary: var(--color-gray-opacity-200);
-  --color-text-brand: var(--color-purple-300);
+  --color-text-brand: var(--color-purple-400); /* Figma Dark Text/Brand #8E87F7 */
   --color-text-brand-weak: var(--color-purple-500);
 
   /* fill */
