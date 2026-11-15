@@ -25,6 +25,227 @@
     "nameConditions2": "공백, 특수 문자 및 영어 대문자는 사용할 수 없어요.",
     "nextButton": "다음",
     "goodName": "{name}님!\n이름이 멋져요",
-    "confirmButton": "고마워!"
+    "confirmButton": "고마워!",
+    "bridge": "{name}님을 위해\n열심히 편지 쓰는 중..",
+    "inviteCodeLabel": "친구 초대 코드 (선택)",
+    "inviteCodePlaceholder": "받은 초대 코드가 있다면 입력해 주세요"
+  },
+  "tab": {
+    "home": "홈",
+    "diary": "일지",
+    "decorate": "꾸미기",
+    "lounge": "휴게실",
+    "office": "원장실"
+  },
+  "home": {
+    "idle": "뒹굴뒹굴~",
+    "openLetter": "{name}의 편지 보기",
+    "arrivalTitle": "편지가 도착했어요\n편지를 열어볼까요?",
+    "arrivalOpen": "열어보기",
+    "arrivalLater": "다음에"
+  },
+  "letter": {
+    "title": "{name}의 편지",
+    "to": "To. 선생님",
+    "body": "나야! 나! {name}!\n{nickname}에게 꼭 편지를 보내고 싶어서\n열심히 배웠어!\n나는 오늘 뒹굴 뒹굴, 햇빛에 얼굴을 말리며\n“{question}”\n생각이 들었어\n{nickname}는 어떻게 생각해? 궁금해",
+    "from": "From. 항상 선생님만을\n생각하는 {name}",
+    "write": "답장 쓰기",
+    "alreadyWritten": "이미 답장했어요",
+    "later": "다음에"
+  },
+  "letterWrite": {
+    "placeholder": "최대 {max}자까지 입력할 수 있어요.",
+    "othersReplies": "다른 사람이 쓴 답장 보기",
+    "previous": "이전 기록",
+    "noPrevious": "이전 기록이 없어요",
+    "submit": "답장 쓰기",
+    "moodTitle": "마지막으로\n오늘의 기분을 알려주세요",
+    "moodDescription": "월간 캘린더에 표시 돼요.",
+    "moodConfirm": "선택했어",
+    "costTitle": "꿈 조각 {count}개를 사용할까요?",
+    "costDescription": "답장을 쓰려면 꿈 조각 {count}개가 필요해요.",
+    "costInsufficientTitle": "꿈 조각 {count}개가 부족해요",
+    "costInsufficientDescription": "광고보고 꿈 조각을 모을까요?",
+    "costLater": "다음에",
+    "costUse": "사용하기",
+    "costWatchAd": "광고 보기"
+  },
+  "mood": {
+    "good": "기분 좋아",
+    "excited": "신나",
+    "soso": "그냥그래",
+    "angry": "화가 나",
+    "sad": "슬퍼",
+    "depressed": "우울해"
+  },
+  "letterSent": {
+    "sent": "편지를 보냈어요",
+    "shareTitle": "다른 사람에게 도움이 되도록\n답장을 공개할까요?",
+    "shareDescription": "익명으로 등록 돼요.",
+    "private": "나만 보기",
+    "public": "공개하기",
+    "snsTitle": "{name}가 오늘의 편지를\n소개해도 될까요?",
+    "snsDescription": "오늘 보낸 편지가 인스타그램 피드에 소개될 수 있어요. 공유 조건은 설정에서 바꿀 수 있어요.",
+    "snsNo": "아니요",
+    "snsYes": "네",
+    "savedPublic": "답장을 공개했어요",
+    "savedPrivate": "나만 볼 수 있게 저장했어요",
+    "rewardEarned": "꿈 조각 {count}개 받았어요",
+    "rewardSpent": "꿈 조각 {count}개를 사용했어요",
+    "goHome": "홈으로 돌아가기"
+  },
+  "diary": {
+    "pickMonth": "달을 선택해주세요",
+    "confirm": "확인",
+    "writeToday": "오늘의 편지 답장 쓰기",
+    "written": "답장 씀",
+    "questionList": "질문 리스트"
+  },
+  "lounge": {
+    "empty": "답장이 없어요",
+    "writeFirst": "먼저 답장 쓰기",
+    "writeToo": "나도 답장 쓰기",
+    "from": "From. 익명",
+    "report": "신고",
+    "reportTitle": "이 답장을 신고할까요?",
+    "reportDescription": "사유를 고르면 더 빨리 확인할 수 있어요. 관리자가 확인한 뒤 처리해요.",
+    "reportCancel": "취소",
+    "reportClose": "확인",
+    "reportDone": "신고가 접수됐어요",
+    "welcomeTitle": "휴게실에 오신 것을 환영해요",
+    "welcomeDescription": "다른 선생님들이 쓴 답장을 읽으며 영감을 얻거나 위로를 받아보세요.",
+    "welcomeConfirm": "확인했어요",
+    "reason": {
+      "spam": "스팸·광고",
+      "abuse": "욕설·괴롭힘",
+      "inappropriate": "부적절한 내용",
+      "other": "기타"
+    }
+  },
+  "decorate": {
+    "tab": {
+      "clothes": "옷",
+      "face": "얼굴",
+      "background": "배경"
+    },
+    "back": "목록으로",
+    "buy": "꿈 조각 {cost}개로 구매하기",
+    "bought": "구매했어요",
+    "insufficientTitle": "광고 보고 꿈 조각을 모을까요?",
+    "insufficientDescription": "꿈 조각 {count}개가 부족해요.",
+    "later": "다음에",
+    "watchAd": "광고 보기",
+    "close": "확인"
+  },
+  "rewards": {
+    "title": "꿈 조각 공장",
+    "count": "꿈 조각 {count}개",
+    "attendance": "출석체크하고",
+    "ad": "광고 보고",
+    "invite": "친구 초대하고",
+    "receive": "{count}개 받기",
+    "received": "받았어요",
+    "receiveShort": "받기",
+    "attendanceTitle": "오늘도 와주셨군요!\n꿈 조각을 {count}개 드릴게요",
+    "attendanceDescription": "편지에 대한 답장을 쓰면 하나 더 드려요.",
+    "attendanceDone": "꿈 조각 {count}개를 받았어요",
+    "writeReply": "답장 쓰기",
+    "inviteSend": "초대 보내기",
+    "close": "닫기",
+    "codeCopied": "초대 코드를 복사했어요",
+    "inviteMessage": "몽몽유치원에서 같이 편지 써요! 가입할 때 초대 코드 {code}를 입력해 주세요.",
+    "inviteStep1": {
+      "title": "친구에게 초대 코드를 보내고"
+    },
+    "inviteStep2": {
+      "title": "친구가 가입하면",
+      "description": "친구가 초대 코드를 입력해야 해요."
+    },
+    "inviteStep3": {
+      "title": "꿈 조각 {count}개를 받아요",
+      "description": "친구가 첫 편지를 쓰면 둘 다 받아요."
+    }
+  },
+  "office": {
+    "together": "{nickname}님과 함께한 지 {days}일 째",
+    "inviteCode": "내 초대 코드 : {code}",
+    "rewardCount": "꿈 조각 {count}개",
+    "moreRewards": "더 받기",
+    "album": "졸업 앨범",
+    "notices": "공지사항",
+    "settings": "설정",
+    "faq": "자주 묻는 질문",
+    "feedback": "의견 보내기",
+    "storeReview": "플레이 스토어 리뷰 남기기",
+    "makers": "만든 사람들"
+  },
+  "album": {
+    "title": "졸업 앨범",
+    "empty": "아직 졸업한 친구가 없어요",
+    "name": "이름",
+    "letterCount": "보낸 편지",
+    "letterCountValue": "{count}개",
+    "topMood": "가장 많이 보낸 기분",
+    "save": "저장하기",
+    "share": "공유하기",
+    "shareText": "{name}와 함께 편지 {count}통을 주고받고 졸업했어요! #몽몽유치원",
+    "captureFailed": "카드 이미지를 만들지 못했어요",
+    "shareCopied": "공유 문구를 복사했어요"
+  },
+  "notices": {
+    "title": "공지사항",
+    "empty": "공지사항이 없어요"
+  },
+  "settings": {
+    "title": "설정",
+    "setLetterIsPrivate": "답장 공개",
+    "setLetterIsPrivateDescription": "새 답장을 휴게실에 익명으로 공개해요.",
+    "setLetterIsPrivateSns": "SNS 소개 동의",
+    "setLetterIsPrivateSnsDescription": "보낸 편지가 인스타그램 피드에 소개될 수 있어요.",
+    "pushEnabled": "푸시 알림",
+    "pushEnabledDescription": "편지가 도착하면 알려드려요.",
+    "language": "언어",
+    "logout": "로그아웃",
+    "withdraw": "탈퇴하기",
+    "withdrawTitle": "정말 탈퇴할까요?",
+    "withdrawDescription": "탈퇴하면 편지와 캐릭터 기록이 사라져요. 같은 계정으로 다시 가입하면 새 계정으로 시작해요.",
+    "withdrawConfirm": "탈퇴하기",
+    "cancel": "취소"
+  },
+  "common": {
+    "errorTitle": "화면을 불러오지 못했어요",
+    "retry": "다시 시도",
+    "pickDate": "날짜를 선택해주세요",
+    "adNotReady": "광고는 아직 준비 중이에요. (AdMob 연동 필요)",
+    "confirm": "확인",
+    "comingSoon": "아직 만들고 있는 기능이에요.",
+    "restDay": "2월 29일은 하루 쉬는 날이에요."
+  },
+  "questions": {
+    "title": "질문 리스트",
+    "adReply": "광고 보고 답장 쓰기"
+  },
+  "rewardHistory": {
+    "title": "꿈 조각 기록",
+    "empty": "아직 기록이 없어요",
+    "type": {
+      "ad": "광고 보기",
+      "invite": "친구 초대",
+      "letter": "답장 쓰기",
+      "admin": "운영자 지급",
+      "attendance": "출석체크",
+      "streak": "연속 답장 보너스",
+      "past_letter": "지난 날짜 답장",
+      "item_purchase": "아이템 구매"
+    }
+  },
+  "guest": {
+    "title": "오늘의 질문",
+    "description": "답장을 쓰면 캐릭터가 자라요.",
+    "write": "답장 쓰기",
+    "loginTitle": "답장을 쓰려면 로그인이 필요해요",
+    "loginDescription": "카카오로 시작하면 오늘 답장부터 기록할 수 있어요.",
+    "later": "다음에",
+    "login": "로그인"
   }
 }

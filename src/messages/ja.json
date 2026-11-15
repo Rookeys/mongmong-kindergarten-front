@@ -26,6 +26,227 @@
     "nameConditions2": "スペース、特殊文字、および英大文字は使用できません。",
     "nextButton": "次へ",
     "goodName": "{name}さん！\n名前が素敵ですね",
-    "confirmButton": "ありがとう！"
+    "confirmButton": "ありがとう！",
+    "bridge": "{name}さんのために\n一生懸命お手紙を書いています..",
+    "inviteCodeLabel": "友だち招待コード（任意）",
+    "inviteCodePlaceholder": "招待コードがあれば入力してください"
+  },
+  "tab": {
+    "home": "ホーム",
+    "diary": "日誌",
+    "decorate": "着せ替え",
+    "lounge": "休憩室",
+    "office": "園長室"
+  },
+  "home": {
+    "idle": "ごろごろ~",
+    "openLetter": "{name}の手紙を見る",
+    "arrivalTitle": "手紙が届きました\n開いてみますか？",
+    "arrivalOpen": "開く",
+    "arrivalLater": "あとで"
+  },
+  "letter": {
+    "title": "{name}の手紙",
+    "to": "To. 先生",
+    "body": "ぼくだよ！{name}だよ！\n{nickname}にどうしても手紙を送りたくて\nいっぱい練習したよ！\n今日はごろごろ、ひなたぼっこしながら\n「{question}」\nって考えたんだ\n{nickname}はどう思う？気になるな",
+    "from": "From. いつも先生のことを\n想っている{name}",
+    "write": "返事を書く",
+    "alreadyWritten": "返事済みです",
+    "later": "あとで"
+  },
+  "letterWrite": {
+    "placeholder": "最大{max}文字まで入力できます。",
+    "othersReplies": "ほかの人の返事を見る",
+    "previous": "これまでの記録",
+    "noPrevious": "これまでの記録はありません",
+    "submit": "返事を送る",
+    "moodTitle": "最後に\n今日の気分を教えてください",
+    "moodDescription": "月間カレンダーに表示されます。",
+    "moodConfirm": "選んだよ",
+    "costTitle": "夢のかけらを{count}個使いますか？",
+    "costDescription": "返事を書くには夢のかけらが{count}個必要です。",
+    "costInsufficientTitle": "夢のかけらが{count}個足りません",
+    "costInsufficientDescription": "広告を見て夢のかけらを集めますか？",
+    "costLater": "あとで",
+    "costUse": "使う",
+    "costWatchAd": "広告を見る"
+  },
+  "mood": {
+    "good": "いい気分",
+    "excited": "ワクワク",
+    "soso": "まあまあ",
+    "angry": "怒ってる",
+    "sad": "悲しい",
+    "depressed": "落ち込み"
+  },
+  "letterSent": {
+    "sent": "手紙を送りました",
+    "shareTitle": "ほかの人の役に立つように\n返事を公開しますか？",
+    "shareDescription": "匿名で登録されます。",
+    "private": "自分だけ",
+    "public": "公開する",
+    "snsTitle": "{name}が今日の手紙を\n紹介してもいいですか？",
+    "snsDescription": "今日の手紙がInstagramのフィードで紹介されることがあります。共有設定は設定画面で変更できます。",
+    "snsNo": "いいえ",
+    "snsYes": "はい",
+    "savedPublic": "返事を公開しました",
+    "savedPrivate": "自分だけ見られるように保存しました",
+    "rewardEarned": "夢のかけらを{count}個もらいました",
+    "rewardSpent": "夢のかけらを{count}個使いました",
+    "goHome": "ホームに戻る"
+  },
+  "diary": {
+    "pickMonth": "月を選んでください",
+    "confirm": "確認",
+    "writeToday": "今日の手紙に返事を書く",
+    "written": "返事済み",
+    "questionList": "質問リスト"
+  },
+  "lounge": {
+    "empty": "返事はまだありません",
+    "writeFirst": "最初に返事を書く",
+    "writeToo": "わたしも返事を書く",
+    "from": "From. 匿名",
+    "report": "通報",
+    "reportTitle": "この返事を通報しますか？",
+    "reportDescription": "理由を選ぶと早く確認できます。管理者が確認してから対応します。",
+    "reportCancel": "キャンセル",
+    "reportClose": "確認",
+    "reportDone": "通報を受け付けました",
+    "welcomeTitle": "休憩室へようこそ",
+    "welcomeDescription": "ほかの先生たちの返事を読んで、ひらめきや癒しをもらいましょう。",
+    "welcomeConfirm": "わかりました",
+    "reason": {
+      "spam": "スパム・広告",
+      "abuse": "暴言・嫌がらせ",
+      "inappropriate": "不適切な内容",
+      "other": "その他"
+    }
+  },
+  "decorate": {
+    "tab": {
+      "clothes": "服",
+      "face": "顔",
+      "background": "背景"
+    },
+    "back": "一覧へ",
+    "buy": "夢のかけら{cost}個で購入",
+    "bought": "購入しました",
+    "insufficientTitle": "広告を見て夢のかけらを集めますか？",
+    "insufficientDescription": "夢のかけらが{count}個足りません。",
+    "later": "あとで",
+    "watchAd": "広告を見る",
+    "close": "確認"
+  },
+  "rewards": {
+    "title": "夢のかけら工場",
+    "count": "夢のかけら{count}個",
+    "attendance": "出席チェックで",
+    "ad": "広告を見て",
+    "invite": "友だち招待で",
+    "receive": "{count}個もらう",
+    "received": "受け取り済み",
+    "receiveShort": "もらう",
+    "attendanceTitle": "今日も来てくれたんですね！\n夢のかけらを{count}個あげます",
+    "attendanceDescription": "手紙に返事を書くともう1個もらえます。",
+    "attendanceDone": "夢のかけらを{count}個もらいました",
+    "writeReply": "返事を書く",
+    "inviteSend": "招待を送る",
+    "close": "閉じる",
+    "codeCopied": "招待コードをコピーしました",
+    "inviteMessage": "モンモン幼稚園で一緒に手紙を書こう！登録時に招待コード{code}を入力してね。",
+    "inviteStep1": {
+      "title": "友だちに招待コードを送って"
+    },
+    "inviteStep2": {
+      "title": "友だちが登録したら",
+      "description": "友だちが招待コードを入力する必要があります。"
+    },
+    "inviteStep3": {
+      "title": "夢のかけらを{count}個もらえます",
+      "description": "友だちが最初の手紙を書くと2人とももらえます。"
+    }
+  },
+  "office": {
+    "together": "{nickname}さんと一緒に{days}日目",
+    "inviteCode": "わたしの招待コード：{code}",
+    "rewardCount": "夢のかけら{count}個",
+    "moreRewards": "もっともらう",
+    "album": "卒業アルバム",
+    "notices": "お知らせ",
+    "settings": "設定",
+    "faq": "よくある質問",
+    "feedback": "ご意見を送る",
+    "storeReview": "Playストアでレビューする",
+    "makers": "作った人たち"
+  },
+  "album": {
+    "title": "卒業アルバム",
+    "empty": "まだ卒業した子はいません",
+    "name": "名前",
+    "letterCount": "送った手紙",
+    "letterCountValue": "{count}通",
+    "topMood": "いちばん多かった気分",
+    "save": "保存する",
+    "share": "シェアする",
+    "shareText": "{name}と手紙を{count}通やりとりして卒業しました！#モンモン幼稚園",
+    "captureFailed": "カード画像を作れませんでした",
+    "shareCopied": "共有文をコピーしました"
+  },
+  "notices": {
+    "title": "お知らせ",
+    "empty": "お知らせはありません"
+  },
+  "settings": {
+    "title": "設定",
+    "setLetterIsPrivate": "返事を公開",
+    "setLetterIsPrivateDescription": "新しい返事を休憩室に匿名で公開します。",
+    "setLetterIsPrivateSns": "SNS紹介に同意",
+    "setLetterIsPrivateSnsDescription": "送った手紙がInstagramのフィードで紹介されることがあります。",
+    "pushEnabled": "プッシュ通知",
+    "pushEnabledDescription": "手紙が届いたらお知らせします。",
+    "language": "言語",
+    "logout": "ログアウト",
+    "withdraw": "退会する",
+    "withdrawTitle": "本当に退会しますか？",
+    "withdrawDescription": "退会すると手紙とキャラクターの記録が消えます。同じアカウントで再登録すると新しいアカウントとして始まります。",
+    "withdrawConfirm": "退会する",
+    "cancel": "キャンセル"
+  },
+  "common": {
+    "errorTitle": "画面を読み込めませんでした",
+    "retry": "もう一度",
+    "pickDate": "日付を選んでください",
+    "adNotReady": "広告はまだ準備中です。(AdMob連携が必要)",
+    "confirm": "確認",
+    "comingSoon": "この機能はまだ準備中です。",
+    "restDay": "2月29日はお休みの日です。"
+  },
+  "questions": {
+    "title": "質問リスト",
+    "adReply": "広告を見て返事を書く"
+  },
+  "rewardHistory": {
+    "title": "夢のかけらの記録",
+    "empty": "まだ記録がありません",
+    "type": {
+      "ad": "広告視聴",
+      "invite": "友だち招待",
+      "letter": "返事を書く",
+      "admin": "運営から",
+      "attendance": "出席チェック",
+      "streak": "連続返事ボーナス",
+      "past_letter": "過去の日付の返事",
+      "item_purchase": "アイテム購入"
+    }
+  },
+  "guest": {
+    "title": "今日の質問",
+    "description": "返事を書くとキャラクターが育ちます。",
+    "write": "返事を書く",
+    "loginTitle": "返事を書くにはログインが必要です",
+    "loginDescription": "カカオで始めると今日の返事から記録できます。",
+    "later": "あとで",
+    "login": "ログイン"
   }
 }

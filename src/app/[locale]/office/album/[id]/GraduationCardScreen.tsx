@@ -1,0 +1,66 @@
+"use client"
+
+import { useRef } from "react"
+import { notFound } from "next/navigation"
+import { useTranslations } from "next-intl"
+import { Popover } from "@kojaem/mongmong"
+import { useCharacterFindMyGraduationCards } from "@/apis/generated/characters/characters"
+import BackTopNavigation from "@/components/BackTopNavigation"
+import CharacterImage from "@/components/CharacterImage"
+import LoadingScreen from "@/components/LoadingScreen"
+import GraduationCardHeader from "../GraduationCardHeader"
+import ShareCardButtons from "./ShareCardButtons"
+
+export default function GraduationCardScreen({ cardId }: { cardId: string }) {
+  const t = useTranslations("album")
+  const tHome = useTranslations("home")
+  const tMood = useTranslations("mood")
+  const cardRef = useRef<HTMLElement>(null)
+  // 단건 조회 API가 없어 목록에서 찾는다
+  const { data: cards } = useCharacterFindMyGraduationCards()
+
+  if (!cards) return <LoadingScreen />
+
+  const card = cards.find((graduationCard) => graduationCard.id === cardId)
+  if (!card) notFound()
+
+  const details = [
+    { label: t("name"), value: card.characterName },
+    { label: t("letterCount"), value: t("letterCountValue", { count: card.letterCount }) },
+    { label: t("topMood"), value: card.topMood ? tMood(card.topMood) : "-" }
+  ]
+
+  return (
+    <main className="bg-gradient-letter flex min-h-dvh flex-col">
+      <BackTopNavigation />
+      <article
+        ref={cardRef}
+        className="bg-card border-border-brand-weak mx-[20px] flex flex-col gap-[16px] rounded-[8px] border p-[16px]"
+      >
+        <GraduationCardHeader card={card} />
+        <div className="bg-home-floor relative flex h-[230px] flex-col items-center justify-end gap-[4px] overflow-hidden rounded-[4px] pb-[16px]">
+          <img
+            src="/assets/images/home-room.gif"
+            alt=""
+            className="pixelated absolute top-0 left-1/2 h-[180px] w-[305px] max-w-none -translate-x-1/2"
+          />
+          <Popover kind="popover" fixedWidth={false} title={tHome("idle")} tail="bottom" />
+          <CharacterImage src={null} alt={card.characterName} size={80} />
+        </div>
+        <dl className="flex flex-col gap-[8px]">
+          {details.map((detail) => (
+            <div key={detail.label} className="flex justify-between">
+              <dt className="text-body-md text-text-inverse-secondary">{detail.label}</dt>
+              <dd className="text-subtitle-md text-text-inverse-primary">{detail.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </article>
+      <ShareCardButtons
+        cardRef={cardRef}
+        fileName={`mongmong-${card.characterName}-${card.graduatedAt.slice(0, 10)}.png`}
+        shareText={t("shareText", { name: card.characterName, count: card.letterCount })}
+      />
+    </main>
+  )
+}

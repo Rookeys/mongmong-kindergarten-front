@@ -4,19 +4,19 @@ import GoogleProvider from "next-auth/providers/google"
 import KakaoProvider from "next-auth/providers/kakao"
 import NaverProvider from "next-auth/providers/naver"
 import { refreshAccessToken } from "@/app/api/auth/refreshAccessToken"
+import { authKakaoLogin } from "@/apis/generated/auth/auth"
+import type { AuthTokenResponseDto } from "@/apis/generated/model"
 
 declare module "next-auth" {
   interface Session {
     access_token?: string
-    refresh_token?: string
     access_token_expires_at?: number
-    refresh_token_expires_at?: number
+    // 닉네임이 없으면 이름 작성 온보딩이 필요하다
     signup_required?: boolean
+    error?: "RefreshTokenExpired"
     user: DefaultSession["user"] & {
       nickname?: string | null
     }
-    oauth_provider?: string
-    oauth_access_token?: string
   }
 }
 
@@ -25,24 +25,38 @@ declare module "next-auth/jwt" {
     access_token?: string
     refresh_token?: string
     access_token_expires_at?: number
-    refresh_token_expires_at?: number
     signup_required?: boolean
     nickname?: string | null
-    image?: string | null
-    oauth_provider?: string
-    oauth_access_token?: string
+    error?: "RefreshTokenExpired"
+  }
+}
+
+const EXPIRY_BUFFER_MS = 60 * 1000
+
+// 백엔드 응답에 만료 시각이 없어서 Access Token(JWT)의 exp를 읽는다
+function getExpiresAt(accessToken: string) {
+  const payload = JSON.parse(Buffer.from(accessToken.split(".")[1], "base64url").toString())
+  return payload.exp * 1000
+}
+
+function saveTokens(token: JWT, data: AuthTokenResponseDto): JWT {
+  return {
+    ...token,
+    access_token: data.accessToken,
+    refresh_token: data.refreshToken,
+    access_token_expires_at: getExpiresAt(data.accessToken),
+    nickname: data.user.nickname,
+    signup_required: !data.user.nickname,
+    error: undefined
   }
 }
 
 export const authOptions: NextAuthOptions = {
   session: {
-    // JWT 기반 세션 사용
     strategy: "jwt"
   },
   pages: {
-    // 사용자 지정 페이지
-    signIn: "/sign-in",
-    signOut: "/sign-out"
+    signIn: "/auth/sign-in"
   },
   providers: [
     GoogleProvider({
@@ -62,110 +76,42 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, account, user }) {
+    // 백엔드는 카카오 로그인만 지원한다. Google·Naver는 백엔드 API가 생기면 연결한다 (TODO.md)
+    signIn({ account }) {
+      return account?.provider === "kakao"
+    },
+
+    async jwt({ token, account, trigger, session }) {
+      if (account) {
+        // 카카오 로그인: 없는 계정이면 백엔드가 닉네임 없이 가입시킨다
+        const data = await authKakaoLogin({ kakaoAccessToken: account.access_token! })
+        return saveTokens(token, data)
+      }
+
+      // 이름 작성 후 useSession().update({ nickname })
+      if (trigger === "update" && session?.nickname) {
+        return { ...token, nickname: session.nickname, signup_required: false }
+      }
+
+      const isExpiringSoon = Date.now() >= (token.access_token_expires_at ?? 0) - EXPIRY_BUFFER_MS
+      if (!token.refresh_token || !isExpiringSoon) {
+        return token
+      }
+
       try {
-        if (!!account && !!user) {
-          try {
-            // Todo: 로그인 API 호출로 변경
-            const { data } = {
-              data: {
-                accessToken: "accessToken",
-                refreshToken: "refreshToken",
-                accessTokenExpiresAt: 1774319543,
-                refreshTokenExpiresAt: 1776738743,
-                nickname: "testUser",
-                email: "tamd5971@gmail.com"
-              }
-            }
-            throw { status: 404 }
-
-            const accessToken = data.accessToken
-            const refreshToken = data.refreshToken
-            const accessTokenExpiresAt = data.accessTokenExpiresAt
-            const refreshTokenExpiresAt = data.refreshTokenExpiresAt
-            const nickname = data.nickname
-
-            const newToken: JWT = {
-              ...token,
-              access_token: accessToken,
-              refresh_token: refreshToken,
-              nickname: nickname,
-              signup_required: false
-            }
-
-            if (accessTokenExpiresAt) {
-              newToken.access_token_expires_at = Date.now() + accessTokenExpiresAt * 1000 // * 초 단위이므로 Date 형식에 맞게 1000을 곱함 (밀리초)
-            }
-            if (refreshTokenExpiresAt) {
-              newToken.refresh_token_expires_at = Date.now() + refreshTokenExpiresAt * 1000
-            }
-            return newToken
-          } catch (error: any) {
-            if (error.status === 404) {
-              // 신규 회원인 경우
-              return {
-                ...token,
-                signup_required: true,
-                oauth_provider: account.provider,
-                oauth_access_token: account.access_token,
-                email: token.email
-              }
-            }
-          }
-        }
-        if (token.signup_required) {
-          return token
-        }
-
-        // 토큰 만료 시 토큰 재발급
-        const EXPIRY_BUFFER_MS = 60 * 1000
-        if (Date.now() < (token.access_token_expires_at as number) - EXPIRY_BUFFER_MS) {
-          return token
-        } else {
-          const {
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken,
-            accessTokenExpiresAt: newAccessTokenExpiresAt,
-            refreshTokenExpiresAt: newRefreshTokenExpiresAt
-          } = await refreshAccessToken(token.refresh_token as string)
-
-          const newToken: JWT = {
-            ...token,
-            access_token: newAccessToken,
-            refresh_token: newRefreshToken
-          }
-
-          if (newAccessTokenExpiresAt) {
-            newToken.access_token_expires_at = Date.now() + Number(newAccessTokenExpiresAt) * 1000
-          }
-          if (newRefreshTokenExpiresAt) {
-            newToken.refresh_token_expires_at = Date.now() + Number(newRefreshTokenExpiresAt) * 1000
-          }
-          return newToken
-        }
+        return saveTokens(token, await refreshAccessToken(token.refresh_token))
       } catch {
-        throw new Error("Refresh token expired")
+        return { ...token, access_token: undefined, refresh_token: undefined, error: "RefreshTokenExpired" }
       }
     },
 
     async session({ session, token }) {
+      session.access_token = token.access_token
+      session.access_token_expires_at = token.access_token_expires_at
       session.signup_required = token.signup_required ?? false
-
-      if (!token.signup_required) {
-        session.access_token = token.access_token
-        session.refresh_token = token.refresh_token
-        session.access_token_expires_at = token.access_token_expires_at
-        session.refresh_token_expires_at = token.refresh_token_expires_at
-        session.signup_required = token.signup_required
-
-        session.user ??= {}
-        session.user.nickname = token.nickname
-        session.user.image = token.image
-      } else {
-        session.oauth_provider = token.oauth_provider
-        session.oauth_access_token = token.oauth_access_token
-      }
-
+      session.error = token.error
+      session.user ??= {}
+      session.user.nickname = token.nickname
       return session
     },
 

@@ -1,0 +1,104 @@
+"use client"
+
+import { useLocale, useTranslations } from "next-intl"
+import { Button, Popover } from "@kojaem/mongmong"
+import { useAuthGetMe } from "@/apis/generated/auth/auth"
+import { useCharacterFindMine } from "@/apis/generated/characters/characters"
+import type { LocaleType } from "@/apis/generated/model"
+import { useLetterFindPublic } from "@/apis/generated/letters/letters"
+import { useQuestionFindDaily } from "@/apis/generated/questions/questions"
+import CharacterImage from "@/components/CharacterImage"
+import LoadingScreen from "@/components/LoadingScreen"
+import PublicLetterCard from "@/components/PublicLetterCard"
+import { Link } from "@/i18n/navigation"
+import { isRestDay, toKstDate } from "@/utils/date"
+import LetterArrivalSheet from "./LetterArrivalSheet"
+
+export default function HomeScreen() {
+  const t = useTranslations("home")
+  const tCommon = useTranslations("common")
+  const locale = useLocale() as LocaleType
+  const { data: character } = useCharacterFindMine()
+  const { data: me } = useAuthGetMe()
+  // 2월 29일은 질문이 없는 날이라 조회하지 않는다
+  const isTodayRestDay = isRestDay(toKstDate())
+  const { data: question } = useQuestionFindDaily({ locale }, { query: { enabled: !isTodayRestDay } })
+  const hasReplied = Boolean(question?.letterId)
+  // 오늘 답장한 뒤에는 질문 카드 대신 같은 질문에 다른 사람이 쓴 공개 답장 하나를 보여준다 (Figma 홈 5390:22240)
+  const { data: publicLetters } = useLetterFindPublic(
+    { questionId: question?.id ?? "", take: 5 },
+    { query: { enabled: hasReplied } }
+  )
+
+  if (!character || !me || (!question && !isTodayRestDay)) return <LoadingScreen />
+
+  const characterName = character.characterType.name
+  // 공개 목록에는 내 답장도 들어 있어서 빼고 고른다
+  const otherReply = publicLetters?.find((letter) => letter.id !== question?.letterId)
+
+  return (
+    <main className="bg-home-floor flex flex-1 flex-col">
+      <header className="bg-home-header flex h-[54px] items-center justify-between px-[20px] py-[12px]">
+        <div className="flex items-center gap-[20px]">
+          <HeaderStat value={`LV.${character.level}`} />
+          <Link href="/rewards">
+            <HeaderStat value={me.rewardCount} />
+          </Link>
+        </div>
+        {/* TODO: 오른쪽 아이콘 3개는 Figma에서 용도 미정 (임시 하트 아이콘). 정해지면 각 화면으로 연결 */}
+        <div className="flex items-center gap-[20px]">
+          <button type="button" onClick={() => alert(tCommon("comingSoon"))}>
+            <HeaderIcon />
+          </button>
+          <button type="button" onClick={() => alert(tCommon("comingSoon"))}>
+            <HeaderIcon />
+          </button>
+          <button type="button" onClick={() => alert(tCommon("comingSoon"))}>
+            <HeaderIcon />
+          </button>
+        </div>
+      </header>
+
+      <section className="relative flex h-[398px] flex-col items-center justify-end gap-[4px] overflow-hidden">
+        <img
+          src="/assets/images/home-room.gif"
+          alt=""
+          className="pixelated absolute top-0 left-1/2 h-[304px] w-[515px] max-w-none -translate-x-1/2"
+        />
+        <Popover kind="popover" fixedWidth={false} title={t("idle")} tail="bottom" />
+        <CharacterImage src={character.characterType.imageUrl} alt={characterName} size={100} />
+      </section>
+
+      <section className="px-[20px] pb-[12px]">
+        {!question ? (
+          <div className="bg-fill-glass-weak border-border-brand-weak rounded-card-l border px-[20px] py-[16px] backdrop-blur-[15px]">
+            <p className="text-body-md text-text-inverse-primary">{tCommon("restDay")}</p>
+          </div>
+        ) : otherReply ? (
+          <PublicLetterCard letter={otherReply} />
+        ) : (
+          <div className="bg-fill-glass-weak border-border-brand-weak rounded-card-l flex flex-col items-end gap-[12px] border px-[20px] py-[16px] backdrop-blur-[15px]">
+            <p className="text-body-md text-text-inverse-primary w-full">{question.content}</p>
+            <Button asChild size="s" color="brand" variant="fill">
+              <Link href="/letter">{t("openLetter", { name: characterName })}</Link>
+            </Button>
+          </div>
+        )}
+      </section>
+      {question && !hasReplied && <LetterArrivalSheet />}
+    </main>
+  )
+}
+
+function HeaderStat({ value }: { value: string | number }) {
+  return (
+    <div className="flex items-center gap-[2px]">
+      <HeaderIcon />
+      <span className="text-subtitle-sm text-text-primary">{value}</span>
+    </div>
+  )
+}
+
+function HeaderIcon() {
+  return <img src="/assets/images/heart.png" alt="" width={28} height={28} className="rounded-full" />
+}

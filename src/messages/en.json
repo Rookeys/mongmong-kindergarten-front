@@ -26,6 +26,227 @@
     "nameConditions2": "Spaces, special characters, and uppercase English letters are not allowed.",
     "nextButton": "Next",
     "goodName": "{name}!\nThat's a great name",
-    "confirmButton": "Thanks!"
+    "confirmButton": "Thanks!",
+    "bridge": "Writing a letter\njust for {name}..",
+    "inviteCodeLabel": "Friend invite code (optional)",
+    "inviteCodePlaceholder": "Enter an invite code if you have one"
+  },
+  "tab": {
+    "home": "Home",
+    "diary": "Diary",
+    "decorate": "Decorate",
+    "lounge": "Lounge",
+    "office": "Office"
+  },
+  "home": {
+    "idle": "Rolling around~",
+    "openLetter": "Read {name}'s letter",
+    "arrivalTitle": "A letter has arrived\nWant to open it?",
+    "arrivalOpen": "Open",
+    "arrivalLater": "Later"
+  },
+  "letter": {
+    "title": "{name}'s letter",
+    "to": "To. Teacher",
+    "body": "It's me! {name}!\nI really wanted to send {nickname} a letter,\nso I practiced hard!\nToday I rolled around, drying my face in the sun,\nand wondered:\n“{question}”\nWhat do you think, {nickname}? I'm curious",
+    "from": "From. {name},\nalways thinking of you",
+    "write": "Write a reply",
+    "alreadyWritten": "Already replied",
+    "later": "Later"
+  },
+  "letterWrite": {
+    "placeholder": "You can write up to {max} characters.",
+    "othersReplies": "See others' replies",
+    "previous": "Previous entries",
+    "noPrevious": "No previous entries",
+    "submit": "Send reply",
+    "moodTitle": "Lastly,\nhow do you feel today?",
+    "moodDescription": "It'll show on your monthly calendar.",
+    "moodConfirm": "Done",
+    "costTitle": "Use {count} dream pieces?",
+    "costDescription": "Replying to a past letter costs {count} dream pieces.",
+    "costInsufficientTitle": "You need {count} dream pieces",
+    "costInsufficientDescription": "Watch an ad to collect dream pieces?",
+    "costLater": "Later",
+    "costUse": "Use",
+    "costWatchAd": "Watch ad"
+  },
+  "mood": {
+    "good": "Good",
+    "excited": "Excited",
+    "soso": "So-so",
+    "angry": "Angry",
+    "sad": "Sad",
+    "depressed": "Down"
+  },
+  "letterSent": {
+    "sent": "Letter sent",
+    "shareTitle": "Share your reply\nto help others?",
+    "shareDescription": "It'll be posted anonymously.",
+    "private": "Only me",
+    "public": "Share",
+    "snsTitle": "Can {name} feature\ntoday's letter?",
+    "snsDescription": "Today's letter may be featured on our Instagram feed. You can change this in Settings.",
+    "snsNo": "No",
+    "snsYes": "Yes",
+    "savedPublic": "Your reply is shared",
+    "savedPrivate": "Saved for you only",
+    "rewardEarned": "You got {count} dream pieces",
+    "rewardSpent": "You used {count} dream pieces",
+    "goHome": "Back to home"
+  },
+  "diary": {
+    "pickMonth": "Choose a month",
+    "confirm": "Done",
+    "writeToday": "Reply to today's letter",
+    "written": "Replied",
+    "questionList": "Question list"
+  },
+  "lounge": {
+    "empty": "No replies yet",
+    "writeFirst": "Be the first to reply",
+    "writeToo": "Write my reply too",
+    "from": "From. Anonymous",
+    "report": "Report",
+    "reportTitle": "Report this reply?",
+    "reportDescription": "Choosing a reason helps us review faster. An admin will review it.",
+    "reportCancel": "Cancel",
+    "reportClose": "OK",
+    "reportDone": "Your report was submitted",
+    "welcomeTitle": "Welcome to the lounge",
+    "welcomeDescription": "Read other teachers' replies for inspiration or comfort.",
+    "welcomeConfirm": "Got it",
+    "reason": {
+      "spam": "Spam or ads",
+      "abuse": "Abuse or harassment",
+      "inappropriate": "Inappropriate",
+      "other": "Other"
+    }
+  },
+  "decorate": {
+    "tab": {
+      "clothes": "Clothes",
+      "face": "Face",
+      "background": "Background"
+    },
+    "back": "Back to list",
+    "buy": "Buy for {cost} dream pieces",
+    "bought": "Purchased",
+    "insufficientTitle": "Watch an ad for dream pieces?",
+    "insufficientDescription": "You need {count} more dream pieces.",
+    "later": "Later",
+    "watchAd": "Watch ad",
+    "close": "OK"
+  },
+  "rewards": {
+    "title": "Dream piece factory",
+    "count": "{count} dream pieces",
+    "attendance": "Check in",
+    "ad": "Watch an ad",
+    "invite": "Invite a friend",
+    "receive": "Get {count}",
+    "received": "Received",
+    "receiveShort": "Get",
+    "attendanceTitle": "Welcome back!\nHere are {count} dream pieces",
+    "attendanceDescription": "Reply to a letter to get one more.",
+    "attendanceDone": "You got {count} dream pieces",
+    "writeReply": "Write a reply",
+    "inviteSend": "Send invite",
+    "close": "Close",
+    "codeCopied": "Invite code copied",
+    "inviteMessage": "Let's write letters together at Mongmong Kindergarten! Enter invite code {code} when you sign up.",
+    "inviteStep1": {
+      "title": "Send your invite code"
+    },
+    "inviteStep2": {
+      "title": "When your friend signs up",
+      "description": "They need to enter your invite code."
+    },
+    "inviteStep3": {
+      "title": "Get {count} dream pieces",
+      "description": "You both get them after their first letter."
+    }
+  },
+  "office": {
+    "together": "Day {days} with {nickname}",
+    "inviteCode": "My invite code: {code}",
+    "rewardCount": "{count} dream pieces",
+    "moreRewards": "Get more",
+    "album": "Graduation album",
+    "notices": "Notices",
+    "settings": "Settings",
+    "faq": "FAQ",
+    "feedback": "Send feedback",
+    "storeReview": "Review on Play Store",
+    "makers": "Makers"
+  },
+  "album": {
+    "title": "Graduation album",
+    "empty": "No graduates yet",
+    "name": "Name",
+    "letterCount": "Letters sent",
+    "letterCountValue": "{count}",
+    "topMood": "Most common mood",
+    "save": "Save",
+    "share": "Share",
+    "shareText": "{name} graduated after {count} letters together! #MongmongKindergarten",
+    "captureFailed": "Couldn't create the card image",
+    "shareCopied": "Share text copied"
+  },
+  "notices": {
+    "title": "Notices",
+    "empty": "No notices"
+  },
+  "settings": {
+    "title": "Settings",
+    "setLetterIsPrivate": "Share replies",
+    "setLetterIsPrivateDescription": "New replies are shared anonymously in the lounge.",
+    "setLetterIsPrivateSns": "Allow SNS feature",
+    "setLetterIsPrivateSnsDescription": "Your letters may be featured on our Instagram feed.",
+    "pushEnabled": "Push notifications",
+    "pushEnabledDescription": "We'll let you know when a letter arrives.",
+    "language": "Language",
+    "logout": "Log out",
+    "withdraw": "Delete account",
+    "withdrawTitle": "Delete your account?",
+    "withdrawDescription": "Your letters and character history will be removed. Signing up again with the same account starts fresh.",
+    "withdrawConfirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "common": {
+    "errorTitle": "Couldn't load this screen",
+    "retry": "Try again",
+    "pickDate": "Choose a date",
+    "adNotReady": "Ads aren't ready yet. (AdMob integration needed)",
+    "confirm": "Done",
+    "comingSoon": "This feature is still being built.",
+    "restDay": "February 29 is a day off."
+  },
+  "questions": {
+    "title": "Question list",
+    "adReply": "Watch an ad to reply"
+  },
+  "rewardHistory": {
+    "title": "Dream piece history",
+    "empty": "No history yet",
+    "type": {
+      "ad": "Watched an ad",
+      "invite": "Friend invite",
+      "letter": "Wrote a reply",
+      "admin": "From admin",
+      "attendance": "Check-in",
+      "streak": "Streak bonus",
+      "past_letter": "Past-date reply",
+      "item_purchase": "Item purchase"
+    }
+  },
+  "guest": {
+    "title": "Today's question",
+    "description": "Your character grows as you reply.",
+    "write": "Write a reply",
+    "loginTitle": "Log in to write a reply",
+    "loginDescription": "Start with Kakao to save your reply from today.",
+    "later": "Later",
+    "login": "Log in"
   }
 }

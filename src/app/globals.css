@@ -6,8 +6,6 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 :root {
@@ -175,7 +173,7 @@
   --color-text-inverse-primary: var(--color-gray-opacity-50);
   --color-text-inverse-secondary: var(--color-gray-opacity-100);
   --color-text-inverse-tertiary: var(--color-gray-opacity-200);
-  --color-text-brand: var(--color-purple-300);
+  --color-text-brand: var(--color-purple-400); /* Figma Dark Text/Brand #8E87F7 */
   --color-text-brand-weak: var(--color-purple-500);
 
   /* fill */
@@ -218,6 +216,10 @@
 }
 
 @theme {
+  /* 홈 화면 전용 색 (Figma 홈: 상단바, 방 바닥) */
+  --color-home-header: #140f60;
+  --color-home-floor: #ffd0da;
+
   --text-title-lg: 24px;
   --text-title-lg--font-weight: 700;
   --text-title-lg--line-height: 135%;
@@ -418,4 +420,44 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: MonaS12, Helvetica, sans-serif;
+}
+
+/* Figma Semantic/Background/Gradient_bg2 (편지·답장 화면 배경) */
+@utility bg-gradient-letter {
+  background: radial-gradient(
+    564% 148% at 54.4% 132.4%,
+    rgb(249 248 255) 10.25%,
+    rgb(196 192 251) 25.69%,
+    rgb(142 135 247) 41.12%,
+    rgb(112 105 209) 48.77%,
+    rgb(81 75 172) 56.43%,
+    rgb(51 45 134) 64.08%,
+    rgb(35 30 115) 67.9%,
+    rgb(20 15 96) 71.73%
+  );
+}
+
+/* 휴게실 답장·졸업 카드 배경 (Figma: #F4F4F9 위에 brand 10%) */
+@utility bg-card {
+  background: linear-gradient(rgb(41 5 255 / 0.1), rgb(41 5 255 / 0.1)), #f4f4f9;
+}
+
+/* 픽셀 아트 이미지가 확대될 때 흐려지지 않게 */
+@utility pixelated {
+  image-rendering: pixelated;
+}
+
+/* 밤하늘 구름 배경 (온보딩·일지·원장실 등) */
+@utility bg-night-sky {
+  background: url("/assets/images/background.png") center / cover no-repeat;
+}
+
+/* 캐릭터 편지지 (Figma Semantic/Background/Gradient_Card) */
+@utility bg-letter-paper {
+  background: radial-gradient(
+    120% 120% at 0% 0%,
+    rgb(255 255 255 / 0.9),
+    rgb(249 248 255 / 0.9) 54%,
+    rgb(229 226 255 / 0.9)
+  );
 }
