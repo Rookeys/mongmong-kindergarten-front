@@ -434,3 +434,8 @@ body {
     rgb(20 15 96) 71.73%
   );
 }
+
+/* 휴게실 답장·졸업 카드 배경 (Figma: #F4F4F9 위에 brand 10%) */
+@utility bg-card {
+  background: linear-gradient(rgb(41 5 255 / 0.1), rgb(41 5 255 / 0.1)), #f4f4f9;
+}

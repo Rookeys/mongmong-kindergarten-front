@@ -1,11 +1,11 @@
+import { getNotice } from "@/apis/notice"
 import BackTopNavigation from "@/components/BackTopNavigation"
-import { api, type Notice } from "@/utils/api"
 import { requireSession } from "@/utils/session"
 
 export default async function NoticePage({ params }: { params: Promise<{ id: string }> }) {
   const { access_token: token } = await requireSession()
   const { id } = await params
-  const notice = await api<Notice>(`/notices/${id}`, { token })
+  const notice = await getNotice(id, token)
 
   return (
     <main className="flex min-h-dvh flex-col bg-[url('/assets/images/background.png')] bg-cover bg-center">

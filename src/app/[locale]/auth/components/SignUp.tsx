@@ -38,10 +38,7 @@ export default function SignUp({ session }: { session: Session | null }) {
           layout
           src="/onboarding.gif"
           alt=""
-          className={cn(
-            "mx-auto",
-            step === "inputNicknmae" ? "mt-[54px] h-25 w-25" : "mt-[197px] h-50 w-50"
-          )}
+          className={cn("mx-auto", step === "inputNicknmae" ? "mt-[54px] h-25 w-25" : "mt-[197px] h-50 w-50")}
           transition={imageTransition}
         />
         <AnimatePresence mode="wait">

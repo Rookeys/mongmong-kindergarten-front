@@ -4,7 +4,7 @@ import GoogleProvider from "next-auth/providers/google"
 import KakaoProvider from "next-auth/providers/kakao"
 import NaverProvider from "next-auth/providers/naver"
 import { refreshAccessToken } from "@/app/api/auth/refreshAccessToken"
-import { api, type AuthTokenResponse } from "@/utils/api"
+import { loginWithKakao, type AuthToken } from "@/apis/auth"
 
 declare module "next-auth" {
   interface Session {
@@ -33,18 +33,22 @@ declare module "next-auth/jwt" {
 const EXPIRY_BUFFER_MS = 60 * 1000
 
 // 백엔드 응답에 만료 시각이 없어서 Access Token(JWT)의 exp를 읽는다
-const jwtExpiresAt = (jwt: string) =>
-  JSON.parse(Buffer.from(jwt.split(".")[1], "base64url").toString()).exp * 1000
+function getExpiresAt(accessToken: string) {
+  const payload = JSON.parse(Buffer.from(accessToken.split(".")[1], "base64url").toString())
+  return payload.exp * 1000
+}
 
-const withTokens = (token: JWT, data: AuthTokenResponse): JWT => ({
-  ...token,
-  access_token: data.accessToken,
-  refresh_token: data.refreshToken,
-  access_token_expires_at: jwtExpiresAt(data.accessToken),
-  nickname: data.user.nickname,
-  signup_required: !data.user.nickname,
-  error: undefined
-})
+function saveTokens(token: JWT, data: AuthToken): JWT {
+  return {
+    ...token,
+    access_token: data.accessToken,
+    refresh_token: data.refreshToken,
+    access_token_expires_at: getExpiresAt(data.accessToken),
+    nickname: data.user.nickname,
+    signup_required: !data.user.nickname,
+    error: undefined
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -79,11 +83,8 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, account, trigger, session }) {
       if (account) {
         // 카카오 로그인: 없는 계정이면 백엔드가 닉네임 없이 가입시킨다
-        const data = await api<AuthTokenResponse>("/auth/kakao", {
-          method: "POST",
-          body: { kakaoAccessToken: account.access_token }
-        })
-        return withTokens(token, data)
+        const data = await loginWithKakao(account.access_token!)
+        return saveTokens(token, data)
       }
 
       // 이름 작성 후 useSession().update({ nickname })
@@ -91,12 +92,13 @@ export const authOptions: NextAuthOptions = {
         return { ...token, nickname: session.nickname, signup_required: false }
       }
 
-      if (!token.refresh_token || Date.now() < (token.access_token_expires_at ?? 0) - EXPIRY_BUFFER_MS) {
+      const isExpiringSoon = Date.now() >= (token.access_token_expires_at ?? 0) - EXPIRY_BUFFER_MS
+      if (!token.refresh_token || !isExpiringSoon) {
         return token
       }
 
       try {
-        return withTokens(token, await refreshAccessToken(token.refresh_token))
+        return saveTokens(token, await refreshAccessToken(token.refresh_token))
       } catch {
         return { ...token, access_token: undefined, refresh_token: undefined, error: "RefreshTokenExpired" }
       }

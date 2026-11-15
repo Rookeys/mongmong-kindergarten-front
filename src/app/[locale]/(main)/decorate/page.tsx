@@ -1,14 +1,17 @@
-import { api, type Character, type CharacterItem, type Item, type User } from "@/utils/api"
+import { getMe } from "@/apis/auth"
+import { getMyCharacter } from "@/apis/character"
+import { getItems, getOwnedItems } from "@/apis/item"
 import { requireSession } from "@/utils/session"
 import Decorate from "./Decorate"
 
+/** 꾸미기 탭 */
 export default async function DecoratePage() {
   const { access_token: token } = await requireSession()
-  const [character, me, items, owned] = await Promise.all([
-    api<Character>("/characters/me", { token }),
-    api<User>("/auth/me", { token }),
-    api<Item[]>("/items", { token }),
-    api<CharacterItem[]>("/character-items", { token })
+  const [character, me, items, ownedItems] = await Promise.all([
+    getMyCharacter(token),
+    getMe(token),
+    getItems(token),
+    getOwnedItems(token)
   ])
-  return <Decorate character={character} rewardCount={me.rewardCount} items={items} owned={owned} />
+  return <Decorate character={character} rewardCount={me.rewardCount} items={items} ownedItems={ownedItems} />
 }

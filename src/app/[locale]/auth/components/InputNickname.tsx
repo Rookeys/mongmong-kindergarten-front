@@ -7,7 +7,8 @@ import { useForm } from "react-hook-form"
 import { motion } from "motion/react"
 import { nicknameSchema } from "@/validations/nicknameSchema"
 import { Button, TextField } from "@kojaem/mongmong"
-import { api, ApiError } from "@/utils/api"
+import { updateMe } from "@/apis/auth"
+import { ApiError, getErrorMessage } from "@/apis/fetcher"
 
 interface props {
   setSendNext: Dispatch<SetStateAction<"question" | "inputNicknmae" | "goodName" | "bridge">>
@@ -20,9 +21,9 @@ interface nicknameI {
 
 export default function InputNickname({ setSendNext, onNext }: props) {
   const t = useTranslations("sign-up")
-  const { data: session, update } = useSession()
+  const { update: updateSession } = useSession()
   const [submitting, setSubmitting] = useState(false)
-  // TODO: Figma에 없는 임시 입력칸 (TODO.md). 첫 일지를 쓰면 초대한 사람과 나 모두 꿈조각을 받는다.
+  // TODO: Figma에 없는 임시 입력칸 (TODO.md). 친구가 첫 일지를 쓰면 초대한 사람과 나 모두 꿈조각을 받는다.
   const [inviteCode, setInviteCode] = useState("")
   const [inviteError, setInviteError] = useState<string>()
   const {
@@ -42,6 +43,28 @@ export default function InputNickname({ setSendNext, onNext }: props) {
   useEffect(() => {
     trigger("nickname")
   }, [])
+
+  const handleNext = async () => {
+    if (errors.nickname?.message) return
+    const nickname = watch("nickname")
+    setSubmitting(true)
+    setInviteError(undefined)
+    try {
+      await updateMe({ nickname, friendInviteCode: inviteCode.trim() || undefined })
+      await updateSession({ nickname })
+      onNext(nickname)
+      setSendNext("goodName")
+    } catch (error) {
+      // 초대 코드 오류(INVITE_*)는 초대 코드 칸에, 나머지는 닉네임 칸에 보여준다
+      if (error instanceof ApiError && error.code.startsWith("INVITE")) {
+        setInviteError(error.message)
+      } else {
+        setError("nickname", { message: getErrorMessage(error) })
+      }
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
     <motion.div
@@ -77,25 +100,7 @@ export default function InputNickname({ setSendNext, onNext }: props) {
       <div className="text-subtitle-lg absolute bottom-0 left-0 w-full py-5">
         <Button
           type="button"
-          onClick={async () => {
-            if (errors.nickname?.message) return
-            const nickname = watch("nickname")
-            setSubmitting(true)
-            try {
-              setInviteError(undefined)
-              const friendInviteCode = inviteCode.trim() || undefined
-              await api("/auth/me", { method: "PATCH", token: session?.access_token, body: { nickname, friendInviteCode } })
-              await update({ nickname })
-              onNext(nickname)
-              setSendNext("goodName")
-            } catch (error) {
-              const message = error instanceof ApiError ? error.message : String(error)
-              if (error instanceof ApiError && error.code.startsWith("INVITE")) setInviteError(message)
-              else setError("nickname", { message })
-            } finally {
-              setSubmitting(false)
-            }
-          }}
+          onClick={handleNext}
           size="xl"
           color="brand"
           variant="fill"
