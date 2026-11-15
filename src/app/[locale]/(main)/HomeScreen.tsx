@@ -45,11 +45,17 @@ export default function HomeScreen() {
             <HeaderStat value={me.rewardCount} />
           </Link>
         </div>
-        {/* TODO: 오른쪽 아이콘 3개는 Figma에서 용도 미정 (임시 하트 아이콘) */}
-        <div className="flex items-center gap-[20px]" aria-hidden>
-          <HeaderIcon />
-          <HeaderIcon />
-          <HeaderIcon />
+        {/* TODO: 오른쪽 아이콘 3개는 Figma에서 용도 미정 (임시 하트 아이콘). 정해지면 각 화면으로 연결 */}
+        <div className="flex items-center gap-[20px]">
+          <button type="button" onClick={() => alert(tCommon("comingSoon"))}>
+            <HeaderIcon />
+          </button>
+          <button type="button" onClick={() => alert(tCommon("comingSoon"))}>
+            <HeaderIcon />
+          </button>
+          <button type="button" onClick={() => alert(tCommon("comingSoon"))}>
+            <HeaderIcon />
+          </button>
         </div>
       </header>
 
