@@ -7,7 +7,6 @@
 - [ ] **`.env`의 `NEXT_PUBLIC_API_ROOT`**: 로컬은 `http://localhost:4000` (`/api/v1` 없이). 예전 `NEXT_PUBLIC_API_URL`은 쓰지 않는다.
 - [ ] **디자이너에게 전달**: 아래 "Figma에 디자인이 없는 화면·요소" 표와 "임시 구현" 목록, 홈 오른쪽 위 아이콘 3개 용도, 꾸미기 옷·얼굴 아이템을 캐릭터 위 어디에 그릴지, 꾸미기 탭 장식·기타 여부.
 - [ ] **(선택) 로컬 개발 DB 테스트 데이터 정리**: 검증·스크린샷용 테스트 계정(`*@test.dev`), 공개 답장, 졸업 카드 1개, 공지 1개.
-- [ ] **`pnpm lint` 고장**: `eslint-plugin-tailwindcss`가 Tailwind v4를 지원하지 않아 실행 자체가 안 된다 (이번 작업 전부터).
 
 ## 임시 구현 (디자인·정책이 정해지면 교체)
 
@@ -26,6 +25,8 @@ Figma에 화면이나 동작 기준이 없어 프론트에서 먼저 만들어 �
 | 신고 사유 | 휴게실 신고 시트의 칩 (선택 사항) | `src/components/ReportButton.tsx` |
 | 설정·로그아웃·탈퇴 | `/office/settings` | `src/app/[locale]/office/settings/` |
 | 원장실 메뉴 | 자주 묻는 질문·의견 보내기·플레이 스토어 리뷰 남기기·만든 사람들(Figma "서비스 팀원")은 메뉴만 있고, 누르면 "아직 만들고 있는 기능이에요" 알림 | `src/app/[locale]/(main)/office/OfficeScreen.tsx` |
+| 홈 오른쪽 위 아이콘 3개 | Figma에 용도가 없어 임시 하트 아이콘. 누르면 "아직 만들고 있는 기능이에요" 알림 | `src/app/[locale]/(main)/HomeScreen.tsx` |
+| 비회원 | 로그인 화면 "비회원으로 시작하기" → `/guest`. 오늘의 질문만 보여주고(`GET /questions/guest/today`), "답장 쓰기"를 누르면 카카오 로그인 안내 모달 | `src/app/[locale]/guest/` |
 
 ## Figma에 디자인이 없는 화면·요소
 
@@ -39,13 +40,13 @@ Figma에 화면이나 동작 기준이 없어 프론트에서 먼저 만들어 �
 
 ## 정해진 규칙
 
+- 비회원은 오늘의 질문만 볼 수 있고, 답장을 쓰려면 로그인해야 한다. 기획에 정해진 것이 없어 프론트에서 이렇게 정했으니 팀원들과 공유해야 한다.
 - 2월 29일은 질문이 없는 쉬는 날이다. 백엔드는 이날 질문을 주지 않고(`QUESTION_NOT_FOUND`), 프론트는 API를 부르지 않고 "2월 29일은 하루 쉬는 날이에요."를 보여준다 (홈·편지·답장 쓰기·휴게실, 일지 캘린더에서는 누를 수 없음). 백엔드 `feat/leap-day-no-question`과 같이 나가야 한다.
 
 ## 아직 비워 둔 것
 
 - 토큰 갱신 공유: 같은 Refresh Token으로 동시에 갱신하지 않도록 진행 중인 갱신을 서버 메모리에서 공유한다(`src/app/api/auth/refreshAccessToken.ts`). 프론트 서버를 여러 대 띄우면 Redis 같은 공유 저장소로 옮겨야 한다.
 
-- 홈 상단 오른쪽 아이콘 3개: Figma에 용도가 없고 임시 하트 아이콘이다.
 - 홈·화면 하단 광고 배너: Figma는 임시 이미지다. AdMob 붙일 때 넣는다.
 - 캐릭터 이미지: 백엔드 `characterType.imageUrl`이 없으면 임시 알 이미지를 쓴다.
 - 꾸미기: 옷·얼굴 아이템을 캐릭터 위 어디에 그릴지 기준이 없어 캐릭터 크기에 맞춰 겹쳤다. 아이템 탭은 백엔드 기준 옷/얼굴/배경 3개 (Figma 일부 화면은 장식·기타 포함).
@@ -58,10 +59,11 @@ Figma에 화면이나 동작 기준이 없어 프론트에서 먼저 만들어 �
 앱은 `<html data-theme="dark">`(Figma Dark 색 모드)로 `@kojaem/mongmong`(0.0.8) 컴포넌트를 그대로 쓴다. 화면에서 덮어쓰는 색·크기는 없다.
 부족한 점이 생기면 프론트에서 덮어쓰지 말고 여기에 적은 뒤 디자인시스템에서 고친다.
 
-- Figma Dark `Text/Brand`는 #8e87f7인데 디자인시스템 `tokens.json`은 #6a62ea → 토큰 동기화 확인 필요
+- Figma Dark `Text/Brand`(#8e87f7)와 맞추려고 `globals.css`의 `--color-text-brand`를 `purple-400`으로 먼저 바꿨다. 디자인시스템 PR(`feature/text-brand-token-kojaem`)이 배포되면 이 줄을 지운다.
 - Figma 기준으로 DatePicker 달력은 어두운 화면 위에, 밝은 바텀시트 안에는 휠을 쓴다
+- Modal: 버튼 두 개가 모달 폭을 채우지 않고 글자가 길면 줄바꿈되며("로그인하기"), 밝은 모달 위 제목·설명 글자색이 흐리게 보인다 → Figma Modal과 비교 확인 필요
 
 ## 로그인
 
 - 지금은 카카오만 백엔드와 연동한다. Google·Naver provider는 `src/auth.ts`에 남겨 두었고 `signIn` 콜백에서 막아 두었다. 백엔드에 `POST /auth/google`, `POST /auth/naver`가 생기면 연동한다.
-- 비회원 시작 버튼은 아직 `alert("guest")`다. 비회원용 API는 `GET /questions/guest/today`.
+- 비회원 화면은 `/guest` (위 "임시 구현" 표). 비회원용 API는 `GET /questions/guest/today`.
