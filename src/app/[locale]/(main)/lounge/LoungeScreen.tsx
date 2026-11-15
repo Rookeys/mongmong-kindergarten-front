@@ -1,19 +1,19 @@
 "use client"
 
-import { useFormatter, useLocale, useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { Button, ListRow, Result } from "@kojaem/mongmong"
 import { useLetterFindPublic } from "@/apis/generated/letters/letters"
 import type { LocaleType } from "@/apis/generated/model"
 import { useQuestionFindDaily } from "@/apis/generated/questions/questions"
 import CharacterFace from "@/components/CharacterFace"
+import DateChangeTitle from "@/components/DateChangeTitle"
 import LoadingScreen from "@/components/LoadingScreen"
 import { Link } from "@/i18n/navigation"
 import LoungeWelcomeSheet from "./LoungeWelcomeSheet"
-import PublicLetterCard from "./PublicLetterCard"
+import PublicLetterCard from "@/components/PublicLetterCard"
 
 export default function LoungeScreen({ date }: { date?: string }) {
   const t = useTranslations("lounge")
-  const format = useFormatter()
   const locale = useLocale() as LocaleType
   const { data: question } = useQuestionFindDaily({ date, locale })
   const { data: letters } = useLetterFindPublic(
@@ -27,9 +27,8 @@ export default function LoungeScreen({ date }: { date?: string }) {
 
   return (
     <main className="bg-gradient-letter flex flex-1 flex-col">
-      {/* TODO: 제목 옆 화살표로 날짜 변경 (Figma "날짜 변경") */}
       <header className="text-subtitle-lg text-text-primary flex h-[54px] items-center justify-center">
-        {format.dateTime(new Date(`${question.date}T00:00:00`), { dateStyle: "long" })}
+        <DateChangeTitle date={question.date} path="/lounge" />
       </header>
       <h1 className="text-title-md text-text-primary px-[20px] py-[24px]">{question.content}</h1>
 

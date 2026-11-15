@@ -48,8 +48,9 @@ export default function DiaryScreen({ month: monthParam }: { month?: string }) {
           month={month}
         />
         <div className="flex flex-1 justify-end">
-          {/* TODO: 질문 리스트 화면 (Figma "질문 리스트") */}
-          <img src="/assets/icons/menu.svg" alt="" width={24} height={24} aria-hidden />
+          <Link href="/questions" aria-label={t("questionList")}>
+            <img src="/assets/icons/menu.svg" alt="" width={24} height={24} />
+          </Link>
         </div>
       </header>
 

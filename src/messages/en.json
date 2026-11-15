@@ -40,7 +40,10 @@
   },
   "home": {
     "idle": "Rolling around~",
-    "openLetter": "Read {name}'s letter"
+    "openLetter": "Read {name}'s letter",
+    "arrivalTitle": "A letter has arrived\nWant to open it?",
+    "arrivalOpen": "Open",
+    "arrivalLater": "Later"
   },
   "letter": {
     "title": "{name}'s letter",
@@ -96,13 +99,14 @@
     "pickMonth": "Choose a month",
     "confirm": "Done",
     "writeToday": "Reply to today's letter",
-    "written": "Replied"
+    "written": "Replied",
+    "questionList": "Question list"
   },
   "lounge": {
     "empty": "No replies yet",
     "writeFirst": "Be the first to reply",
     "writeToo": "Write my reply too",
-    "from": "From. An anonymous teacher",
+    "from": "From. Anonymous",
     "report": "Report",
     "reportTitle": "Report this reply?",
     "reportDescription": "Choosing a reason helps us review faster. An admin will review it.",
@@ -181,7 +185,9 @@
     "topMood": "Most common mood",
     "save": "Save",
     "share": "Share",
-    "shareText": "{name} graduated after {count} letters together! #MongmongKindergarten"
+    "shareText": "{name} graduated after {count} letters together! #MongmongKindergarten",
+    "captureFailed": "Couldn't create the card image",
+    "shareCopied": "Share text copied"
   },
   "notices": {
     "title": "Notices",
@@ -205,6 +211,26 @@
   },
   "common": {
     "errorTitle": "Couldn't load this screen",
-    "retry": "Try again"
+    "retry": "Try again",
+    "pickDate": "Choose a date",
+    "adNotReady": "Ads aren't ready yet. (AdMob integration needed)"
+  },
+  "questions": {
+    "title": "Question list",
+    "adReply": "Watch an ad to reply"
+  },
+  "rewardHistory": {
+    "title": "Dream piece history",
+    "empty": "No history yet",
+    "type": {
+      "ad": "Watched an ad",
+      "invite": "Friend invite",
+      "letter": "Wrote a reply",
+      "admin": "From admin",
+      "attendance": "Check-in",
+      "streak": "Streak bonus",
+      "past_letter": "Past-date reply",
+      "item_purchase": "Item purchase"
+    }
   }
 }

@@ -39,7 +39,10 @@
   },
   "home": {
     "idle": "뒹굴뒹굴~",
-    "openLetter": "{name}의 편지 보기"
+    "openLetter": "{name}의 편지 보기",
+    "arrivalTitle": "편지가 도착했어요\n편지를 열어볼까요?",
+    "arrivalOpen": "열어보기",
+    "arrivalLater": "다음에"
   },
   "letter": {
     "title": "{name}의 편지",
@@ -95,13 +98,14 @@
     "pickMonth": "달을 선택해주세요",
     "confirm": "확인",
     "writeToday": "오늘의 편지 답장 쓰기",
-    "written": "답장 씀"
+    "written": "답장 씀",
+    "questionList": "질문 리스트"
   },
   "lounge": {
     "empty": "답장이 없어요",
     "writeFirst": "먼저 답장 쓰기",
     "writeToo": "나도 답장 쓰기",
-    "from": "From. 익명의 선생님",
+    "from": "From. 익명",
     "report": "신고",
     "reportTitle": "이 답장을 신고할까요?",
     "reportDescription": "사유를 고르면 더 빨리 확인할 수 있어요. 관리자가 확인한 뒤 처리해요.",
@@ -180,7 +184,9 @@
     "topMood": "가장 많이 보낸 기분",
     "save": "저장하기",
     "share": "공유하기",
-    "shareText": "{name}와 함께 편지 {count}통을 주고받고 졸업했어요! #몽몽유치원"
+    "shareText": "{name}와 함께 편지 {count}통을 주고받고 졸업했어요! #몽몽유치원",
+    "captureFailed": "카드 이미지를 만들지 못했어요",
+    "shareCopied": "공유 문구를 복사했어요"
   },
   "notices": {
     "title": "공지사항",
@@ -204,6 +210,26 @@
   },
   "common": {
     "errorTitle": "화면을 불러오지 못했어요",
-    "retry": "다시 시도"
+    "retry": "다시 시도",
+    "pickDate": "날짜를 선택해주세요",
+    "adNotReady": "광고는 아직 준비 중이에요. (AdMob 연동 필요)"
+  },
+  "questions": {
+    "title": "질문 리스트",
+    "adReply": "광고 보고 답장 쓰기"
+  },
+  "rewardHistory": {
+    "title": "꿈 조각 기록",
+    "empty": "아직 기록이 없어요",
+    "type": {
+      "ad": "광고 보기",
+      "invite": "친구 초대",
+      "letter": "답장 쓰기",
+      "admin": "운영자 지급",
+      "attendance": "출석체크",
+      "streak": "연속 답장 보너스",
+      "past_letter": "지난 날짜 답장",
+      "item_purchase": "아이템 구매"
+    }
   }
 }

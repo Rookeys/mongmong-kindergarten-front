@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useFormatter, useLocale, useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
@@ -14,6 +14,7 @@ import { getQuestionFindDailyQueryKey, useQuestionFindDaily } from "@/apis/gener
 import { getErrorMessage } from "@/apis/instance"
 import BackTopNavigation from "@/components/BackTopNavigation"
 import CharacterFace from "@/components/CharacterFace"
+import DateChangeTitle from "@/components/DateChangeTitle"
 import LoadingScreen from "@/components/LoadingScreen"
 import { Link } from "@/i18n/navigation"
 import { toKstDate } from "@/utils/date"
@@ -28,7 +29,6 @@ type Dialog = "cost" | "mood"
 
 export default function LetterWriteScreen({ date }: { date?: string }) {
   const t = useTranslations("letterWrite")
-  const format = useFormatter()
   const locale = useLocale() as LocaleType
   const queryClient = useQueryClient()
 
@@ -72,8 +72,7 @@ export default function LetterWriteScreen({ date }: { date?: string }) {
 
   return (
     <main className="bg-gradient-letter flex min-h-dvh flex-col">
-      {/* TODO: 제목 옆 화살표로 날짜 변경 (Figma "날짜 변경") */}
-      <BackTopNavigation title={format.dateTime(new Date(`${question.date}T00:00:00`), { dateStyle: "long" })} />
+      <BackTopNavigation title={<DateChangeTitle date={question.date} path="/letter/write" />} />
       <h1 className="text-title-md text-text-primary px-[20px] py-[24px]">{question.content}</h1>
 
       <div className="px-[20px] py-[16px]">

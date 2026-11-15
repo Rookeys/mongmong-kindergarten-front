@@ -36,3 +36,18 @@ export function getMonthCells(year: number, month: number): CalendarCell[] {
   }
   return cells
 }
+
+/** Date(로컬) → YYYY-MM-DD */
+export function toDateString(date: Date) {
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+  return `${date.getFullYear()}-${month}-${day}`
+}
+
+/**
+ * 질문 순번(1~365)이 올해 며칠인지. 백엔드는 같은 월/일에 같은 질문을 주므로 1월 1일을 1번으로 센다.
+ * TODO: 윤년 2월 29일 처리는 백엔드 규칙 확인 필요 (임시)
+ */
+export function getDateOfQuestionOrder(year: number, orderNum: number) {
+  return toDateString(new Date(year, 0, orderNum))
+}

@@ -22,6 +22,7 @@ import RewardRow from "./RewardRow"
 
 export default function RewardsScreen() {
   const t = useTranslations("rewards")
+  const tCommon = useTranslations("common")
   const queryClient = useQueryClient()
   const { data: me } = useAuthGetMe()
   const { data: attendance } = useRewardFindTodayAttendance()
@@ -47,16 +48,26 @@ export default function RewardsScreen() {
     <main className="bg-gradient-letter flex min-h-dvh flex-col">
       <BackTopNavigation title={t("title")} />
 
-      {/* TODO: 꿈조각 이력 화면 (GET /rewards/history) */}
-      <ListRow padding="l" leadingAsset={<CharacterFace />} title={t("count", { count: me.rewardCount })} />
+      <Link href="/rewards/history" className="block">
+        <ListRow
+          padding="l"
+          leadingAsset={<CharacterFace />}
+          title={t("count", { count: me.rewardCount })}
+          trailingAccessory={<span aria-hidden>›</span>}
+        />
+      </Link>
       <RewardRow
         title={t("attendance")}
         buttonLabel={attendance.isChecked ? t("received") : t("receive", { count: ATTENDANCE_REWARD })}
         disabled={attendance.isChecked}
         onClick={() => setOpenSheet("attendance")}
       />
-      {/* TODO: AdMob 보상형 광고 연결 전까지 비활성 */}
-      <RewardRow title={t("ad")} buttonLabel={t("receive", { count: AD_REWARD })} disabled />
+      {/* TODO: AdMob 보상형 광고 연결 전까지 임시 알림 (TODO.md) */}
+      <RewardRow
+        title={t("ad")}
+        buttonLabel={t("receive", { count: AD_REWARD })}
+        onClick={() => alert(tCommon("adNotReady"))}
+      />
       <RewardRow
         title={t("invite")}
         buttonLabel={t("receive", { count: INVITE_REWARD })}

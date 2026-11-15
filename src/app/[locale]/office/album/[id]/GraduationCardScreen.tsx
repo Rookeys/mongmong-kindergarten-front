@@ -1,5 +1,6 @@
 "use client"
 
+import { useRef } from "react"
 import { notFound } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { Popover } from "@kojaem/mongmong"
@@ -14,6 +15,7 @@ export default function GraduationCardScreen({ cardId }: { cardId: string }) {
   const t = useTranslations("album")
   const tHome = useTranslations("home")
   const tMood = useTranslations("mood")
+  const cardRef = useRef<HTMLElement>(null)
   // 단건 조회 API가 없어 목록에서 찾는다
   const { data: cards } = useCharacterFindMyGraduationCards()
 
@@ -31,7 +33,10 @@ export default function GraduationCardScreen({ cardId }: { cardId: string }) {
   return (
     <main className="bg-gradient-letter flex min-h-dvh flex-col">
       <BackTopNavigation />
-      <article className="bg-card border-border-brand-weak mx-[20px] flex flex-col gap-[16px] rounded-[8px] border p-[16px]">
+      <article
+        ref={cardRef}
+        className="bg-card border-border-brand-weak mx-[20px] flex flex-col gap-[16px] rounded-[8px] border p-[16px]"
+      >
         <GraduationCardHeader card={card} />
         <div className="bg-home-floor relative flex h-[230px] flex-col items-center justify-end gap-[4px] overflow-hidden rounded-[4px] pb-[16px]">
           <img
@@ -52,7 +57,11 @@ export default function GraduationCardScreen({ cardId }: { cardId: string }) {
           ))}
         </dl>
       </article>
-      <ShareCardButtons shareText={t("shareText", { name: card.characterName, count: card.letterCount })} />
+      <ShareCardButtons
+        cardRef={cardRef}
+        fileName={`mongmong-${card.characterName}-${card.graduatedAt.slice(0, 10)}.png`}
+        shareText={t("shareText", { name: card.characterName, count: card.letterCount })}
+      />
     </main>
   )
 }

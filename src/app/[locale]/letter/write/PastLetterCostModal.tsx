@@ -16,6 +16,7 @@ interface Props {
 /** 지난 날짜 답장 전 꿈조각 사용 확인. 꿈조각이 부족하면 광고 안내로 바뀐다. */
 export default function PastLetterCostModal({ open, hasEnoughReward, onClose, onConfirm }: Props) {
   const t = useTranslations("letterWrite")
+  const tCommon = useTranslations("common")
   const values = { count: PAST_LETTER_COST }
 
   return (
@@ -34,8 +35,8 @@ export default function PastLetterCostModal({ open, hasEnoughReward, onClose, on
               {t("costUse")}
             </Button>
           ) : (
-            // TODO: AdMob 보상형 광고 연결 전까지 비활성
-            <Button size="l" color="brand" variant="fill" isFullWidth disabled>
+            // TODO: AdMob 보상형 광고 연결 전까지 임시 알림 (TODO.md)
+            <Button size="l" color="brand" variant="fill" isFullWidth onClick={() => alert(tCommon("adNotReady"))}>
               {t("costWatchAd")}
             </Button>
           )}
